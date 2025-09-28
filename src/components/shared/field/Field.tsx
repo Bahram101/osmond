@@ -3,6 +3,7 @@ import React from "react";
 import { Controller } from "react-hook-form";
 
 import { IField } from "./field.interface";
+import { Input } from "@/components/ui/input";
 
 const Field = <T extends Record<string, any>>({
   control,
@@ -11,7 +12,7 @@ const Field = <T extends Record<string, any>>({
   className,
   ...rest
 }: IField<T>) => {
- 
+
   return (
     <Controller
       control={control}
@@ -22,22 +23,15 @@ const Field = <T extends Record<string, any>>({
         fieldState: { error },
       }) => {
         return (
-          <div className={cn(className)}>
-            <div
-              className={cn(
-                "m-0 bg-white rounded-lg border px-2",
-                error ? "border-red-400" : "border-gray-300"
-              )}
-            >
-              <input
-                className="w-full p-2 outline-none"
-                value={(value || "").toString()}
-                onChange={onChange}
-                onBlur={onBlur}
-                autoCapitalize="none"
-                {...rest}
-              />
-            </div>
+          <div className={cn("",className)}>
+            <Input
+              className="w-full p-2"
+              value={(value || "").toString()}
+              onChange={onChange}
+              onBlur={onBlur}
+              autoCapitalize="none"
+              {...rest}
+            />
             {error && <small className=" text-red-400">{error.message}</small>}
           </div>
         );

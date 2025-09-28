@@ -15,10 +15,10 @@ export const Header = () => {
             <Link href="/">Home</Link>
           </li>
           <li>
-            <Link href="/admin">Админ</Link>
+            <Link href="/users">Users</Link>
           </li>
           <li>
-            <Link href="/asdf">Asdf</Link>
+            <Link href="/admin">Админ</Link>
           </li>
           <li>
             <button className=" cursor-pointer">Выйти</button>
