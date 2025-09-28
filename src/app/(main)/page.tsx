@@ -1,9 +1,5 @@
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
-  return (
-    <div>
-       asdf
-    </div>
-  );
+  return <div>Home</div>;
 }

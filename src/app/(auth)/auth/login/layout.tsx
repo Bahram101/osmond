@@ -1,13 +1,7 @@
 import React, { ReactNode } from "react";
 
 const LoginLayout = ({ children }: { children: ReactNode }) => {
-  return (
-    <html lang="en">
-      <body>
-        <div>{children}</div>
-      </body>
-    </html>
-  );
+  return <div>{children}</div>;
 };
 
 export default LoginLayout;

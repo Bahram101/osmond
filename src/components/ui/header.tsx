@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const Header = () => {
-
   return (
     <header className="px-4 py-4 border-b border-zinc-200 items-center justify-between flex">
       <Link href="/" className="flex items-center gap-3">
@@ -17,6 +16,9 @@ export const Header = () => {
           </li>
           <li>
             <Link href="/admin">Админ</Link>
+          </li>
+          <li>
+            <Link href="/asdf">Asdf</Link>
           </li>
           <li>
             <button className=" cursor-pointer">Выйти</button>
