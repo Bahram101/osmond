@@ -1,9 +1,20 @@
-import React from 'react'
+import { Input } from "@/components/ui/input";
+import { IAuthFormData } from "@/types/auth.interface";
+import React from "react";
+import { useForm } from "react-hook-form";
 
 const LoginPage = () => {
-  return (
-    <div>LoginPage</div>
-  )
-}
+  const { handleSubmit, control } = useForm<IAuthFormData>({
+    mode: "onChange",
+  });
 
-export default LoginPage
+  
+
+  return (
+    <div className="p-6 bg-white w-80 self-center mx-auto">
+      <Input />
+    </div>
+  );
+};
+
+export default LoginPage;

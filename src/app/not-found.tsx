@@ -1,4 +1,4 @@
-import AppLayout from "@/components/ui/AppLayout";
+import AppLayout from "@/components/layout/AppLayout";
 import Link from "next/link";
 import React from "react";
 import "@/app/globals.css";

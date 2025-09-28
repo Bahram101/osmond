@@ -1,9 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Header } from "@/components/ui/header";
-import { Footer } from "@/components/ui/footer";
-import Container from "@/components/ui/container";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+import Container from "@/components/shared/container";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
