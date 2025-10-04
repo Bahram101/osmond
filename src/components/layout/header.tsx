@@ -1,8 +1,11 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 
 export const Header = () => {
+  const { data: session } = useSession();
+
   return (
     <header className="px-4 py-4 border-b border-zinc-200 items-center justify-between flex">
       <Link href="/" className="flex items-center gap-3">
@@ -20,9 +23,13 @@ export const Header = () => {
           <li>
             <Link href="/admin">Админ</Link>
           </li>
-          <li>
-            <button className=" cursor-pointer">Выйти</button>
-          </li>
+          {session && (
+            <li>
+              <button className="cursor-pointer" onClick={() => signOut()}>
+                Выйти
+              </button>
+            </li>
+          )}
         </ul>
       </nav>
     </header>
