@@ -3,7 +3,6 @@ import Field from "@/components/shared/field/Field";
 import { Button } from "@/components/ui/button";
 import { validEmail } from "@/lib/helpers";
 import { IAuthFormData } from "@/types/auth.interface";
-import { signIn } from "next-auth/react";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -16,21 +15,21 @@ const LoginPage = () => {
     email,
     password,
   }) => {
-    console.log("data", email, password);
+    // console.log("data", email, password);
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+      credentials: "include"
+    })
 
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: true,
-      callbackUrl: "/", // куда перенаправлять после входа
-    });
   };
 
   return (
     <div className="p-6 bg-white w-80 self-center mx-auto rounded shadow-md">
       <h1 className="text-xl font-semibold text-center mb-3">Login</h1>
       {/* {message && <span className="text-red-400 mb-3 block">{message}</span>} */}
-    
+
       <Field<IAuthFormData>
         className="mb-3"
         control={control}

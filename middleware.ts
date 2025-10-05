@@ -1,35 +1,41 @@
-import { withAuth } from "next-auth/middleware"
-import { NextResponse } from "next/server"
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export default withAuth(
-  function middleware(req) {
-    const { pathname } = req.nextUrl
-    const token = req.nextauth?.token
+export function middleware(req: NextRequest) {
+  const token = req.cookies.get("token")?.value;
+  console.log('token', req)
 
-    console.log('pathname',pathname)
-    console.log('tkn',token)
+  const { pathname } = req.nextUrl;
+  const publicPaths = ["/auth/login", "/auth/register", "/auth/forgot-password"];
 
-    // Если пользователь не авторизован и идёт не на /auth/*
-    if (!token && !pathname.startsWith("/auth")) {
-      const url = new URL("/auth/login", req.url)
-      return NextResponse.redirect(url)
-    }
 
-    // Если пользователь авторизован и пытается попасть на /auth/*
-    if (token && pathname.startsWith("/auth")) {
-      const url = new URL("/", req.url)
-      return NextResponse.redirect(url)
-    }
-
-    return NextResponse.next()
-  },
-  {
-    callbacks: {
-      authorized: () => true, // мы сами решаем логику авторизации выше
-    },
+  if (!token && !publicPaths.includes(pathname)) {
+    return NextResponse.redirect(new URL("/auth/login", req.url));
   }
-)
+
+  if (token && pathname === "/auth/login") {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  // 🔹 Если пытается попасть в /admin
+  // if (pathname.startsWith("/admin")) {
+
+  //   try {
+  //     // const decoded = jwt.verify(token, JWT_SECRET) as { role?: string };
+
+  //     if (decoded.role !== "ADMIN") { 
+  //       return NextResponse.redirect(new URL("/", req.url));
+  //     }
+  //   } catch {
+  //     // Если токен невалидный → редирект на логин
+  //     // return NextResponse.redirect(new URL("/auth/login", req.url));
+  //   }
+  // }
+
+  return NextResponse.next();
+}
 
 export const config = {
-  matcher: ["/((?!api|_next|static|favicon.ico).*)"], // применять ко всем страницам
-}
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};
+
