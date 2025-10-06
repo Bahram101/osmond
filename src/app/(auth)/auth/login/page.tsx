@@ -3,26 +3,26 @@ import Field from "@/components/shared/field/Field";
 import { Button } from "@/components/ui/button";
 import { validEmail } from "@/lib/helpers";
 import { IAuthFormData } from "@/types/auth.interface";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useAuthMutation } from "./useAuthMutation";
 
 const LoginPage = () => {
+  const router = useRouter();
   const { handleSubmit, control } = useForm<IAuthFormData>({
     mode: "onChange",
+    defaultValues:{
+      email: 'bahram101@mail.ru',
+      password: '123456'
+    }
   });
 
-  const onSubmit: SubmitHandler<IAuthFormData> = async ({
-    email,
-    password,
-  }) => {
-    // console.log("data", email, password);
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-      credentials: "include"
-    })
+  const { isLoading, loginSync } = useAuthMutation();
 
+  const onSubmit: SubmitHandler<IAuthFormData> = async (data) => {
+    await loginSync(data);
+    router.push("/");
   };
 
   return (
@@ -55,7 +55,7 @@ const LoginPage = () => {
         }}
       />
       <Button className="w-full" onClick={handleSubmit(onSubmit)}>
-        Войти
+        {isLoading ? "Loading..." : "Войти"}
       </Button>
     </div>
   );

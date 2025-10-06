@@ -3,6 +3,6 @@ export interface IUser {
   email: string
   username: string
   role: string
-  accessToken: string
-  refreshToken: string
+  // accessToken: string
+  // refreshToken: string
 }

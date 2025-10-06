@@ -22,11 +22,11 @@ export const Header = () => {
             <Link href="/admin">Админ</Link>
           </li>
 
-          <li>
+          {/* <li>
             <button className="cursor-pointer">
               Выйти
             </button>
-          </li>
+          </li> */}
 
         </ul>
       </nav>
