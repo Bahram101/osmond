@@ -1,6 +1,4 @@
-// import { IUser } from "@/types/user.interface";
-// import React, { createContext, ReactNode, useState } from "react";
-
+"use client";
 import { AuthService } from "@/services/auth.service";
 import { IUser } from "@/types/user.interface";
 import { createContext, ReactNode, useEffect, useState } from "react";
@@ -8,13 +6,13 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 interface IAuthContext {
   user: IUser | null;
   setUser: (user: IUser | null) => void;
-  isLoading: boolean;
+  // isLoading: boolean;
 }
 
-const AuthContext = createContext<IAuthContext | null>(null);
+export const AuthContext = createContext<IAuthContext | null>(null);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -25,8 +23,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     AuthService.getMe()
       .then((data) => {
-        setUser(data.user);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        console.log("getMe data", data);
+        // setUser(data.user);
+        // localStorage.setItem("user", JSON.stringify(data.user));
       })
       .catch(() => {
         localStorage.removeItem("user");
@@ -35,7 +34,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, isLoading }}>
+    <AuthContext.Provider value={{ user, setUser }}>
       {children}
     </AuthContext.Provider>
   );

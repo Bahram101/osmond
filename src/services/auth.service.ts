@@ -1,12 +1,14 @@
-import { request } from "@/lib/request.api";
+import { request } from "@/lib/api/request.api";
+import { IAuthFormData } from "@/types/auth.interface";
+import { IUser } from "@/types/user.interface";
 
 export const AuthService = {
-  async login(email: string, password: string) {
+  async login(data: IAuthFormData): Promise<IUser> {
     try {
-      const response = await request({
+      const response = await request<IUser>({
         url: "/auth/login",
         method: "POST",
-        data: { email, password },
+        data,
       });
 
       return response;
@@ -20,6 +22,7 @@ export const AuthService = {
       url: "/auth/me",
       method: "GET",
     });
+    console.log("getMe response", response);
     return response;
   },
 };

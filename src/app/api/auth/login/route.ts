@@ -1,22 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import { userSelect } from "@/lib/prisma/select";
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
+//auth/login
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
     const user = await prisma.user.findUnique({
       where: { email },
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        role: true,
-      },
-    });
+      select: userSelect,
+    }); 
 
     if (!user) {
       return NextResponse.json(
@@ -25,21 +22,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, {
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
       // expiresIn: "1h",
     });
 
-    const res = NextResponse.json(
-      {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-        role: user.role,
-      },
-      {
-        status: 200,
-      }
-    );
+    const res = NextResponse.json(user, {
+      status: 200,
+    });
 
     res.cookies.set("token", token, { httpOnly: true, secure: true });
     return res;

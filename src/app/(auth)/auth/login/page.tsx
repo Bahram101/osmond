@@ -1,21 +1,22 @@
 "use client";
 import Field from "@/components/shared/field/Field";
 import { Button } from "@/components/ui/button";
-import { validEmail } from "@/lib/helpers";
+import { validEmail } from "@/lib/utils/helpers";
 import { IAuthFormData } from "@/types/auth.interface";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAuthMutation } from "./useAuthMutation";
+import { useAuthMutation } from "@/hooks/auth/useAuthMutation";
+import Loader from "@/components/shared/Loader";
 
 const LoginPage = () => {
   const router = useRouter();
   const { handleSubmit, control } = useForm<IAuthFormData>({
     mode: "onChange",
-    defaultValues:{
-      email: 'bahram101@mail.ru',
-      password: '123456'
-    }
+    defaultValues: {
+      email: "bahram101@mail.ru",
+      password: "123456",
+    },
   });
 
   const { isLoading, loginSync } = useAuthMutation();
@@ -55,7 +56,7 @@ const LoginPage = () => {
         }}
       />
       <Button className="w-full" onClick={handleSubmit(onSubmit)}>
-        {isLoading ? "Loading..." : "Войти"}
+        {isLoading ? <Loader /> : "Войти"}
       </Button>
     </div>
   );
