@@ -2,6 +2,16 @@
 import { useAuth } from "@/hooks/auth/useAuth";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarSeparator,
+  MenubarTrigger,
+} from "../ui/menubar";
 
 export const Header = () => {
   const { user, logout } = useAuth();
@@ -9,11 +19,18 @@ export const Header = () => {
   return (
     <header className="px-4 py-4 border-b border-zinc-200 items-center justify-between flex">
       <Link href="/" className="flex items-center gap-3">
-        <Image alt="Логотип" src="/logo.png" width={40} height={40} priority unoptimized />
+        <Image
+          alt="Логотип"
+          src="/logo.png"
+          width={40}
+          height={40}
+          priority
+          unoptimized
+        />
         <span className="font-semibold text-lg">Osmond</span>
       </Link>
       <nav>
-        <ul className="flex gap-3">
+        <ul className="flex gap-3 flex items-center justify-center">
           <li>
             <Link href="/">Home</Link>
           </li>
@@ -23,10 +40,28 @@ export const Header = () => {
           <li>
             <Link href="/admin">Админ</Link>
           </li>
+
           {user && (
-            <li>
-              <button className="cursor-pointer" onClick={logout}>Выйти</button>
-            </li>
+            <Menubar>
+              <MenubarMenu>
+                <MenubarTrigger className="cursor-pointer">
+                  {user.username}
+                </MenubarTrigger>
+                <MenubarContent>
+                  <MenubarRadioGroup value="benoit">
+                    <MenubarRadioItem value="andy">Профиль</MenubarRadioItem>
+                  </MenubarRadioGroup>
+                  <MenubarSeparator />
+                  <MenubarItem
+                    inset
+                    className="cursor-pointer"
+                    onClick={logout}
+                  >
+                    Выйти
+                  </MenubarItem>
+                </MenubarContent>
+              </MenubarMenu>
+            </Menubar>
           )}
         </ul>
       </nav>
