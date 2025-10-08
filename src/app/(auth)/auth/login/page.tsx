@@ -55,7 +55,7 @@ const LoginPage = () => {
           },
         }}
       />
-      <Button className="w-full" onClick={handleSubmit(onSubmit)}>
+      <Button className="w-full cursor-pointer" onClick={handleSubmit(onSubmit)}>
         {isLoading ? <Loader /> : "Войти"}
       </Button>
     </div>

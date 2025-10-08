@@ -12,6 +12,7 @@ import {
   MenubarSeparator,
   MenubarTrigger,
 } from "../ui/menubar";
+import Skeleton from "../shared/Skeleton";
 
 export const Header = () => {
   const { user, logout } = useAuth();
@@ -30,26 +31,36 @@ export const Header = () => {
         <span className="font-semibold text-lg">Osmond</span>
       </Link>
       <nav>
-        <ul className="flex gap-3 flex items-center justify-center">
+        <ul className="flex gap-3 items-center justify-center">
           <li>
             <Link href="/">Home</Link>
-          </li>
-          <li>
-            <Link href="/users">Users</Link>
           </li>
           <li>
             <Link href="/admin">Админ</Link>
           </li>
 
-          {user && (
-            <Menubar>
+          {user ? (
+            <Menubar className="border-none shadow-none p-0">
               <MenubarMenu>
-                <MenubarTrigger className="cursor-pointer">
-                  {user.username}
+                <MenubarTrigger className="cursor-pointer p-0">
+                  <Image
+                    alt="Логотип"
+                    src="/account.png"
+                    width={23}
+                    height={23}
+                    priority
+                    unoptimized
+                  />
                 </MenubarTrigger>
                 <MenubarContent>
+                  <MenubarRadioItem value="andy">
+                    {user.username}
+                  </MenubarRadioItem>
+
                   <MenubarRadioGroup value="benoit">
-                    <MenubarRadioItem value="andy">Профиль</MenubarRadioItem>
+                    <MenubarRadioItem value="andy" className="cursor-pointer">
+                      Профиль
+                    </MenubarRadioItem>
                   </MenubarRadioGroup>
                   <MenubarSeparator />
                   <MenubarItem
@@ -62,6 +73,8 @@ export const Header = () => {
                 </MenubarContent>
               </MenubarMenu>
             </Menubar>
+          ) : (
+            <Skeleton />
           )}
         </ul>
       </nav>

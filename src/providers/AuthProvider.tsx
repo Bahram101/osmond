@@ -23,6 +23,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) setUser(JSON.parse(savedUser));
+
     const fetchUser = async () => {
       try {
         const data = await AuthService.getMe();
