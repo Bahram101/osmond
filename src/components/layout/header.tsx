@@ -1,13 +1,15 @@
 "use client";
+import { useAuth } from "@/hooks/auth/useAuth";
 import Image from "next/image";
 import Link from "next/link";
 
 export const Header = () => {
+  const { user, logout } = useAuth();
 
   return (
     <header className="px-4 py-4 border-b border-zinc-200 items-center justify-between flex">
       <Link href="/" className="flex items-center gap-3">
-        <Image alt="Логотип" src="/logo.png" width={40} height={40} priority />
+        <Image alt="Логотип" src="/logo.png" width={40} height={40} priority unoptimized />
         <span className="font-semibold text-lg">Osmond</span>
       </Link>
       <nav>
@@ -21,13 +23,11 @@ export const Header = () => {
           <li>
             <Link href="/admin">Админ</Link>
           </li>
-
-          {/* <li>
-            <button className="cursor-pointer">
-              Выйти
-            </button>
-          </li> */}
-
+          {user && (
+            <li>
+              <button className="cursor-pointer" onClick={logout}>Выйти</button>
+            </li>
+          )}
         </ul>
       </nav>
     </header>

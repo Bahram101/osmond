@@ -3,7 +3,12 @@ import { instance } from "./axios";
 import { errorCatch } from "./error.api";
 import { toast } from "sonner";
 
-export const request = async <T>(config: AxiosRequestConfig) => {
+interface CustomRequestConfig extends AxiosRequestConfig {
+  showToast?: boolean;
+}
+
+export const request = async <T>(config: CustomRequestConfig) => {
+  const { showToast = true } = config;
   const onSuccess = (response: AxiosResponse<T>) => {
     return response.data;
   };
@@ -13,7 +18,9 @@ export const request = async <T>(config: AxiosRequestConfig) => {
       error.response?.data?.error ||
       error.response?.data?.message ||
       "Unknown error";
-    toast.error(message);
+
+    if (showToast) toast.error(message);
+
     return Promise.reject(errorCatch(error));
   };
 

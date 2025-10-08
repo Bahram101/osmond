@@ -17,14 +17,12 @@ export const useAuthMutation = () => {
     IAuthFormData
   >({
     mutationKey: ["login"],
-
     mutationFn: (formData) => AuthService.login(formData),
-
     onSuccess(user) {
       setUser(user);
+      localStorage.setItem("user", JSON.stringify(user))
       router.push("/");
     },
-
     onError(error) {
       console.log("auth error", error);
     },

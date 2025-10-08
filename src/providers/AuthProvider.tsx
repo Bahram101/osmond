@@ -1,40 +1,56 @@
 "use client";
+import Loader from "@/components/shared/Loader";
 import { AuthService } from "@/services/auth.service";
 import { IUser } from "@/types/user.interface";
+import { usePathname, useRouter } from "next/navigation";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
 interface IAuthContext {
   user: IUser | null;
   setUser: (user: IUser | null) => void;
-  // isLoading: boolean;
+  logout: () => void;
 }
 
 export const AuthContext = createContext<IAuthContext | null>(null);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) setUser(JSON.parse(savedUser));
+    if (pathname.startsWith("/auth")) {
+      return;
+    }
 
-    const token = localStorage.getItem("accessToken");
-    if (!token) return;
+    const fetchUser = async () => {
+      try {
+        const data = await AuthService.getMe();
+        setUser(data);
+      } catch {
+        setUser(null);
 
-    AuthService.getMe()
-      .then((data) => {
-        console.log("getMe data", data);
-        // setUser(data.user);
-        // localStorage.setItem("user", JSON.stringify(data.user));
-      })
-      .catch(() => {
-        localStorage.removeItem("user");
-        localStorage.removeItem("accessToken");
-      });
-  }, []);
+        if (!pathname.startsWith("/auth")) {
+          router.push("/auth/login");
+        }
+      }
+    };
+
+    fetchUser();
+  }, [pathname, router]);
+
+  const logout = async () => {
+    try {
+      await AuthService.logOut();
+      setUser(null);
+      router.push("/auth/login");
+    } catch (e) {
+      console.error("Logout failed:", e);
+    }
+  };
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

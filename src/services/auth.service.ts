@@ -10,19 +10,26 @@ export const AuthService = {
         method: "POST",
         data,
       });
-
       return response;
     } catch (error) {
       throw error;
     }
   },
 
-  async getMe() {
-    const response = await request({
+  async logOut(): Promise<{ message: string }> {
+    const res = request<{ message: string }>({
+      url: "/auth/logout",
+      method: "POST",
+    });
+    return res;
+  },
+
+  async getMe(): Promise<IUser> {
+    const response = request<IUser>({
       url: "/auth/me",
       method: "GET",
+      showToast: false,
     });
-    console.log("getMe response", response);
     return response;
   },
 };
