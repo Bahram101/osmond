@@ -20,14 +20,10 @@ export const Header = () => {
   return (
     <header className="px-4 py-4 border-b border-zinc-200 items-center justify-between flex">
       <Link href="/" className="flex items-center gap-3">
-        <Image
-          alt="Логотип"
-          src="/logo.png"
-          width={40}
-          height={40}
-          priority
-          unoptimized
-        />
+        <div className="relative w-10 h-10">
+          <Image src="/logo.png" alt="Логотип" fill unoptimized priority />
+        </div>
+
         <span className="font-semibold text-lg">Osmond</span>
       </Link>
       <nav>

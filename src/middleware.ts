@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getUserFromToken } from "./lib/auth";
 
-export function middleware(req: NextRequest) { 
-  const token = req.cookies.get("token")?.value; 
+export async function middleware(req: NextRequest) {
+  const token = req.cookies.get("token")?.value;
   const { pathname } = req.nextUrl;
   const publicPaths = [
     "/auth/login",
@@ -22,22 +23,23 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  // 🔹 Если пытается попасть в /admin
-  // if (pathname.startsWith("/admin")) {
+  try {
+    const decoded = await getUserFromToken(req)
+    console.log('Decoded Token:', decoded);
 
-  //   try {
-  //     // const decoded = jwt.verify(token, JWT_SECRET) as { role?: string };
+    if (pathname.startsWith("/admin")) {
+      if (decoded?.role === "ADMIN") {
+        return NextResponse.redirect(new URL("/", req.url));
+      }
+    }
 
-  //     if (decoded.role !== "ADMIN") {
-  //       return NextResponse.redirect(new URL("/", req.url));
-  //     }
-  //   } catch {
-  //     // Если токен невалидный → редирект на логин
-  //     // return NextResponse.redirect(new URL("/auth/login", req.url));
-  //   }
-  // }
+    return NextResponse.next();
+  } catch (err) {
+    console.error("Invalid token:", err);
+    return NextResponse.redirect(new URL("/auth/login", req.url));
+  }
 
-  return NextResponse.next();
+  // return NextResponse.next();
 }
 
 export const config = {

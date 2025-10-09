@@ -6,7 +6,7 @@ import { userSelect } from "@/lib/prisma/select";
 //auth/me
 export async function GET(req: NextRequest) {
   try {
-    const decoded = getUserFromToken(req);
+    const decoded = await getUserFromToken(req);
 
     if (!decoded){
       return Response.json({ error: "Unauthorized" }, { status: 401 });
