@@ -25,21 +25,18 @@ export async function middleware(req: NextRequest) {
 
   try {
     const decoded = await getUserFromToken(req)
-    console.log('Decoded Token:', decoded);
 
     if (pathname.startsWith("/admin")) {
-      if (decoded?.role === "ADMIN") {
+      if (decoded?.role !== "ADMIN") {
         return NextResponse.redirect(new URL("/", req.url));
       }
     }
 
     return NextResponse.next();
   } catch (err) {
-    console.error("Invalid token:", err);
     return NextResponse.redirect(new URL("/auth/login", req.url));
   }
 
-  // return NextResponse.next();
 }
 
 export const config = {

@@ -30,7 +30,9 @@ export async function POST(req: Request) {
       status: 200,
     });
 
-    res.cookies.set("token", token, { httpOnly: true, secure: true });
+    console.log('TOKEN:', token);
+
+    res.cookies.set("token", token, { httpOnly: true });
     return res;
   } catch (e) {
     return NextResponse.json({ error: "Login failed" }, { status: 500 });
