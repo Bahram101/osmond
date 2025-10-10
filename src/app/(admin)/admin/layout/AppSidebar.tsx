@@ -1,13 +1,24 @@
 "use client";
-import React, { useEffect, useRef, useState,useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
- 
-import SidebarWidget from "./SidebarWidget";
-import { Box, Calendar, ChartPie, ChevronDownIcon, CircleUserRound, Ellipsis, LayoutGrid, ListEndIcon, PackageIcon, Plug2, SheetIcon } from "lucide-react";
 
+import SidebarWidget from "./SidebarWidget";
+import {
+  Box,
+  Calendar,
+  ChartPie,
+  ChevronDownIcon,
+  CircleUserRound,
+  Ellipsis,
+  LayoutGrid,
+  ListEndIcon,
+  PackageIcon,
+  Plug2,
+  SheetIcon,
+} from "lucide-react";
 
 type NavItem = {
   name: string;
@@ -224,7 +235,7 @@ const AppSidebar: React.FC = () => {
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // const isActive = (path: string) => path === pathname;
-   const isActive = useCallback((path: string) => path === pathname, [pathname]);
+  const isActive = useCallback((path: string) => path === pathname, [pathname]);
 
   useEffect(() => {
     // Check if the current path matches any submenu item
@@ -250,7 +261,7 @@ const AppSidebar: React.FC = () => {
     if (!submenuMatched) {
       setOpenSubmenu(null);
     }
-  }, [pathname,isActive]);
+  }, [pathname, isActive]);
 
   useEffect(() => {
     // Set the height of the submenu items when the submenu is opened
@@ -301,19 +312,22 @@ const AppSidebar: React.FC = () => {
         <Link href="/">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
-              <Image
-                className="dark:hidden"
-                src="/images/logo/logo.svg"
-                alt="Logo"
-                width={150}
-                height={40}
-              />
+              <div className="relative w-[150px] h-[40px]">
+                <Image
+                  src="/images/logo/logo.svg"
+                  alt="Логотип"
+                  fill
+                  unoptimized
+                  priority
+                />
+              </div>
               <Image
                 className="hidden dark:block"
                 src="/images/logo/logo-dark.svg"
                 alt="Logo"
                 width={150}
                 height={40}
+                unoptimized
               />
             </>
           ) : (
