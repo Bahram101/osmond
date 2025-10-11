@@ -5,6 +5,7 @@ import Backdrop from "./layout/Backdrop";
 import AppHeader from "./layout/AppHeader";
 import { SidebarProvider, useSidebar } from "./context/SidebarContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import './globals.css'
 
 export default function AdminLayout({
   children,
