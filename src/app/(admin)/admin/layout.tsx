@@ -33,7 +33,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
     : "lg:ml-[90px]";
 
   return (
-    <div className="min-h-screen xl:flex">
+    <div className="min-h-screen xl:flex font-sans">
       <AppSidebar />
       <Backdrop />
 

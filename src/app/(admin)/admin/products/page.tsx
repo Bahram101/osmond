@@ -1,8 +1,13 @@
 import React from 'react'
+import RecentOrders from '../components/ecommerce/RecentOrders'
+import PageBreadcrumb from '../components/common/PageBreadCrumb'
 
 const ProductsPage = () => {
   return (
-    <div>ProductsPage</div>
+    <div className="col-span-12 xl:col-span-7">
+      <PageBreadcrumb pageTitle="Товары" />
+      <RecentOrders />
+    </div>
   )
 }
 

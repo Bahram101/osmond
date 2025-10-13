@@ -16,8 +16,11 @@ import {
   LayoutGrid,
   ListEndIcon,
   PackageIcon,
+  PanelsTopLeft,
   Plug2,
   SheetIcon,
+  ShoppingCart,
+  Users,
 } from "lucide-react";
 
 type NavItem = {
@@ -30,18 +33,23 @@ type NavItem = {
 const navItems: NavItem[] = [
   {
     icon: <LayoutGrid />,
-    name: "Dashboard",
+    name: "Главная",
     path: "/admin"
     // subItems: [{ name: "Ecommerce", path: "/", pro: false }],
   },
   {
-    icon: <Calendar />,
-    name: "Products",
+    icon: <ShoppingCart />,
+    name: "Товары",
     path: "/admin/products",
   },
   {
-    icon: <CircleUserRound />,
-    name: "User Profile",
+    icon: <PanelsTopLeft />,
+    name: "Категория",
+    path: "/admin/categories",
+  },
+  {
+    icon: <Users />,
+    name: "Пользователи",
     path: "/admin/users",
   },
 ];
