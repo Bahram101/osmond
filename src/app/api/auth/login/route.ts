@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     const user = await prisma.user.findUnique({
       where: { email },
       select: userSelect,
-    }); 
+    });
 
     if (!user) {
       return NextResponse.json(
@@ -33,6 +33,7 @@ export async function POST(req: Request) {
     console.log('TOKEN:', token);
 
     res.cookies.set("token", token, { httpOnly: true });
+
     return res;
   } catch (e) {
     return NextResponse.json({ error: "Login failed" }, { status: 500 });
