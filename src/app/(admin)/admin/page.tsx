@@ -6,12 +6,10 @@ import MonthlyTarget from "./components/ecommerce/MonthlyTarget";
 import StatisticsChart from "./components/ecommerce/StatisticsChart";
 import DemographicCard from "./components/ecommerce/DemographicCard";
 import RecentOrders from "./components/ecommerce/RecentOrders";
- 
 
 export const metadata: Metadata = {
-  title:
-    "Next.js E-commerce Dashboard | TailAdmin - Next.js Dashboard Template",
-  description: "This is Next.js Home for TailAdmin Dashboard Template",
+  title: "Next.js E-commerce Dashboard ",
+  description: "This is Next.js Home ",
 };
 
 export default function Ecommerce() {
@@ -20,23 +18,23 @@ export default function Ecommerce() {
       <div className="col-span-12 space-y-6 xl:col-span-7">
         <EcommerceMetrics />
 
-        <MonthlySalesChart />
+        {/* <MonthlySalesChart /> */}
       </div>
 
       <div className="col-span-12 xl:col-span-5">
-        <MonthlyTarget />
+        {/* <MonthlyTarget /> */}
       </div>
 
       <div className="col-span-12">
-        <StatisticsChart />
+        {/* <StatisticsChart /> */}
       </div>
 
       <div className="col-span-12 xl:col-span-5">
-        <DemographicCard />
+        {/* <DemographicCard /> */}
       </div>
 
       <div className="col-span-12 xl:col-span-7">
-        <RecentOrders />
+        {/* <RecentOrders /> */}
       </div>
     </div>
   );

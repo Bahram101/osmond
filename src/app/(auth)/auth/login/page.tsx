@@ -8,17 +8,8 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAuthMutation } from "@/hooks/auth/useAuthMutation";
 import Loader from "@/components/shared/Loader";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -39,11 +30,6 @@ const LoginPage = () => {
 
   return (
     <>
-      {/* <div className="p-6 bg-white w-80 self-center mx-auto rounded shadow-md">
-        <h1 className="text-xl font-semibold text-center mb-3">Login</h1>
-        {message && <span className="text-red-400 mb-3 block">{message}</span>}
-      </div> */}
-   
       <Card className="w-full max-w-sm mx-auto self-center ">
         <CardContent>
           <form>

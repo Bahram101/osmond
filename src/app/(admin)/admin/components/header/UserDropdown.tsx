@@ -4,6 +4,8 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
+import { ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils/cn";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,19 +24,11 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         onClick={toggleDropdown} 
         className="flex items-center text-gray-700 dark:text-gray-400 dropdown-toggle cursor-pointer"
       >
-        <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-          <Image
-            width={44}
-            height={44}
-            src="/images/user/owner.jpg"
-            alt="User"
-            unoptimized
-          />
-        </span>
+ 
 
         <span className="block mr-1 font-medium text-theme-sm">Musharof</span>
-
-        <svg
+        <ChevronDown className={cn('transition-transform duration-200',isOpen ? 'rotate-180 ' : '')}/>
+        {/* <svg
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
           }`}
@@ -51,7 +45,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-        </svg>
+        </svg> */}
       </button>
 
       <Dropdown
