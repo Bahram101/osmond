@@ -1,11 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-import { EcommerceMetrics } from "./components/ecommerce/EcommerceMetrics";
-import MonthlySalesChart from "./components/ecommerce/MonthlySalesChart";
-import MonthlyTarget from "./components/ecommerce/MonthlyTarget";
-import StatisticsChart from "./components/ecommerce/StatisticsChart";
-import DemographicCard from "./components/ecommerce/DemographicCard";
-import RecentOrders from "./components/ecommerce/RecentOrders";
+import { EcommerceMetrics } from "./components/ecommerce/EcommerceMetrics"; 
 
 export const metadata: Metadata = {
   title: "Next.js E-commerce Dashboard ",

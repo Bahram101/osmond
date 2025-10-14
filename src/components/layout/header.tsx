@@ -24,7 +24,7 @@ export const Header = () => {
           <Image src="/logo.png" alt="Логотип" fill unoptimized priority />
         </div>
 
-        <span className="font-semibold text-lg">Osmond</span>
+        <span className="font-semibold text-lg opacity-80">Osmond</span>
       </Link>
       <nav>
         <ul className="flex gap-3 items-center justify-center">
