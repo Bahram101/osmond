@@ -40,7 +40,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     fetchUser();
-  }, [pathname, router]);
+  }, [router]);
 
   const logout = async () => {
     try {

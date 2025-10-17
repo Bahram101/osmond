@@ -11,7 +11,7 @@ const Field = <T extends Record<string, any>>({
   rules,
   className,
   ...rest
-}: IField<T>) => {
+}: IField<T>) => { 
 
   return (
     <Controller
@@ -25,7 +25,7 @@ const Field = <T extends Record<string, any>>({
         return (
           <div className={cn("",className)}>
             <Input
-              className="w-full p-2"
+              className={cn(error && "border-red-400")}
               value={(value || "").toString()}
               onChange={onChange}
               onBlur={onBlur}

@@ -37,7 +37,7 @@ const LoginPage = () => {
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Field<IAuthFormData>
-                  className=" "
+                  className=""
                   control={control}
                   name="email"
                   rules={{

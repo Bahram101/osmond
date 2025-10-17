@@ -1,8 +1,9 @@
 import React from "react";
-import RecentOrders from "../components/ecommerce/RecentOrders";
-import PageBreadcrumb from "../components/common/PageBreadCrumb";
-import { BoxIcon, Plus, SlidersHorizontal } from "lucide-react";
-import Button from "../components/ui/button/Button";
+import RecentOrders from "../../components/ecommerce/RecentOrders";
+import PageBreadcrumb from "../../components/common/PageBreadCrumb";
+import { Plus } from "lucide-react";
+import Button from "../../components/ui/button/Button";
+import Link from "next/link";
 
 const ProductsPage = () => {
   return (
@@ -16,9 +17,11 @@ const ProductsPage = () => {
             </h3>
           </div>
           <div className="flex items-center gap-3">
-            <Button size="xs" variant="primary" startIcon={<Plus />}>
-              Создать
-            </Button>
+            <Link href="/admin/products/create">
+              <Button size="xs" variant="primary" startIcon={<Plus />}>
+                Создать
+              </Button>
+            </Link>
             {/* <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
               <SlidersHorizontal />
               Filter

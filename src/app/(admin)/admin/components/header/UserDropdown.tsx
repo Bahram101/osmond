@@ -2,8 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import { Dropdown } from "../ui/dropdown/Dropdown";
-import { DropdownItem } from "../ui/dropdown/DropdownItem";
+import { Dropdown } from "../ui/dropdown/Dropdown"; 
 import { ChevronDown, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useAuth } from "@/hooks/auth/useAuth";
@@ -21,16 +20,13 @@ export default function UserDropdown() {
     setIsOpen(false);
   }
 
-  console.log("user", user);
   return (
     <div className="relative">
       <button
         onClick={toggleDropdown}
         className="flex items-center text-gray-700 dark:text-gray-400 dropdown-toggle cursor-pointer"
       >
-        <span className="mr-1 font-medium text-theme-sm">
-          {user?.username}
-        </span>
+        <span className="mr-1 font-medium text-theme-sm">{user?.username}</span>
         <ChevronDown
           className={cn(
             "transition-transform duration-200 opacity-70",
