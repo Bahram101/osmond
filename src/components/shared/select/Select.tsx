@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import cn from 'clsx'
 
 interface ControlledSelectProps<T extends FieldValues> {
   name: FieldPath<T>;
@@ -35,10 +36,10 @@ export function ControlledSelect<T extends FieldValues>({
         field: { value, onChange, onBlur },
         fieldState: { error },
       }) => (
-        <>
-          <Select>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Theme" />
+        <div>
+          <Select value={value ?? ""} onValueChange={onChange}>
+            <SelectTrigger className={cn("w-full", error && 'border-red-400')}>
+              <SelectValue placeholder="Выберите котегорию" />
             </SelectTrigger>
             <SelectContent>
               {options.map((option) => (
@@ -49,7 +50,7 @@ export function ControlledSelect<T extends FieldValues>({
             </SelectContent>
           </Select>
           {error && <small className=" text-red-400">{error.message}</small>}
-        </>
+        </div>
       )}
     />
   );

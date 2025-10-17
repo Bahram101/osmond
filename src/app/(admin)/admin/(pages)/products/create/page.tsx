@@ -12,6 +12,9 @@ import ControlledSelect from "@/components/shared/select/Select";
 const ProductCreatePage = () => {
   const { control, handleSubmit } = useForm<IProduct>({
     mode: "all",
+    defaultValues:{
+      // categoryId: ""
+    }
   });
 
   const onSubmit: SubmitHandler<IProduct> = (data) => {
@@ -43,7 +46,7 @@ const ProductCreatePage = () => {
               name="description"
               control={control}
               rules={{
-                required: "Заполните поле",
+                // required: "Заполните поле",
                 minLength: {
                   value: 3,
                   message: "Минимум 3 символа",
@@ -62,18 +65,18 @@ const ProductCreatePage = () => {
             />
           </div>
           <div>
-            <Label htmlFor="price">Категория</Label>
+            <Label htmlFor="categoryId">Категория</Label>
             <ControlledSelect
               name="categoryId"
               control={control}
               rules={{ required: "Заполните поле" }}
             />
           </div>
+          
           <div className="flex justify-end">
             <Button
               size="xs"
               variant="primary"
-              className="self-right"
               onClick={handleSubmit(onSubmit)}
             >
               Создать
