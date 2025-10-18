@@ -9,12 +9,22 @@ import Button from "../../../components/ui/button/Button";
 import { IProduct } from "@/types/product.interface";
 import ControlledSelect from "@/components/shared/select/Select";
 
+const categoryOptions = [
+  { value: "light", label: "Light" },
+  { value: "dark", label: "Dark" },
+  { value: "system", label: "System" },
+];
+const availableOptions = [
+  { value: true, label: "Да" },
+  { value: false, label: "Нет" },
+];
+
 const ProductCreatePage = () => {
   const { control, handleSubmit } = useForm<IProduct>({
     mode: "all",
-    defaultValues:{
-      // categoryId: ""
-    }
+    defaultValues: {
+      availability: true,
+    },
   });
 
   const onSubmit: SubmitHandler<IProduct> = (data) => {
@@ -66,13 +76,25 @@ const ProductCreatePage = () => {
           </div>
           <div>
             <Label htmlFor="categoryId">Категория</Label>
-            <ControlledSelect
+            <ControlledSelect<IProduct, string>
               name="categoryId"
               control={control}
               rules={{ required: "Заполните поле" }}
+              options={categoryOptions}
+              placeholder="Выберите котегорию"
             />
           </div>
-          
+          <div>
+            <Label htmlFor="categoryId">Опубликовать</Label>
+            <ControlledSelect<IProduct, boolean>
+              name="availability"
+              control={control}
+              options={availableOptions || []}
+              placeholder="Выберите доступность"
+              // rules={{ required: "Заполните поле" }}
+            />
+          </div>
+
           <div className="flex justify-end">
             <Button
               size="xs"
