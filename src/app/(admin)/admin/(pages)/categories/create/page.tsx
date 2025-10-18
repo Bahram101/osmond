@@ -39,7 +39,7 @@ const CategoryCreatePage = () => {
           </div>
 
           <div>
-            <Label htmlFor="categoryId">Опубликовать</Label>
+            <Label htmlFor="categoryId">Выберите категорию</Label>
             <ControlledSelect<ICategory, string>
               name="categoryId"
               control={control}

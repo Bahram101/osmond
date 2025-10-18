@@ -5,7 +5,7 @@ import { userSelect } from "@/lib/prisma/select";
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
-//auth/login
+// api/auth/login
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();

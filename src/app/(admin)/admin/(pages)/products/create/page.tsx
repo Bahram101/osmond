@@ -76,7 +76,7 @@ const ProductCreatePage = () => {
           </div>
           <div>
             <Label htmlFor="categoryId">Категория</Label>
-            <ControlledSelect<IProduct, string>
+            <ControlledSelect
               name="categoryId"
               control={control}
               rules={{ required: "Заполните поле" }}
