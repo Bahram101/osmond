@@ -1,5 +1,5 @@
 import React from "react";
-import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
+import { Control, Controller, FieldPath, FieldValues, RegisterOptions } from "react-hook-form";
 import {
   Select,
   SelectContent,
@@ -17,7 +17,7 @@ export interface ControlledSelectOption<T> {
 interface ControlledSelectProps<T extends FieldValues, TValue> {
   name: FieldPath<T>;
   control: Control<T>;
-  rules?: any;
+  rules?: RegisterOptions<T> ;
   className?: string;
   options: ControlledSelectOption<TValue>[];
   placeholder?: string;
@@ -30,13 +30,14 @@ export function ControlledSelect<T extends FieldValues, TValue>({
   options,
   placeholder
 }: ControlledSelectProps<T, TValue>) {
+  
   return (
     <Controller
       name={name}
       control={control}
       rules={rules}
       render={({
-        field: { value, onChange, onBlur },
+        field: { value, onChange },
         fieldState: { error },
       }) => (
         <div>

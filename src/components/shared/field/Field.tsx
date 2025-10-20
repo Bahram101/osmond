@@ -11,8 +11,7 @@ const Field = <T extends Record<string, any>>({
   rules,
   className,
   ...rest
-}: IField<T>) => { 
-
+}: IField<T>) => {
   return (
     <Controller
       control={control}
@@ -23,7 +22,7 @@ const Field = <T extends Record<string, any>>({
         fieldState: { error },
       }) => {
         return (
-          <div className={cn("",className)}>
+          <div className={cn("", className)}>
             <Input
               className={cn(error && "border-red-400")}
               value={(value || "").toString()}

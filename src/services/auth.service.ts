@@ -4,16 +4,12 @@ import { IUser } from "@/types/user.interface";
 
 export const AuthService = {
   async login(data: IAuthFormData): Promise<IUser> {
-    try {
-      const response = await request<IUser>({
-        url: "/auth/login",
-        method: "POST",
-        data,
-      });
-      return response;
-    } catch (error) {
-      throw error;
-    }
+    const response = await request<IUser>({
+      url: "/auth/login",
+      method: "POST",
+      data,
+    });
+    return response;
   },
 
   async logOut(): Promise<{ message: string }> {

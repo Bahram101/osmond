@@ -8,14 +8,32 @@ import ControlledSelect from "@/components/shared/select/Select";
 import Button from "../../../components/ui/button/Button";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { ICategory } from "@/types/category.interface";
+import {
+  useCreateCategory,
+  useGetCategories,
+} from "@/hooks/category/useCategories";
+import Loader from "@/components/shared/Loader";
+import { toast } from "sonner";
 
 const CategoryCreatePage = () => {
-  const { control, handleSubmit } = useForm<ICategory>({
+  const { control, handleSubmit, reset } = useForm<ICategory>({
     mode: "all",
   });
 
+  const { categories, isFetchingCategories, refetch } = useGetCategories();
+  const { createCategory, isCreatingCategory } = useCreateCategory(() => {
+    reset();
+    refetch();
+  });
+
+  const categoryOptions = categories?.map((cat: ICategory) => ({
+    value: cat.id,
+    label: cat.name,
+  }));
+
   const onSubmit: SubmitHandler<ICategory> = (data) => {
-    console.log(data);
+    createCategory(data);
+    toast.success("Категория успешно создана", { className: "bg-green-100 text-green-700" });
   };
 
   return (
@@ -41,11 +59,10 @@ const CategoryCreatePage = () => {
           <div>
             <Label htmlFor="categoryId">Выберите категорию</Label>
             <ControlledSelect<ICategory, string>
-              name="categoryId"
+              name="parentId"
               control={control}
-              options={[]}
+              options={categoryOptions || []}
               placeholder="Выберите категорию"
-              // rules={{ required: "Заполните поле" }}
             />
           </div>
 
@@ -55,7 +72,7 @@ const CategoryCreatePage = () => {
               variant="primary"
               onClick={handleSubmit(onSubmit)}
             >
-              Создать
+              {isCreatingCategory ? <Loader /> : "Создать"}
             </Button>
           </div>
         </ComponentCard>

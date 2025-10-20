@@ -30,8 +30,6 @@ export async function POST(req: Request) {
       status: 200,
     });
 
-    console.log('TOKEN:', token);
-
     res.cookies.set("token", token, { httpOnly: true });
 
     return res;

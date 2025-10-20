@@ -28,7 +28,7 @@ const ProductCreatePage = () => {
   });
 
   const onSubmit: SubmitHandler<IProduct> = (data) => {
-    console.log(data);
+    // console.log(data);
   };
 
   return (
@@ -76,7 +76,7 @@ const ProductCreatePage = () => {
           </div>
           <div>
             <Label htmlFor="categoryId">Категория</Label>
-            <ControlledSelect
+            <ControlledSelect<IProduct, string>
               name="categoryId"
               control={control}
               rules={{ required: "Заполните поле" }}
