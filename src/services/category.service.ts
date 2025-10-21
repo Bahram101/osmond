@@ -12,11 +12,16 @@ export const CategoryService = {
   },
 
   async getAll() {
-    const res = await request<ICategory[]>({
-      url: "/categories",
+    return await request({
+      url: "/categories?type=flat",
       method: "GET",
     });
-    console.log('res',res)
-    return res;
+  },
+
+  async getTree() {
+    return await request({
+      url: "/categories?type=tree",
+      method: "GET",
+    });
   },
 };

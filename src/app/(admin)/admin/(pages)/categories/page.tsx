@@ -1,24 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import Table from "rc-table";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import Button from "../../components/ui/button/Button";
 import { useGetCategories } from "@/hooks/category/useCategories";
-import {
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import Loader from "@/components/shared/Loader";
 
 const Categories = () => {
   const { categories, isFetchingCategories } = useGetCategories();
-  const [cats, setCats] = useState([]);
 
   const columns = [
     {
@@ -29,16 +20,21 @@ const Categories = () => {
     },
     {
       title: "Parent",
-      dataIndex: "parentId",
-      key: "parentId",
+      dataIndex: "parent.name",
+      key: "parent.name",
       width: 100,
+      render: (_: any, record: any) => record.parent?.name || "—",
     },
 
     {
       title: "Operations",
       dataIndex: "",
       key: "operations",
-      render: () => <a href="#">Delete</a>,
+      render: () => (
+        <Button variant="danger" size="xs">
+          Удалить
+        </Button>
+      ),
     },
   ];
 
@@ -55,12 +51,19 @@ const Categories = () => {
             </Button>
           </Link>
         </div>
-
-        <Table
-          columns={columns}
-          data={categories}
-          rowKey={(record) => record.id}
-        />
+        {isFetchingCategories ? (
+          <Loader />
+        ) : (
+          <div className="overflow-x-auto">
+            <Table
+              columns={columns}
+              data={categories}
+              tableLayout="fixed"
+              rowKey={(record) => record.id}
+              style={{ width: "100%", minWidth: "1000px" }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
