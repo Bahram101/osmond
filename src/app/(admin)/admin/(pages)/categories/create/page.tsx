@@ -27,13 +27,13 @@ const CategoryCreatePage = () => {
   });
 
   const categoryOptions = categories?.map((cat: ICategory) => ({
-    value: cat.id,
+    value: cat.id ?? "",
     label: cat.name,
   }));
 
   const onSubmit: SubmitHandler<ICategory> = (data) => {
     createCategory(data);
-    toast.success("Категория успешно создана", { className: "bg-green-100 text-green-700" });
+    toast.success("Категория успешно создана");
   };
 
   return (

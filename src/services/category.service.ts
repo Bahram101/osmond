@@ -1,8 +1,9 @@
+import { DeleteResponse } from "@/hooks/category/useCategories";
 import { request } from "@/lib/api/request.api";
 import { ICategory } from "@/types/category.interface";
 
 export const CategoryService = {
-  async createCategory(data: ICategory) {
+  async createCategory(data: ICategory): Promise<ICategory> {
     const res = await request<ICategory>({
       url: "/categories/create",
       method: "POST",
@@ -11,8 +12,8 @@ export const CategoryService = {
     return res;
   },
 
-  async getAll() {
-    return await request({
+  async getAll():Promise<ICategory[]> {
+    return await request<ICategory[]>({
       url: "/categories?type=flat",
       method: "GET",
     });
@@ -24,4 +25,11 @@ export const CategoryService = {
       method: "GET",
     });
   },
+
+  async deleteCategory(id: string): Promise<DeleteResponse>{
+    return await request<DeleteResponse>({
+      url: `/categories/${id}`,
+      method: "DELETE"
+    })
+  }
 };

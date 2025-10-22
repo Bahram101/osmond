@@ -1,34 +1,62 @@
 "use client";
 import React from "react";
-import { Plus } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
-import Table from "rc-table";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import Button from "../../components/ui/button/Button";
-import { useGetCategories } from "@/hooks/category/useCategories";
+import {
+  useDeleteCategory,
+  useGetCategories,
+} from "@/hooks/category/useCategories";
 import Loader from "@/components/shared/Loader";
 import { DataTable } from "@/components/common/DataTable";
-import { createColumnHelper } from "@tanstack/react-table";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { ICategory } from "@/types/category.interface";
 
 const Categories = () => {
-  const { categories, isFetchingCategories } = useGetCategories();
+  const { categories, isFetchingCategories, refetch } = useGetCategories();
+  const { deleteCategory, isDeleting } = useDeleteCategory(refetch);
+
+  const handleDelete = (id: string) => {
+    if (confirm("Точно удалить категорию?")) {
+      deleteCategory(id);
+    }
+  };
 
   const columnHelper = createColumnHelper<ICategory>();
 
-  const columns = [
-    {
-      accessorKey: "name",
+  const columns: ColumnDef<ICategory, any>[] = [
+    columnHelper.accessor("name", {
       header: "Название",
-    },
-    columnHelper.accessor(row => row.parent?.name ?? "—", {
-      header: "Род. категория",
+    }),
+    columnHelper.accessor((row) => row.parent?.name ?? "—", {
       id: "parent.name",
-      size: 100,
-      cell: info => info.getValue(),
+      header: "Род. категория",
+    }),
+    columnHelper.display({
+      id: "actions",
+      header: "Действия",
+      size: 260,
+      cell: ({ row }) => (
+        <div className="flex justify-center gap-3">
+          <Button
+            variant="danger"
+            size="tiny"
+            onClick={() => handleDelete(row.original.id)}
+          >
+            <Trash2 className="size-4" />
+            Удалить
+          </Button>
+          <Link href={`/admin/categories/edit/${row.original.id}`}>
+            <Button variant="primary" size="tiny">
+              <Pencil className="size-4" />
+              Редактировать
+            </Button>
+          </Link>
+        </div>
+      ),
     }),
   ];
-
 
   return (
     <div className="col-span-12 xl:col-span-7">
@@ -43,18 +71,11 @@ const Categories = () => {
             </Button>
           </Link>
         </div>
+
         {isFetchingCategories ? (
           <Loader />
         ) : (
-          <div className="overflow-x-auto">
-            <DataTable
-              columns={columns}
-              data={categories}
-              tableLayout="fixed"
-              rowKey={(record: any) => record.id}
-              style={{ width: "100%", minWidth: "1000px" }}
-            />
-          </div>
+          <DataTable columns={columns} data={categories} />
         )}
       </div>
     </div>
