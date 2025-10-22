@@ -7,36 +7,28 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import Button from "../../components/ui/button/Button";
 import { useGetCategories } from "@/hooks/category/useCategories";
 import Loader from "@/components/shared/Loader";
+import { DataTable } from "@/components/common/DataTable";
+import { createColumnHelper } from "@tanstack/react-table";
+import { ICategory } from "@/types/category.interface";
 
 const Categories = () => {
   const { categories, isFetchingCategories } = useGetCategories();
 
+  const columnHelper = createColumnHelper<ICategory>();
+
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      width: 100,
+      accessorKey: "name",
+      header: "Название",
     },
-    {
-      title: "Parent",
-      dataIndex: "parent.name",
-      key: "parent.name",
-      width: 100,
-      render: (_: any, record: any) => record.parent?.name || "—",
-    },
-
-    {
-      title: "Operations",
-      dataIndex: "",
-      key: "operations",
-      render: () => (
-        <Button variant="danger" size="xs">
-          Удалить
-        </Button>
-      ),
-    },
+    columnHelper.accessor(row => row.parent?.name ?? "—", {
+      header: "Род. категория",
+      id: "parent.name",
+      size: 100,
+      cell: info => info.getValue(),
+    }),
   ];
+
 
   return (
     <div className="col-span-12 xl:col-span-7">
@@ -55,11 +47,11 @@ const Categories = () => {
           <Loader />
         ) : (
           <div className="overflow-x-auto">
-            <Table
+            <DataTable
               columns={columns}
               data={categories}
               tableLayout="fixed"
-              rowKey={(record) => record.id}
+              rowKey={(record: any) => record.id}
               style={{ width: "100%", minWidth: "1000px" }}
             />
           </div>
