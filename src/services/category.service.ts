@@ -31,5 +31,13 @@ export const CategoryService = {
       url: `/categories/${id}`,
       method: "DELETE"
     })
+  },
+
+  async updateCategory(id: string, data:ICategory): Promise<ICategory>{
+    return await request({
+      url: `/categories/${id}`,
+      method: 'PUT',
+      data
+    })
   }
 };

@@ -20,13 +20,8 @@ const Categories = () => {
 
   const handleDelete = async (id: string) => {
     if (confirm("Точно удалить категорию?")) {
-      // deleteCategory(id)
-      // setDeletingId(id)
-      try {
-        await deleteCategory(id);
-      } finally {
-        setDeletingId(id)
-      }
+      deleteCategory(id)
+      setDeletingId(id)
     }
   };
 
@@ -51,12 +46,12 @@ const Categories = () => {
             <Button
               variant="danger"
               size="tiny"
-              onClick={() => handleDelete(row.original.id)}
+              onClick={() => handleDelete(row.original.id!)}
             >
               {isDeleting && deletingId === row.original.id ? <Loader /> : <Trash2 className="size-4" />}
               Удалить
             </Button>
-            <Link href={`/admin/categories/edit/${row.original.id}`}>
+            <Link href={`/admin/categories/${row.original.id}`}>
               <Button variant="primary" size="tiny">
                 <Pencil className="size-4" />
                 Редактировать
