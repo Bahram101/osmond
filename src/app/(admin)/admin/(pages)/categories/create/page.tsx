@@ -72,7 +72,8 @@ const CategoryCreatePage = () => {
               variant="primary"
               onClick={handleSubmit(onSubmit)}
             >
-              {isCreatingCategory ? <Loader /> : "Создать"}
+              {isCreatingCategory ? <Loader /> : ""} 
+              Создать
             </Button>
           </div>
         </ComponentCard>

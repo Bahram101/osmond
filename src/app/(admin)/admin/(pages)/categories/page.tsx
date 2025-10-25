@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
@@ -16,10 +16,17 @@ import { ICategory } from "@/types/category.interface";
 const Categories = () => {
   const { categories, isFetchingCategories, refetch } = useGetCategories();
   const { deleteCategory, isDeleting } = useDeleteCategory(refetch);
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Точно удалить категорию?")) {
-      deleteCategory(id);
+      // deleteCategory(id)
+      // setDeletingId(id)
+      try {
+        await deleteCategory(id);
+      } finally {
+        setDeletingId(id)
+      }
     }
   };
 
@@ -37,24 +44,27 @@ const Categories = () => {
       id: "actions",
       header: "Действия",
       size: 260,
-      cell: ({ row }) => (
-        <div className="flex justify-center gap-3">
-          <Button
-            variant="danger"
-            size="tiny"
-            onClick={() => handleDelete(row.original.id)}
-          >
-            <Trash2 className="size-4" />
-            Удалить
-          </Button>
-          <Link href={`/admin/categories/edit/${row.original.id}`}>
-            <Button variant="primary" size="tiny">
-              <Pencil className="size-4" />
-              Редактировать
+      cell: ({ row }) => {
+
+        return (
+          <div className="flex justify-center gap-3">
+            <Button
+              variant="danger"
+              size="tiny"
+              onClick={() => handleDelete(row.original.id)}
+            >
+              {isDeleting && deletingId === row.original.id ? <Loader /> : <Trash2 className="size-4" />}
+              Удалить
             </Button>
-          </Link>
-        </div>
-      ),
+            <Link href={`/admin/categories/edit/${row.original.id}`}>
+              <Button variant="primary" size="tiny">
+                <Pencil className="size-4" />
+                Редактировать
+              </Button>
+            </Link>
+          </div>
+        )
+      },
     }),
   ];
 
