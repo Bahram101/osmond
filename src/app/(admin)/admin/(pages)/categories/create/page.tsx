@@ -32,6 +32,7 @@ const CategoryCreatePage = () => {
   }));
 
   const onSubmit: SubmitHandler<ICategory> = (data) => {
+    console.log('ddd',data)
     createCategory(data);
     toast.success("Категория успешно создана");
   };

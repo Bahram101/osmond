@@ -7,7 +7,7 @@ interface IParams {
   }
 }
 
-//api/categories/id
+//DELETE /api/categories/id
 export async function DELETE(
   req: Request,
   { params }: IParams
@@ -31,7 +31,25 @@ export async function DELETE(
   }
 }
 
-//api/categories/id
+// GET /api/categories/id
+export async function GET(_req: Request, { params }: IParams) {
+  try {
+    const { id } = params
+    const category = await prisma.category.findUnique({ where: { id } })
+    if (!category) {
+      return NextResponse.json({ message: 'Категория не найдена' }, { status: 404 })
+    }
+    return NextResponse.json(category)
+  } catch (e) {
+    return NextResponse.json({
+      message: 'Ошибка при получении категории'
+    }, {
+      status: 500
+    })
+  }
+}
+
+//PUT /api/categories/id
 export async function PUT(req: Request, { params }: IParams) {
   try {
     const { id } = params

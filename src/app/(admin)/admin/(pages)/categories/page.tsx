@@ -51,7 +51,7 @@ const Categories = () => {
               {isDeleting && deletingId === row.original.id ? <Loader /> : <Trash2 className="size-4" />}
               Удалить
             </Button>
-            <Link href={`/admin/categories/${row.original.id}`}>
+            <Link href={`/admin/categories/edit/${row.original.id}`}>
               <Button variant="primary" size="tiny">
                 <Pencil className="size-4" />
                 Редактировать

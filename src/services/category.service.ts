@@ -12,7 +12,15 @@ export const CategoryService = {
     return res;
   },
 
-  async getAll():Promise<ICategory[]> {
+  async getCategory(id: string) {
+    const res = await request({
+      url: `/categories/${id}`,
+      method: "GET",
+    })
+    return res
+  },
+
+  async getAll(): Promise<ICategory[]> {
     return await request<ICategory[]>({
       url: "/categories?type=flat",
       method: "GET",
@@ -26,14 +34,14 @@ export const CategoryService = {
     });
   },
 
-  async deleteCategory(id: string): Promise<DeleteResponse>{
+  async deleteCategory(id: string): Promise<DeleteResponse> {
     return await request<DeleteResponse>({
       url: `/categories/${id}`,
       method: "DELETE"
     })
   },
 
-  async updateCategory(id: string, data:ICategory): Promise<ICategory>{
+  async updateCategory(id: string, data: ICategory): Promise<ICategory> {
     return await request({
       url: `/categories/${id}`,
       method: 'PUT',

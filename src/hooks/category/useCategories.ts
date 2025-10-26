@@ -27,6 +27,15 @@ export const useCreateCategory = (onSuccess?: () => void) => {
   return { createCategory, isCreatingCategory };
 };
 
+export const useGetCategory = (id: string) => {
+  const { data: category, isPending: isLoadingCategory } = useQuery({
+    queryKey: ['get-category'],
+    queryFn: () => CategoryService.getCategory(id)
+  })
+
+  return { category, isLoadingCategory }
+}
+
 export const useGetCategories = () => {
   const {
     data: categories = [],
