@@ -26,12 +26,12 @@ export const useCreateCategory = (onSuccess?: () => void) => {
   return { createCategory, isCreatingCategory };
 };
 
-export const useGetCategory = (id: string) => {
-  const { data: category, isPending: isLoadingCategory } = useQuery({
-    queryKey: ['get-category'],
+export const useGetCategoryById = (id: string) => {
+  const { data: category, isPending: isFetchingCategory } = useQuery<ICategory>({
+    queryKey: ['get-category', id],
     queryFn: () => CategoryService.getCategory(id)
   })
-  return { category, isLoadingCategory }
+  return { category, isFetchingCategory }
 }
 
 export const useGetCategories = () => {
@@ -66,7 +66,7 @@ export const useDeleteCategory = (onSuccess?: () => void) => {
 };
 
 export const useUpdateCategory = (onSuccess?: () => void) => {
-  const { mutate: useUpdateCategory, isPending: isUpdatingCategory } = useMutation<ICategory, AxiosError, { id: string, data: ICategoryUpdateDto }>({
+  const { mutate: updateCategory, isPending: isUpdatingCategory } = useMutation<ICategory, AxiosError, { id: string, data: ICategoryUpdateDto }>({
     mutationKey: ['updateCategory'],
     mutationFn: ({ id, data }) => CategoryService.updateCategory(id, data),
     onSuccess: () => {
@@ -76,5 +76,5 @@ export const useUpdateCategory = (onSuccess?: () => void) => {
       console.log('eee', error)
     }
   })
-  return { useUpdateCategory, isUpdatingCategory }
+  return { updateCategory, isUpdatingCategory }
 }

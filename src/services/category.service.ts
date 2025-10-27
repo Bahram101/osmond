@@ -12,8 +12,8 @@ export const CategoryService = {
     return res;
   },
 
-  async getCategory(id: string) {
-    const res = await request({
+  async getCategory(id: string): Promise<ICategory> {
+    const res = await request<ICategory>({
       url: `/categories/${id}`,
       method: "GET",
     })

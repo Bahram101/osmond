@@ -6,12 +6,11 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import ControlledSelect from '@/components/shared/select/Select'
 import Button from '../../../components/ui/button/Button'
 import Loader from '@/components/shared/Loader'
-import { useCreateCategory } from '@/hooks/category/useCategories'
 import { toast } from 'sonner'
 
 
 interface CategoryFormProps {
-  defaultValues?: ICategoryCreateDto | ICategoryUpdateDto;
+  defaultValues?: ICategory | undefined
   categories: ICategory[];
   isFetchingCategories?: boolean;
   onSubmit: SubmitHandler<ICategoryCreateDto>;
@@ -42,7 +41,7 @@ const CategoryForm: FC<CategoryFormProps> = ({
   const handleFormSubmit: SubmitHandler<ICategoryCreateDto> = (data) => {
     onSubmit(data);
     if(clearOnSubmit) reset()
-    toast.success("Категория успешно создана");
+    // toast.success("Категория успешно создана");
   };
 
   return (
