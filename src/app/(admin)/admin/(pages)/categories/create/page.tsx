@@ -7,22 +7,19 @@ import Field from "@/components/shared/field/Field";
 import ControlledSelect from "@/components/shared/select/Select";
 import Button from "../../../components/ui/button/Button";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { ICategory } from "@/types/category.interface";
+import { ICategory, ICategoryCreateDto } from "@/types/category.interface";
 import {
   useCreateCategory,
   useGetCategories,
 } from "@/hooks/category/useCategories";
-import Loader from "@/components/shared/Loader";
 import { toast } from "sonner";
+import CategoryForm from "../components/CategoryForm";
 
 const CategoryCreatePage = () => {
-  const { control, handleSubmit, reset } = useForm<ICategory>({
-    mode: "all",
-  });
 
   const { categories, isFetchingCategories, refetch } = useGetCategories();
   const { createCategory, isCreatingCategory } = useCreateCategory(() => {
-    reset();
+    // reset();
     refetch();
   });
 
@@ -31,52 +28,31 @@ const CategoryCreatePage = () => {
     label: cat.name,
   }));
 
-  const onSubmit: SubmitHandler<ICategory> = (data) => {
-    console.log('ddd',data)
-    createCategory(data);
-    toast.success("Категория успешно создана");
-  };
+  // const onSubmit: SubmitHandler<ICategoryCreateDto> = (data) => {
+  //   createCategory(data);
+  //   toast.success("Категория успешно создана");
+  // };
 
   return (
     <>
-      <PageBreadcrumb pageTitle="Товары" />
+      <PageBreadcrumb
+        items={[
+          { label: "Home", href: "/admin" },
+          { label: "Категории", href: "/admin/categories" },
+          { label: "Создание категорию" },
+        ]}
+      />
+
       <div className="grid xl:grid-cols-2">
         <ComponentCard title="Создание товара">
-          <div>
-            <Label htmlFor="name">Название</Label>
-            <Field<ICategory>
-              name="name"
-              control={control}
-              rules={{
-                required: "Заполните поле",
-                minLength: {
-                  value: 3,
-                  message: "Минимум 3 символа",
-                },
-              }}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="categoryId">Выберите категорию</Label>
-            <ControlledSelect<ICategory, string>
-              name="parentId"
-              control={control}
-              options={categoryOptions || []}
-              placeholder="Выберите категорию"
-            />
-          </div>
-
-          <div className="flex justify-end">
-            <Button
-              size="xs"
-              variant="primary"
-              onClick={handleSubmit(onSubmit)}
-            >
-              {isCreatingCategory ? <Loader /> : ""} 
-              Создать
-            </Button>
-          </div>
+          <CategoryForm 
+            isFetchingCategories={isFetchingCategories}
+            categories={categories || []}
+            onSubmit={(data) => createCategory(data)}
+            isSubmitting={isCreatingCategory}
+            submitText='Создать'
+            clearOnSubmit
+          />
         </ComponentCard>
       </div>
     </>

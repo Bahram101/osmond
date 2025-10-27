@@ -33,7 +33,13 @@ const ProductCreatePage = () => {
 
   return (
     <>
-      <PageBreadcrumb pageTitle="Товары" />
+      <PageBreadcrumb
+        items={[
+          { label: "Home", href: "/admin" },
+          { label: "Товары", href: "/admin/products" },
+          { label: "Создание товара" },
+        ]}
+      />
       <div className="grid xl:grid-cols-2">
         <ComponentCard title="Создание товара">
           <div>

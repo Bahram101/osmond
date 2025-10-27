@@ -1,9 +1,9 @@
 import { DeleteResponse } from "@/hooks/category/useCategories";
 import { request } from "@/lib/api/request.api";
-import { ICategory } from "@/types/category.interface";
+import { ICategory, ICategoryCreateDto, ICategoryUpdateDto } from "@/types/category.interface";
 
 export const CategoryService = {
-  async createCategory(data: ICategory): Promise<ICategory> {
+  async createCategory(data: ICategoryCreateDto): Promise<ICategory> {
     const res = await request<ICategory>({
       url: "/categories/create",
       method: "POST",
@@ -41,7 +41,7 @@ export const CategoryService = {
     })
   },
 
-  async updateCategory(id: string, data: ICategory): Promise<ICategory> {
+  async updateCategory(id: string, data: ICategoryUpdateDto): Promise<ICategory> {
     return await request({
       url: `/categories/${id}`,
       method: 'PUT',

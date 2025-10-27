@@ -1,5 +1,5 @@
 import { CategoryService } from "@/services/category.service";
-import { ICategory } from "@/types/category.interface";
+import { ICategory, ICategoryCreateDto, ICategoryUpdateDto } from "@/types/category.interface";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
@@ -12,7 +12,7 @@ export const useCreateCategory = (onSuccess?: () => void) => {
   const { mutate: createCategory, isPending: isCreatingCategory } = useMutation<
     ICategory,
     AxiosError,
-    ICategory
+    ICategoryCreateDto
   >({
     mutationKey: ["createCategory"],
     mutationFn: (formData) => CategoryService.createCategory(formData),
@@ -23,7 +23,6 @@ export const useCreateCategory = (onSuccess?: () => void) => {
       console.log("error", error);
     },
   });
-
   return { createCategory, isCreatingCategory };
 };
 
@@ -32,7 +31,6 @@ export const useGetCategory = (id: string) => {
     queryKey: ['get-category'],
     queryFn: () => CategoryService.getCategory(id)
   })
-
   return { category, isLoadingCategory }
 }
 
@@ -45,7 +43,6 @@ export const useGetCategories = () => {
     queryKey: ["get-categories"],
     queryFn: () => CategoryService.getAll(),
   });
-
   return { categories, isFetchingCategories, refetch };
 };
 
@@ -69,7 +66,7 @@ export const useDeleteCategory = (onSuccess?: () => void) => {
 };
 
 export const useUpdateCategory = (onSuccess?: () => void) => {
-  const { mutate: useUpdateCategory, isPending: isUpdatingCategory } = useMutation<ICategory, AxiosError, { id: string, data: ICategory }>({
+  const { mutate: useUpdateCategory, isPending: isUpdatingCategory } = useMutation<ICategory, AxiosError, { id: string, data: ICategoryUpdateDto }>({
     mutationKey: ['updateCategory'],
     mutationFn: ({ id, data }) => CategoryService.updateCategory(id, data),
     onSuccess: () => {
@@ -79,6 +76,5 @@ export const useUpdateCategory = (onSuccess?: () => void) => {
       console.log('eee', error)
     }
   })
-
   return { useUpdateCategory, isUpdatingCategory }
 }
