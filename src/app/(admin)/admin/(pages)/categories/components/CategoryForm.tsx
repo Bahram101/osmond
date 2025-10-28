@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import Label from '../../../components/form/Label'
 import Field from '@/components/shared/field/Field'
 import { ICategory, ICategoryCreateDto, ICategoryUpdateDto } from '@/types/category.interface'
@@ -33,6 +33,10 @@ const CategoryForm: FC<CategoryFormProps> = ({
     defaultValues
   })
 
+  useEffect(() => {
+    if (defaultValues) reset(defaultValues);
+  }, [defaultValues]);
+
   const categoryOptions = categories.map((cat) => ({
     value: cat.id ?? "",
     label: cat.name,
@@ -40,7 +44,7 @@ const CategoryForm: FC<CategoryFormProps> = ({
 
   const handleFormSubmit: SubmitHandler<ICategoryCreateDto> = (data) => {
     onSubmit(data);
-    if(clearOnSubmit) reset()
+    if (clearOnSubmit) reset()
     // toast.success("Категория успешно создана");
   };
 

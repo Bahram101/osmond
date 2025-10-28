@@ -5,18 +5,17 @@ import PageBreadcrumb from '@/app/(admin)/admin/components/common/PageBreadCrumb
 import ComponentCard from '@/app/(admin)/admin/components/common/ComponentCard'
 import CategoryForm from '../../components/CategoryForm'
 import { useGetCategories, useGetCategoryById, useUpdateCategory } from '@/hooks/category/useCategories'
-import { toast } from 'sonner'
 import Loader from '@/components/shared/Loader'
 import { ICategory } from '@/types/category.interface'
+import { useRouter } from 'next/navigation'
 
 const CategoryEditPage = () => {
+  const router = useRouter()
   const { id } = useParams()
 
-  const { categories, isFetchingCategories, refetch } = useGetCategories();
+  const { categories, isFetchingCategories } = useGetCategories();
   const { category, isFetchingCategory } = useGetCategoryById(id as string);
-  const { updateCategory, isUpdatingCategory } = useUpdateCategory(() => {
-    toast.success('Категория успешно обновлена')
-  })
+  const { updateCategory, isUpdatingCategory } = useUpdateCategory()
 
   if (isFetchingCategory) return <Loader />;
 
