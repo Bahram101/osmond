@@ -1,35 +1,19 @@
 "use client";
 import React from "react";
 import ComponentCard from "../../../components/common/ComponentCard";
-import Label from "../../../components/form/Label";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
-import Field from "@/components/shared/field/Field";
-import { SubmitHandler, useForm } from "react-hook-form";
-import Button from "../../../components/ui/button/Button";
-import { IProduct } from "@/types/product.interface";
-import ControlledSelect from "@/components/shared/select/Select";
-
-const categoryOptions = [
-  { value: "light", label: "Light" },
-  { value: "dark", label: "Dark" },
-  { value: "system", label: "System" },
-];
-const availableOptions = [
-  { value: true, label: "Да" },
-  { value: false, label: "Нет" },
-];
+import ProductForm from "../components/ProductForm";
+import { useGetCategories } from "@/hooks/category/useCategories";
+import { useCreateProduct } from "@/hooks/product/useProducts"; 
 
 const ProductCreatePage = () => {
-  const { control, handleSubmit } = useForm<IProduct>({
-    mode: "all",
-    defaultValues: {
-      availability: true,
-    },
-  });
+  const { categories, isFetchingCategories } = useGetCategories();
+  const { createProduct, isCreatingProduct } = useCreateProduct();
 
-  const onSubmit: SubmitHandler<IProduct> = (data) => {
-    // console.log(data);
-  };
+  const availableOptions = [
+    { value: true, label: "Да" },
+    { value: false, label: "Нет" },
+  ];
 
   return (
     <>
@@ -42,74 +26,15 @@ const ProductCreatePage = () => {
       />
       <div className="grid xl:grid-cols-2">
         <ComponentCard title="Создание товара">
-          <div>
-            <Label htmlFor="name">Название</Label>
-            <Field<IProduct>
-              name="name"
-              control={control}
-              rules={{
-                required: "Заполните поле",
-                minLength: {
-                  value: 3,
-                  message: "Минимум 3 символа",
-                },
-              }}
-            />
-          </div>
-          <div>
-            <Label htmlFor="description">Описание</Label>
-            <Field<IProduct>
-              name="description"
-              control={control}
-              rules={{
-                // required: "Заполните поле",
-                minLength: {
-                  value: 3,
-                  message: "Минимум 3 символа",
-                },
-              }}
-            />
-          </div>
-          <div>
-            <Label htmlFor="price">Цена</Label>
-            <Field<IProduct>
-              name="price"
-              control={control}
-              rules={{
-                required: "Заполните поле",
-              }}
-            />
-          </div>
-          <div>
-            <Label htmlFor="categoryId">Категория</Label>
-            <ControlledSelect<IProduct, string>
-              name="categoryId"
-              control={control}
-              rules={{ required: "Заполните поле" }}
-              options={categoryOptions}
-              placeholder="Выберите котегорию"
-            />
-          </div>
-          <div>
-            <Label htmlFor="categoryId">Опубликовать</Label>
-            <ControlledSelect<IProduct, boolean>
-              name="availability"
-              control={control}
-              options={availableOptions || []}
-              placeholder="Выберите доступность"
-              // rules={{ required: "Заполните поле" }}
-            />
-          </div>
-
-          <div className="flex justify-end">
-            <Button
-              size="xs"
-              variant="primary"
-              onClick={handleSubmit(onSubmit)}
-            >
-              Создать
-            </Button>
-          </div>
+          <ProductForm
+            submitText="Создать"
+            isFetchingCategories={isFetchingCategories}
+            categories={categories || []}
+            availableOptions={availableOptions || []}
+            onSubmit={(data) => createProduct(data)}
+            isSubmitting={isCreatingProduct}
+            clearOnSubmit={true}
+          />
         </ComponentCard>
       </div>
     </>

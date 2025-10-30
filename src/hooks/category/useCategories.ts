@@ -1,5 +1,9 @@
 import { CategoryService } from "@/services/category.service";
-import { ICategory, ICategoryCreateDto, ICategoryUpdateDto } from "@/types/category.interface";
+import {
+  ICategory,
+  ICategoryCreateDto,
+  ICategoryUpdateDto,
+} from "@/types/category.interface";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -9,7 +13,8 @@ export interface DeleteResponse {
   message: string;
 }
 
-export const useCreateCategory = (onSuccess?: () => void) => {
+export const useCreateCategory = () => {
+  const queryClient = useQueryClient();
   const { mutate: createCategory, isPending: isCreatingCategory } = useMutation<
     ICategory,
     AxiosError,
@@ -18,7 +23,8 @@ export const useCreateCategory = (onSuccess?: () => void) => {
     mutationKey: ["createCategory"],
     mutationFn: (formData) => CategoryService.createCategory(formData),
     onSuccess: () => {
-      onSuccess?.();
+      queryClient.invalidateQueries({ queryKey: ["get-categories"] });
+      toast.success("Категория успешно создана");
     },
     onError(error) {
       console.log("error", error);
@@ -28,12 +34,16 @@ export const useCreateCategory = (onSuccess?: () => void) => {
 };
 
 export const useGetCategoryById = (id: string) => {
-  const { data: category, isPending: isFetchingCategory, refetch: refetchCategory } = useQuery<ICategory>({
-    queryKey: ['get-category', id],
-    queryFn: () => CategoryService.getCategory(id)
-  })
-  return { category, isFetchingCategory, refetchCategory }
-}
+  const {
+    data: category,
+    isPending: isFetchingCategory,
+    refetch: refetchCategory,
+  } = useQuery<ICategory>({
+    queryKey: ["get-category", id],
+    queryFn: () => CategoryService.getCategory(id),
+  });
+  return { category, isFetchingCategory, refetchCategory };
+};
 
 export const useGetCategories = () => {
   const {
@@ -66,22 +76,26 @@ export const useDeleteCategory = (onSuccess?: () => void) => {
   return { deleteCategory, isDeleting };
 };
 
-export const useUpdateCategory = (onSuccess?: () => void) => {
-  const queryClient = useQueryClient()
-  const router = useRouter()
+export const useUpdateCategory = () => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
 
-  const { mutate: updateCategory, isPending: isUpdatingCategory } = useMutation<ICategory, AxiosError, { id: string, data: ICategoryUpdateDto }>({
-    mutationKey: ['updateCategory'],
+  const { mutate: updateCategory, isPending: isUpdatingCategory } = useMutation<
+    ICategory,
+    AxiosError,
+    { id: string; data: ICategoryUpdateDto }
+  >({
+    mutationKey: ["updateCategory"],
     mutationFn: ({ id, data }) => CategoryService.updateCategory(id, data),
     onSuccess: (updatedCategory, { id }) => {
-      queryClient.setQueryData(['get-category', id], updatedCategory)
-      queryClient.invalidateQueries({ queryKey: ['get-categories'] })
-      toast.success('Категория успешно обновлена')
-      router.push('/admin/categories')
+      queryClient.setQueryData(["get-category", id], updatedCategory);
+      queryClient.invalidateQueries({ queryKey: ["get-categories"] });
+      toast.success("Категория успешно обновлена");
+      router.push("/admin/categories");
     },
     onError(error) {
-      console.log('eee', error)
-    }
-  })
-  return { updateCategory, isUpdatingCategory }
-}
+      console.log("eee", error);
+    },
+  });
+  return { updateCategory, isUpdatingCategory };
+};

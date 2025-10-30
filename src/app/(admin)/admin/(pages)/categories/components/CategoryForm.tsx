@@ -1,22 +1,22 @@
-import React, { FC, useEffect } from 'react'
-import Label from '../../../components/form/Label'
-import Field from '@/components/shared/field/Field'
-import { ICategory, ICategoryCreateDto, ICategoryUpdateDto } from '@/types/category.interface'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import ControlledSelect from '@/components/shared/select/Select'
-import Button from '../../../components/ui/button/Button'
-import Loader from '@/components/shared/Loader'
-import { toast } from 'sonner'
-
+import React, { FC, useEffect } from "react";
+import Label from "../../../components/form/Label";
+import Field from "@/components/shared/field/Field";
+import {
+  ICategory,
+  ICategoryCreateDto, 
+} from "@/types/category.interface";
+import { SubmitHandler, useForm } from "react-hook-form";
+import ControlledSelect from "@/components/shared/select/Select";
+import Button from "../../../components/ui/button/Button";
+import Loader from "@/components/shared/Loader"; 
 
 interface CategoryFormProps {
-  defaultValues?: ICategory | undefined
+  defaultValues?: ICategory | undefined;
   categories: ICategory[];
-  isFetchingCategories?: boolean;
-  onSubmit: SubmitHandler<ICategoryCreateDto>;
-  isSubmitting?: boolean;
   submitText?: string;
-  clearOnSubmit?: boolean;
+  isFetchingCategories?: boolean; 
+  isSubmitting?: boolean;
+  onSubmit: SubmitHandler<ICategoryCreateDto>;
 }
 
 const CategoryForm: FC<CategoryFormProps> = ({
@@ -24,14 +24,13 @@ const CategoryForm: FC<CategoryFormProps> = ({
   categories,
   isFetchingCategories,
   onSubmit,
-  isSubmitting,
-  clearOnSubmit,
-  submitText = "Сохранить", }) => {
-
+  isSubmitting, 
+  submitText = "Сохранить",
+}) => {
   const { control, handleSubmit, reset } = useForm<ICategoryCreateDto>({
-    mode: 'all',
-    defaultValues
-  })
+    mode: "all",
+    defaultValues,
+  });
 
   useEffect(() => {
     if (defaultValues) reset(defaultValues);
@@ -43,13 +42,15 @@ const CategoryForm: FC<CategoryFormProps> = ({
   }));
 
   const handleFormSubmit: SubmitHandler<ICategoryCreateDto> = (data) => {
-    onSubmit(data);
-    if (clearOnSubmit) reset()
-    // toast.success("Категория успешно создана");
+    onSubmit(data); 
+    reset(); 
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className='flex flex-col gap-3'>
+    <form
+      onSubmit={handleSubmit(handleFormSubmit)}
+      className="flex flex-col gap-3"
+    >
       <div>
         <Label htmlFor="name">Название</Label>
         <Field<ICategoryCreateDto>
@@ -66,7 +67,7 @@ const CategoryForm: FC<CategoryFormProps> = ({
       </div>
 
       <div>
-        <Label htmlFor="categoryId">Родителькая категория</Label>
+        <Label htmlFor="categoryId">Родительская категория</Label>
         {isFetchingCategories ? (
           <Loader />
         ) : (
@@ -80,17 +81,13 @@ const CategoryForm: FC<CategoryFormProps> = ({
       </div>
 
       <div className="flex justify-end">
-        <Button
-          size="xs"
-          variant="primary"
-          disabled={isSubmitting}
-        >
+        <Button size="xs" variant="primary" disabled={isSubmitting}>
           {isSubmitting ? <Loader /> : ""}
           {submitText}
         </Button>
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default CategoryForm
+export default CategoryForm;

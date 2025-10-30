@@ -1,5 +1,11 @@
 import React from "react";
-import { Control, Controller, FieldPath, FieldValues, RegisterOptions } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldPath,
+  FieldValues,
+  RegisterOptions,
+} from "react-hook-form";
 import {
   Select,
   SelectContent,
@@ -17,7 +23,7 @@ export interface ControlledSelectOption<T> {
 interface ControlledSelectProps<T extends FieldValues, TValue> {
   name: FieldPath<T>;
   control: Control<T>;
-  rules?: RegisterOptions<T> ;
+  rules?: RegisterOptions<T>;
   className?: string;
   options: ControlledSelectOption<TValue>[];
   placeholder?: string;
@@ -28,26 +34,36 @@ export function ControlledSelect<T extends FieldValues, TValue>({
   control,
   rules,
   options,
-  placeholder
+  placeholder,
 }: ControlledSelectProps<T, TValue>) {
-  
   return (
     <Controller
       name={name}
       control={control}
       rules={rules}
-      render={({
-        field: { value, onChange },
-        fieldState: { error },
-      }) => (
+      render={({ field: { value, onChange }, fieldState: { error } }) => (
         <div>
-          <Select value={value ?? ""} onValueChange={onChange}>
+          <Select
+            value={value !== undefined ? String(value) : ""}
+            onValueChange={(val) => {
+              // Преобразуем обратно к boolean, если значения true/false
+    
+              if (val === "true" || val === "false") {
+                onChange(val === "true");
+              } else {
+                onChange(val);
+              }
+            }}
+          >
             <SelectTrigger className={cn("w-full", error && "border-red-400")}>
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>
               {options.map((option) => (
-                <SelectItem key={String(option.value)} value={String(option.value)}>
+                <SelectItem
+                  key={String(option.value)}
+                  value={String(option.value)}
+                >
                   {option.label}
                 </SelectItem>
               ))}

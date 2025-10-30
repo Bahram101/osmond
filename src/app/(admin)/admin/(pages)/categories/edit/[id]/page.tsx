@@ -6,11 +6,9 @@ import ComponentCard from '@/app/(admin)/admin/components/common/ComponentCard'
 import CategoryForm from '../../components/CategoryForm'
 import { useGetCategories, useGetCategoryById, useUpdateCategory } from '@/hooks/category/useCategories'
 import Loader from '@/components/shared/Loader'
-import { ICategory } from '@/types/category.interface'
-import { useRouter } from 'next/navigation'
+import { ICategory } from '@/types/category.interface' 
 
-const CategoryEditPage = () => {
-  const router = useRouter()
+const CategoryEditPage = () => { 
   const { id } = useParams()
 
   const { categories, isFetchingCategories } = useGetCategories();
@@ -37,8 +35,7 @@ const CategoryEditPage = () => {
             categories={categories || []}
             onSubmit={(data) => updateCategory({ id: id as string, data })}
             isSubmitting={isUpdatingCategory}
-            submitText='Создать'
-            clearOnSubmit
+            submitText='Изменить' 
           />
         </ComponentCard>
       </div>

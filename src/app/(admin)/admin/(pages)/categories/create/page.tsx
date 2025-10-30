@@ -6,16 +6,11 @@ import {
   useCreateCategory,
   useGetCategories,
 } from "@/hooks/category/useCategories";
-import CategoryForm from "../components/CategoryForm";
-import { toast } from "sonner";
+import CategoryForm from "../components/CategoryForm"; 
 
 const CategoryCreatePage = () => {
-
-  const { categories, isFetchingCategories, refetch } = useGetCategories();
-  const { createCategory, isCreatingCategory } = useCreateCategory(() => {
-    refetch();
-    toast.success('Категория успешно обновлена')
-  });
+  const { categories, isFetchingCategories } = useGetCategories();
+  const { createCategory, isCreatingCategory } = useCreateCategory();
 
   return (
     <>
@@ -30,12 +25,11 @@ const CategoryCreatePage = () => {
       <div className="grid xl:grid-cols-2">
         <ComponentCard title="Создание товара">
           <CategoryForm
+            submitText='Создать' 
             isFetchingCategories={isFetchingCategories}
             categories={categories || []}
             onSubmit={(data) => createCategory(data)}
             isSubmitting={isCreatingCategory}
-            submitText='Создать'
-            clearOnSubmit
           />
         </ComponentCard>
       </div>
