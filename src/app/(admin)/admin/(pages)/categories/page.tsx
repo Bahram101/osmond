@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
-import PageBreadcrumb from "../../components/common/PageBreadCrumb";
+import BreadCrumb from "../../components/common/BreadCrumb";
 import Button from "../../components/ui/button/Button";
 import {
   useDeleteCategory,
@@ -14,14 +14,14 @@ import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { ICategory } from "@/types/category.interface";
 
 const Categories = () => {
-  const { categories, isFetchingCategories, refetch } = useGetCategories();
-  const { deleteCategory, isDeleting } = useDeleteCategory(refetch);
-  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const { categories, isFetchingCategories} = useGetCategories();
+  const { deleteCategory, isDeleting } = useDeleteCategory();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleDelete = async (id: string) => {
     if (confirm("Точно удалить категорию?")) {
-      deleteCategory(id)
-      setDeletingId(id)
+      deleteCategory(id);
+      setDeletingId(id);
     }
   };
 
@@ -37,10 +37,9 @@ const Categories = () => {
     }),
     columnHelper.display({
       id: "actions",
-      header: "Действия",
+      header: "",
       size: 260,
       cell: ({ row }) => {
-
         return (
           <div className="flex justify-center gap-3">
             <Button
@@ -48,7 +47,11 @@ const Categories = () => {
               size="tiny"
               onClick={() => handleDelete(row.original.id!)}
             >
-              {isDeleting && deletingId === row.original.id ? <Loader /> : <Trash2 className="size-4" />}
+              {isDeleting && deletingId === row.original.id ? (
+                <Loader />
+              ) : (
+                <Trash2 className="size-4" />
+              )}
               Удалить
             </Button>
             <Link href={`/admin/categories/edit/${row.original.id}`}>
@@ -58,18 +61,15 @@ const Categories = () => {
               </Button>
             </Link>
           </div>
-        )
+        );
       },
     }),
   ];
 
   return (
     <div className="col-span-12 xl:col-span-7">
-      <PageBreadcrumb
-        items={[
-          { label: "Home", href: "/admin" },
-          { label: "Категория" },
-        ]}
+      <BreadCrumb
+        items={[{ label: "Home", href: "/admin" }, { label: "Категория" }]}
       />
 
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">

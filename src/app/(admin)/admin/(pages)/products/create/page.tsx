@@ -1,23 +1,18 @@
 "use client";
 import React from "react";
 import ComponentCard from "../../../components/common/ComponentCard";
-import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
+import BreadCrumb from "../../../components/common/BreadCrumb";
 import ProductForm from "../components/ProductForm";
 import { useGetCategories } from "@/hooks/category/useCategories";
-import { useCreateProduct } from "@/hooks/product/useProducts"; 
+import { useCreateProduct } from "@/hooks/product/useProducts";
 
 const ProductCreatePage = () => {
   const { categories, isFetchingCategories } = useGetCategories();
   const { createProduct, isCreatingProduct } = useCreateProduct();
 
-  const availableOptions = [
-    { value: true, label: "Да" },
-    { value: false, label: "Нет" },
-  ];
-
   return (
     <>
-      <PageBreadcrumb
+      <BreadCrumb
         items={[
           { label: "Home", href: "/admin" },
           { label: "Товары", href: "/admin/products" },
@@ -30,7 +25,6 @@ const ProductCreatePage = () => {
             submitText="Создать"
             isFetchingCategories={isFetchingCategories}
             categories={categories || []}
-            availableOptions={availableOptions || []}
             onSubmit={(data) => createProduct(data)}
             isSubmitting={isCreatingProduct}
             clearOnSubmit={true}

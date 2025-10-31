@@ -1,8 +1,8 @@
 import { CategoryService } from "@/services/category.service";
 import {
   ICategory,
-  ICategoryCreateDto,
-  ICategoryUpdateDto,
+  CategoryCreateDTO,
+  CategoryUpdateDTO,
 } from "@/types/category.interface";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -18,7 +18,7 @@ export const useCreateCategory = () => {
   const { mutate: createCategory, isPending: isCreatingCategory } = useMutation<
     ICategory,
     AxiosError,
-    ICategoryCreateDto
+    CategoryCreateDTO
   >({
     mutationKey: ["createCategory"],
     mutationFn: (formData) => CategoryService.createCategory(formData),
@@ -34,30 +34,25 @@ export const useCreateCategory = () => {
 };
 
 export const useGetCategoryById = (id: string) => {
-  const {
-    data: category,
-    isPending: isFetchingCategory,
-    refetch: refetchCategory,
-  } = useQuery<ICategory>({
-    queryKey: ["get-category", id],
-    queryFn: () => CategoryService.getCategory(id),
-  });
-  return { category, isFetchingCategory, refetchCategory };
+  const { data: category, isPending: isFetchingCategory } = useQuery<ICategory>(
+    {
+      queryKey: ["get-category", id],
+      queryFn: () => CategoryService.getCategory(id),
+    }
+  );
+  return { category, isFetchingCategory };
 };
 
 export const useGetCategories = () => {
-  const {
-    data: categories = [],
-    isPending: isFetchingCategories,
-    refetch,
-  } = useQuery({
+  const { data: categories = [], isPending: isFetchingCategories } = useQuery({
     queryKey: ["get-categories"],
     queryFn: () => CategoryService.getAll(),
   });
-  return { categories, isFetchingCategories, refetch };
+  return { categories, isFetchingCategories };
 };
 
-export const useDeleteCategory = (onSuccess?: () => void) => {
+export const useDeleteCategory = () => {
+  const queryClient = useQueryClient();
   const { mutate: deleteCategory, isPending: isDeleting } = useMutation<
     DeleteResponse,
     AxiosError,
@@ -66,7 +61,7 @@ export const useDeleteCategory = (onSuccess?: () => void) => {
     mutationKey: ["delete-category"],
     mutationFn: (id) => CategoryService.deleteCategory(id),
     onSuccess: (data) => {
-      onSuccess?.();
+      queryClient.invalidateQueries({queryKey:["get-categories"]})
       toast.success(data.message);
     },
     onError: (error) => {
@@ -83,7 +78,7 @@ export const useUpdateCategory = () => {
   const { mutate: updateCategory, isPending: isUpdatingCategory } = useMutation<
     ICategory,
     AxiosError,
-    { id: string; data: ICategoryUpdateDto }
+    { id: string; data: CategoryUpdateDTO }
   >({
     mutationKey: ["updateCategory"],
     mutationFn: ({ id, data }) => CategoryService.updateCategory(id, data),

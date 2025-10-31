@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import { useParams } from 'next/navigation'
-import PageBreadcrumb from '@/app/(admin)/admin/components/common/PageBreadCrumb'
+import BreadCrumb from '@/app/(admin)/admin/components/common/BreadCrumb'
 import ComponentCard from '@/app/(admin)/admin/components/common/ComponentCard'
 import CategoryForm from '../../components/CategoryForm'
 import { useGetCategories, useGetCategoryById, useUpdateCategory } from '@/hooks/category/useCategories'
@@ -19,7 +19,7 @@ const CategoryEditPage = () => {
 
   return (
     <>
-      <PageBreadcrumb
+      <BreadCrumb
         items={[
           { label: "Home", href: "/admin" },
           { label: "Категории", href: "/admin/categories" },

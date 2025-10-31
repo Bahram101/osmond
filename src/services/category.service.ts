@@ -1,9 +1,13 @@
 import { DeleteResponse } from "@/hooks/category/useCategories";
 import { request } from "@/lib/api/request.api";
-import { ICategory, ICategoryCreateDto, ICategoryUpdateDto } from "@/types/category.interface";
+import {
+  ICategory,
+  CategoryCreateDTO,
+  CategoryUpdateDTO,
+} from "@/types/category.interface";
 
 export const CategoryService = {
-  async createCategory(data: ICategoryCreateDto): Promise<ICategory> {
+  async createCategory(data: CategoryCreateDTO): Promise<ICategory> {
     const res = await request<ICategory>({
       url: "/categories/create",
       method: "POST",
@@ -16,8 +20,8 @@ export const CategoryService = {
     const res = await request<ICategory>({
       url: `/categories/${id}`,
       method: "GET",
-    })
-    return res
+    });
+    return res;
   },
 
   async getAll(): Promise<ICategory[]> {
@@ -37,15 +41,18 @@ export const CategoryService = {
   async deleteCategory(id: string): Promise<DeleteResponse> {
     return await request<DeleteResponse>({
       url: `/categories/${id}`,
-      method: "DELETE"
-    })
+      method: "DELETE",
+    });
   },
 
-  async updateCategory(id: string, data: ICategoryUpdateDto): Promise<ICategory> {
+  async updateCategory(
+    id: string,
+    data: CategoryUpdateDTO
+  ): Promise<ICategory> {
     return await request({
       url: `/categories/${id}`,
-      method: 'PUT',
-      data
-    })
-  }
+      method: "PUT",
+      data,
+    });
+  },
 };

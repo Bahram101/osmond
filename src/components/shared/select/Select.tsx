@@ -46,8 +46,6 @@ export function ControlledSelect<T extends FieldValues, TValue>({
           <Select
             value={value !== undefined ? String(value) : ""}
             onValueChange={(val) => {
-              // Преобразуем обратно к boolean, если значения true/false
-    
               if (val === "true" || val === "false") {
                 onChange(val === "true");
               } else {

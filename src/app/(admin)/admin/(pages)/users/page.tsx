@@ -1,10 +1,10 @@
 import React from "react";
-import PageBreadcrumb from "../../components/common/PageBreadCrumb";
+import BreadCrumb from "../../components/common/BreadCrumb";
 
 const UsersPage = () => {
   return (
     <div className="col-span-12 xl:col-span-7">
-      <PageBreadcrumb
+      <BreadCrumb
         items={[{ label: "Home", href: "/admin" }, { label: "Пользователи" }]}
       />
     </div>

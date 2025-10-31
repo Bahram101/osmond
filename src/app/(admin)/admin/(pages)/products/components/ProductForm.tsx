@@ -2,39 +2,41 @@ import { ICategory } from "@/types/category.interface";
 import React, { FC } from "react";
 import Label from "../../../components/form/Label";
 import Field from "@/components/shared/field/Field";
-import { availableOptionsType, IProductCreateDto } from "@/types/product.interface";
+import { ProductCreateDTO } from "@/types/product.interface";
 import ControlledSelect from "@/components/shared/select/Select";
 import Button from "../../../components/ui/button/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Loader from "@/components/shared/Loader";
 
 interface ProductFormProps {
-  defaultValues?: Partial<IProductCreateDto>;
+  defaultValues?: Partial<ProductCreateDTO>;
   categories: ICategory[];
-  availableOptions: availableOptionsType[];
   submitText?: string;
   clearOnSubmit?: boolean;
   isFetchingCategories: boolean;
   isSubmitting?: boolean;
-  onSubmit: SubmitHandler<IProductCreateDto>;
+  onSubmit: SubmitHandler<ProductCreateDTO>;
 }
 
+const availableOptions = [
+  { value: true, label: "Да" },
+  { value: false, label: "Нет" },
+];
 
 const ProductForm: FC<ProductFormProps> = ({
   defaultValues,
   categories,
-  availableOptions,
   submitText,
   isFetchingCategories,
   isSubmitting,
   clearOnSubmit,
   onSubmit,
 }) => {
-  const { control, handleSubmit, reset } = useForm<IProductCreateDto>({
+  const { control, handleSubmit, reset } = useForm<ProductCreateDTO>({
     mode: "all",
     defaultValues: {
       ...defaultValues,
-      availability: true,
+      published: true,
     },
   });
 
@@ -43,7 +45,7 @@ const ProductForm: FC<ProductFormProps> = ({
     label: cat.name,
   }));
 
-  const handleFormSubmit: SubmitHandler<IProductCreateDto> = (data) => {
+  const handleFormSubmit: SubmitHandler<ProductCreateDTO> = (data) => {
     onSubmit(data);
     if (clearOnSubmit) reset();
   };
@@ -55,7 +57,7 @@ const ProductForm: FC<ProductFormProps> = ({
     >
       <div>
         <Label htmlFor="name">Название</Label>
-        <Field<IProductCreateDto>
+        <Field<ProductCreateDTO>
           name="name"
           control={control}
           rules={{
@@ -69,7 +71,7 @@ const ProductForm: FC<ProductFormProps> = ({
       </div>
       <div>
         <Label htmlFor="description">Описание</Label>
-        <Field<IProductCreateDto>
+        <Field<ProductCreateDTO>
           name="description"
           control={control}
           rules={{
@@ -82,7 +84,7 @@ const ProductForm: FC<ProductFormProps> = ({
       </div>
       <div>
         <Label htmlFor="price">Цена</Label>
-        <Field<IProductCreateDto>
+        <Field<ProductCreateDTO>
           name="price"
           type="number"
           control={control}
@@ -96,7 +98,7 @@ const ProductForm: FC<ProductFormProps> = ({
         {isFetchingCategories ? (
           <Loader />
         ) : (
-          <ControlledSelect<IProductCreateDto, string>
+          <ControlledSelect<ProductCreateDTO, string>
             name="categoryId"
             control={control}
             rules={{ required: "Заполните поле" }}
@@ -106,9 +108,9 @@ const ProductForm: FC<ProductFormProps> = ({
         )}
       </div>
       <div>
-        <Label htmlFor="availability">Опубликовать</Label>
-        <ControlledSelect<IProductCreateDto, boolean>
-          name="availability"
+        <Label htmlFor="published">Опубликовать</Label>
+        <ControlledSelect<ProductCreateDTO, boolean>
+          name="published"
           control={control}
           options={availableOptions || []}
           placeholder="Выберите доступность"

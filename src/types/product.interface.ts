@@ -7,16 +7,20 @@ export interface IProduct {
   views: number;
   userId: number;
   categoryId: string;
-  availability?: boolean;
+  published?: boolean;
   createdAt: string;
+  category:{
+    id: string,
+    name: string
+  }
 }
 
-export type IProductCreateDto = Pick<
+export type ProductCreateDTO = Pick<
   IProduct,
-  "name" | "description" | "price" | "categoryId" | "availability"
+  "name" | "description" | "price" | "categoryId" | "published"
 >;
 
-export type availableOptionsType = {
+export type PublishedOption = {
   value: boolean;
   label: string;
 };

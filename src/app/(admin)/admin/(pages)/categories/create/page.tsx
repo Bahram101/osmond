@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
+import BreadCrumb from "../../../components/common/BreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import {
   useCreateCategory,
@@ -14,7 +14,7 @@ const CategoryCreatePage = () => {
 
   return (
     <>
-      <PageBreadcrumb
+      <BreadCrumb
         items={[
           { label: "Home", href: "/admin" },
           { label: "Категории", href: "/admin/categories" },

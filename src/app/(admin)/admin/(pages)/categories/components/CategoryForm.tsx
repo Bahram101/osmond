@@ -3,7 +3,7 @@ import Label from "../../../components/form/Label";
 import Field from "@/components/shared/field/Field";
 import {
   ICategory,
-  ICategoryCreateDto, 
+  CategoryCreateDTO, 
 } from "@/types/category.interface";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ControlledSelect from "@/components/shared/select/Select";
@@ -16,7 +16,7 @@ interface CategoryFormProps {
   submitText?: string;
   isFetchingCategories?: boolean; 
   isSubmitting?: boolean;
-  onSubmit: SubmitHandler<ICategoryCreateDto>;
+  onSubmit: SubmitHandler<CategoryCreateDTO>;
 }
 
 const CategoryForm: FC<CategoryFormProps> = ({
@@ -27,7 +27,7 @@ const CategoryForm: FC<CategoryFormProps> = ({
   isSubmitting, 
   submitText = "Сохранить",
 }) => {
-  const { control, handleSubmit, reset } = useForm<ICategoryCreateDto>({
+  const { control, handleSubmit, reset } = useForm<CategoryCreateDTO>({
     mode: "all",
     defaultValues,
   });
@@ -41,7 +41,7 @@ const CategoryForm: FC<CategoryFormProps> = ({
     label: cat.name,
   }));
 
-  const handleFormSubmit: SubmitHandler<ICategoryCreateDto> = (data) => {
+  const handleFormSubmit: SubmitHandler<CategoryCreateDTO> = (data) => {
     onSubmit(data); 
     reset(); 
   };
@@ -53,7 +53,7 @@ const CategoryForm: FC<CategoryFormProps> = ({
     >
       <div>
         <Label htmlFor="name">Название</Label>
-        <Field<ICategoryCreateDto>
+        <Field<CategoryCreateDTO>
           name="name"
           control={control}
           rules={{
@@ -71,7 +71,7 @@ const CategoryForm: FC<CategoryFormProps> = ({
         {isFetchingCategories ? (
           <Loader />
         ) : (
-          <ControlledSelect<ICategoryCreateDto, string>
+          <ControlledSelect<CategoryCreateDTO, string>
             name="parentId"
             control={control}
             options={categoryOptions}

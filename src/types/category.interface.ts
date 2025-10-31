@@ -10,6 +10,6 @@ export interface ICategory {
   } | null;
 }
 
-export type ICategoryCreateDto = Pick<ICategory, 'name' | 'parentId'>
+export type CategoryCreateDTO = Pick<ICategory, 'name' | 'parentId'>
 
-export type ICategoryUpdateDto = Partial<ICategoryCreateDto>
+export type CategoryUpdateDTO = Partial<CategoryCreateDTO>

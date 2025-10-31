@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       ...data,
       price: Number(data.price),
       userId: decoded?.userId,
-      availability: data.availability === "true" || data.availability === true,
+      published: data.published === "true" || data.published === true,
     };
     const createdProduct = await prisma.product.create({ data: dataParsed });
 

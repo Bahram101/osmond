@@ -11,7 +11,7 @@ interface BreadcrumbProps {
   items: BreadcrumbItem[];
 }
 
-const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
+const BreadCrumb: React.FC<BreadcrumbProps> = ({ items }) => {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
       <h2 className="text-xl font-semibold text-gray-800 dark:text-white/90">
@@ -46,4 +46,4 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
   );
 };
 
-export default PageBreadcrumb;
+export default BreadCrumb;
