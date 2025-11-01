@@ -12,7 +12,7 @@ const CategoryEditPage = () => {
   const { id } = useParams()
 
   const { categories, isFetchingCategories } = useGetCategories();
-  const { category, isFetchingCategory } = useGetCategoryById(id as string);
+  const { category, isFetchingCategory } = useGetCategoryById(id);
   const { updateCategory, isUpdatingCategory } = useUpdateCategory()
 
   if (isFetchingCategory) return <Loader />;

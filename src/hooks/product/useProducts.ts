@@ -21,9 +21,20 @@ export const useCreateProduct = () => {
 };
 
 export const useGetProducts = () => {
-  const { data: products=[], isPending: isFetchingProducts } = useQuery({
+  const { data: products = [], isPending: isFetchingProducts } = useQuery<
+    IProduct[]
+  >({
     queryKey: ["get-products"],
-    queryFn: () => ProductService.getProducts(),
+    queryFn: () => ProductService.getAll(),
   });
   return { products, isFetchingProducts };
+};
+
+export const useGetProduct = (id?: string) => {
+  const { data: product, isPending: isFetchingProduct } = useQuery<IProduct>({
+    queryKey: ["get-product", id],
+    queryFn: () => ProductService.getById(id as string),
+    enabled: !!id,
+  });
+  return { product, isFetchingProduct };
 };

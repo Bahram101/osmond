@@ -1,5 +1,5 @@
 import { ICategory } from "@/types/category.interface";
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import Label from "../../../components/form/Label";
 import Field from "@/components/shared/field/Field";
 import { ProductCreateDTO } from "@/types/product.interface";
@@ -36,9 +36,15 @@ const ProductForm: FC<ProductFormProps> = ({
     mode: "all",
     defaultValues: {
       ...defaultValues,
-      published: true,
+      published: defaultValues?.published ?? true,
     },
   });
+
+  console.log("defaultValues", defaultValues);
+
+  useEffect(() => {
+    if (defaultValues) reset(defaultValues);
+  }, [defaultValues]);
 
   const categoryOptions = categories.map((cat) => ({
     value: cat.id ?? "",
@@ -46,6 +52,7 @@ const ProductForm: FC<ProductFormProps> = ({
   }));
 
   const handleFormSubmit: SubmitHandler<ProductCreateDTO> = (data) => {
+    console.log("dataa", data);
     onSubmit(data);
     if (clearOnSubmit) reset();
   };
@@ -66,6 +73,8 @@ const ProductForm: FC<ProductFormProps> = ({
               value: 3,
               message: "Минимум 3 символа",
             },
+            validate: (value) =>
+              String(value).trim() !== "" || "Название не может быть пустым",
           }}
         />
       </div>

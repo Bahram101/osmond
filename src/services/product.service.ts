@@ -9,10 +9,23 @@ export const ProductService = {
       data,
     });
   },
-  async getProducts() {
-    return request<IProduct>({
+  async getAll() {
+    return request<IProduct[]>({
       url: "/products",
       method: "GET",
+    });
+  },
+  async getById(id: string) {
+    return await request<IProduct>({
+      url: `/products/${id}`,
+      method: "GET",
+    });
+  },
+  async update(id: string, data: ProductCreateDTO) {
+    return request({
+      url: `/products/${id}`,
+      method: "PUT",
+      data,
     });
   },
 };

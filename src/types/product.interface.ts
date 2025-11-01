@@ -3,16 +3,13 @@ export interface IProduct {
   name: string;
   description?: string;
   price: number;
-  image?: string;
-  views: number;
-  userId: number;
-  categoryId: string;
-  published?: boolean;
+  categoryId?: string;
+  published: boolean;
   createdAt: string;
-  category:{
-    id: string,
-    name: string
-  }
+  category: {
+    id: string;
+    name: string;
+  };
 }
 
 export type ProductCreateDTO = Pick<

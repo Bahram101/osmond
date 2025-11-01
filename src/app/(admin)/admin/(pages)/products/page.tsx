@@ -9,6 +9,7 @@ import Loader from "@/components/shared/Loader";
 import { DataTable } from "@/components/common/DataTable";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { IProduct } from "@/types/product.interface";
+import Badge from "../../components/ui/badge/Badge";
 
 const ProductsPage = () => {
   const { products, isFetchingProducts } = useGetProducts();
@@ -20,44 +21,47 @@ const ProductsPage = () => {
       header: "Название",
     }),
     columnHelper.accessor("description", {
-      header: "Описании",
-    }),   
-    columnHelper.accessor((row) => row.category.name ?? "-", {
+      header: "Описание",
+    }),
+    columnHelper.accessor((row) => row.category?.name ?? "-", {
       id: "category.name",
-      header: "Категория"
-    }), 
-     columnHelper.accessor("published", {
+      header: "Категория",
+    }),
+    columnHelper.accessor("published", {
       header: "Опубликован",
-      cell: ({ getValue }) => (getValue() ? "Да" : "Нет"),
+      cell: ({ getValue }) => {
+        const value = getValue(); 
+        const color = value ? "success" : "light"; // success = зелёный, error = красный
+        const text = value ? "Да" : "Нет";
+
+        return (
+          <Badge size="sm" color={color}>
+            {text}
+          </Badge>
+        );
+      },
+    }),
+    columnHelper.accessor("createdAt", {
+      header: "Дата создания",
+      cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("ru-RU"),
     }),
     columnHelper.display({
       id: "actions",
       header: "",
       size: 260,
-      cell: ({ row }) => {
-        return (
-          <div className="flex justify-center gap-3">
-            <Button
-              variant="danger"
-              size="tiny"
-              // onClick={() => handleDelete(row.original.id!)}
-            >
-              {/* {isDeleting && deletingId === row.original.id ? (
-                <Loader />
-              ) : (
-                <Trash2 className="size-4" />
-              )} */}
-              Удалить
+      cell: ({ row }) => (
+        <div className="flex justify-center gap-3">
+          <Button variant="danger" size="tiny">
+            Удалить
+          </Button>
+          <Link href={`/admin/products/edit/${row.original.id}`}>
+            <Button variant="primary" size="tiny">
+              <Pencil className="size-4" />
+              Редактировать
             </Button>
-            <Link href={`/admin/products/edit/${row.original.id}`}>
-              <Button variant="primary" size="tiny">
-                <Pencil className="size-4" />
-                Редактировать
-              </Button>
-            </Link>
-          </div>
-        );
-      },
+          </Link>
+        </div>
+      ),
     }),
   ];
 

@@ -33,11 +33,12 @@ export const useCreateCategory = () => {
   return { createCategory, isCreatingCategory };
 };
 
-export const useGetCategoryById = (id: string) => {
+export const useGetCategoryById = (id?: string) => {
   const { data: category, isPending: isFetchingCategory } = useQuery<ICategory>(
     {
       queryKey: ["get-category", id],
-      queryFn: () => CategoryService.getCategory(id),
+      queryFn: () => CategoryService.getCategory(id as string),
+      enabled: !!id,
     }
   );
   return { category, isFetchingCategory };
@@ -61,7 +62,7 @@ export const useDeleteCategory = () => {
     mutationKey: ["delete-category"],
     mutationFn: (id) => CategoryService.deleteCategory(id),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({queryKey:["get-categories"]})
+      queryClient.invalidateQueries({ queryKey: ["get-categories"] });
       toast.success(data.message);
     },
     onError: (error) => {

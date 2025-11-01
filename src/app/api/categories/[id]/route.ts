@@ -1,11 +1,8 @@
 import { prisma } from "@/lib/prisma";
+import { IParams } from "@/types/category.interface";
 import { NextResponse } from "next/server";
 
-interface IParams {
-  params: {
-    id: string
-  }
-}
+
 
 //DELETE /api/categories/id
 export async function DELETE(

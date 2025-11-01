@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 // /api/products
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const products = await prisma.product.findMany({
       select: {
@@ -20,10 +20,17 @@ export async function GET(req: NextRequest) {
         },
       },
     });
+
     return NextResponse.json(products);
-  } catch (e) {
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      return NextResponse.json(
+        { message: `Ошибка при получении товаров: ${e.message}` },
+        { status: 500 }
+      );
+    }
     return NextResponse.json(
-      { message: "Ошибка при получении товаров" },
+      { message: "Неизвестная ошибка при получении товаров" },
       { status: 500 }
     );
   }
