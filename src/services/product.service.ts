@@ -1,5 +1,10 @@
+import { DeleteResponse } from "@/hooks/category/useCategories";
 import { request } from "@/lib/api/request.api";
-import { IProduct, ProductCreateDTO, ProductUpdateDTO } from "@/types/product.interface";
+import {
+  IProduct,
+  ProductCreateDTO,
+  ProductUpdateDTO,
+} from "@/types/product.interface";
 
 export const ProductService = {
   async createProduct(data: ProductCreateDTO) {
@@ -22,10 +27,16 @@ export const ProductService = {
     });
   },
   async update(id: string, data: ProductUpdateDTO) {
-    return request<IProduct>({
+    return await request<IProduct>({
       url: `/products/${id}`,
       method: "PUT",
       data,
+    });
+  },
+  async delete(id: string) {
+    return await request<DeleteResponse>({
+      url: `/products/${id}`,
+      method: "DELETE",
     });
   },
 };

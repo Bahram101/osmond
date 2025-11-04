@@ -7,6 +7,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { DeleteResponse } from "../category/useCategories";
 
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
@@ -63,4 +64,23 @@ export const useUpdateProduct = () => {
     },
   });
   return { updateProduct, isUpdatingProduct };
+};
+
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+  const { mutate: deleteProduct, isPending: isDeletingProduct } = useMutation<
+    DeleteResponse,
+    Error,
+    string
+  >({
+    mutationKey: ["delete-product"],
+    mutationFn: (id) => ProductService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["get-products"] });
+    },
+    onError(e) {
+      console.log(e);
+    },
+  });
+  return { deleteProduct, isDeletingProduct };
 };

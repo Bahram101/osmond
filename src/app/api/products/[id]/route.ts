@@ -35,6 +35,7 @@ export async function GET(_req: NextRequest, { params }: IParams) {
   }
 }
 
+// /api/products/id
 export async function PUT(req: NextRequest, { params }: IParams) {
   try {
     const { id } = await params;
@@ -58,5 +59,25 @@ export async function PUT(req: NextRequest, { params }: IParams) {
       { message: "Ошибка при обновлении товара" },
       { status: 500 }
     );
+  }
+}
+
+// /api/products/id
+export async function DEL(req: NextRequest, { params }: IParams) {
+  try {
+    const { id } = params;
+    const product = await prisma.product.findUnique({ where: { id } });
+    if (!product) {
+      return NextResponse.json({ message: "Товар не найден" }, { status: 404 });
+    }
+    await prisma.product.delete({ where: { id } });
+    return NextResponse.json({ message: "Товаруспешно удален!" });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json(
+        { message: "Ошибка при удалении" },
+        { status: 500 }
+      );
+    }
   }
 }
