@@ -1,24 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { productSelect } from "../../../../prisma/selects/product.select";
 
 // /api/products
 export async function GET() {
   try {
     const products = await prisma.product.findMany({
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        published: true,
-        price: true,
-        createdAt: true,
-        category: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
+      select: productSelect,
     });
 
     return NextResponse.json(products);

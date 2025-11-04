@@ -1,11 +1,11 @@
 import cn from "clsx";
 import React from "react";
-import { Controller } from "react-hook-form";
+import { Controller, FieldValues } from "react-hook-form";
 
 import { IField } from "./field.interface";
 import { Input } from "@/components/ui/input";
 
-const Field = <T extends Record<string, any>>({
+const Field = <T extends FieldValues>({
   control,
   name,
   rules,

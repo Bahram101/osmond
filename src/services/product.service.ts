@@ -1,5 +1,5 @@
 import { request } from "@/lib/api/request.api";
-import { IProduct, ProductCreateDTO } from "@/types/product.interface";
+import { IProduct, ProductCreateDTO, ProductUpdateDTO } from "@/types/product.interface";
 
 export const ProductService = {
   async createProduct(data: ProductCreateDTO) {
@@ -21,8 +21,8 @@ export const ProductService = {
       method: "GET",
     });
   },
-  async update(id: string, data: ProductCreateDTO) {
-    return request({
+  async update(id: string, data: ProductUpdateDTO) {
+    return request<IProduct>({
       url: `/products/${id}`,
       method: "PUT",
       data,

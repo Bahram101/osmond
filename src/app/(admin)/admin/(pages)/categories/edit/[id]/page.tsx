@@ -1,19 +1,23 @@
-"use client"
-import React from 'react'
-import { useParams } from 'next/navigation'
-import BreadCrumb from '@/app/(admin)/admin/components/common/BreadCrumb'
-import ComponentCard from '@/app/(admin)/admin/components/common/ComponentCard'
-import CategoryForm from '../../components/CategoryForm'
-import { useGetCategories, useGetCategoryById, useUpdateCategory } from '@/hooks/category/useCategories'
-import Loader from '@/components/shared/Loader'
-import { ICategory } from '@/types/category.interface' 
+"use client";
+import React from "react";
+import { useParams } from "next/navigation";
+import BreadCrumb from "@/app/(admin)/admin/components/common/BreadCrumb";
+import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard";
+import CategoryForm from "../../components/CategoryForm";
+import {
+  useGetCategories,
+  useGetCategoryById,
+  useUpdateCategory,
+} from "@/hooks/category/useCategories";
+import Loader from "@/components/shared/Loader";
+import { ICategory } from "@/types/category.interface";
 
-const CategoryEditPage = () => { 
-  const { id } = useParams()
+const CategoryEditPage = () => {
+  const { id } = useParams<{ id: string }>();
 
   const { categories, isFetchingCategories } = useGetCategories();
   const { category, isFetchingCategory } = useGetCategoryById(id);
-  const { updateCategory, isUpdatingCategory } = useUpdateCategory()
+  const { updateCategory, isUpdatingCategory } = useUpdateCategory();
 
   if (isFetchingCategory) return <Loader />;
 
@@ -35,12 +39,12 @@ const CategoryEditPage = () => {
             categories={categories || []}
             onSubmit={(data) => updateCategory({ id: id as string, data })}
             isSubmitting={isUpdatingCategory}
-            submitText='Изменить' 
+            submitText="Изменить"
           />
         </ComponentCard>
       </div>
     </>
   );
-}
+};
 
-export default CategoryEditPage
+export default CategoryEditPage;

@@ -17,6 +17,8 @@ export type ProductCreateDTO = Pick<
   "name" | "description" | "price" | "categoryId" | "published"
 >;
 
+export type ProductUpdateDTO = Partial<ProductCreateDTO>
+
 export type PublishedOption = {
   value: boolean;
   label: string;

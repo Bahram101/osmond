@@ -5,14 +5,15 @@ import React from "react";
 import ProductForm from "../../components/ProductForm";
 import { useGetCategories } from "@/hooks/category/useCategories";
 import { useParams } from "next/navigation";
-import { useGetProduct } from "@/hooks/product/useProducts";
+import { useGetProduct, useUpdateProduct } from "@/hooks/product/useProducts";
 import { IProduct } from "@/types/product.interface";
+import Loader from "@/components/shared/Loader";
 
 const ProductUpdatePage = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { categories, isFetchingCategories } = useGetCategories();
-  const { product, isFetchingProduct } = useGetProduct(id)
-
+  const { product, isFetchingProduct } = useGetProduct(id);
+  const { updateProduct, isUpdatingProduct } = useUpdateProduct();
 
   return (
     <>
@@ -20,20 +21,23 @@ const ProductUpdatePage = () => {
         items={[
           { label: "Home", href: "/admin" },
           { label: "Товары", href: "/admin/products" },
-          { label: "Создание товара" },
+          { label: "Редактирование товара" },
         ]}
       />
       <div className="grid xl:grid-cols-2">
-        <ComponentCard title="Создание товара">
-          <ProductForm
-            defaultValues={product as IProduct}
-            isFetchingCategories={isFetchingCategories}
-            categories={categories || []}
-            submitText="Изменить"
-            // onSubmit={(data) => createProduct(data)}
-            // isSubmitting={isCreatingProduct}
-
-          />
+        <ComponentCard title="Редактирование товара">
+          {isFetchingProduct ? (
+            <Loader />
+          ) : (
+            <ProductForm
+              defaultValues={product as IProduct}
+              isFetchingCategories={isFetchingCategories}
+              categories={categories || []}
+              submitText="Изменить"
+              onSubmit={(data) => updateProduct({ id: id as string, data })}
+              isSubmitting={isUpdatingProduct}
+            />
+          )}
         </ComponentCard>
       </div>
     </>
