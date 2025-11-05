@@ -6,6 +6,7 @@ export const productSelect = {
   description: true,
   published: true,
   price: true,
+  quantity: true,
   createdAt: true,
   category: {
     select: {

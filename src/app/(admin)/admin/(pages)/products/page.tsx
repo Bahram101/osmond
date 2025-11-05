@@ -1,10 +1,10 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import BreadCrumb from "../../components/common/BreadCrumb";
-import { Pencil, Plus } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import Button from "../../components/ui/button/Button";
 import Link from "next/link";
-import { useGetProducts } from "@/hooks/product/useProducts";
+import { useDeleteProduct, useGetProducts } from "@/hooks/product/useProducts";
 import Loader from "@/components/shared/Loader";
 import { DataTable } from "@/components/common/DataTable";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
@@ -13,6 +13,15 @@ import Badge from "../../components/ui/badge/Badge";
 
 const ProductsPage = () => {
   const { products, isFetchingProducts } = useGetProducts();
+  const { deleteProduct, isDeletingProduct } = useDeleteProduct();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDelete = (id: string) => {
+    if (confirm("Точно удалить товар?")) {
+      deleteProduct(id);
+      setDeletingId(id);
+    }
+  };
 
   const columnHelper = createColumnHelper<IProduct>();
 
@@ -20,20 +29,25 @@ const ProductsPage = () => {
     columnHelper.accessor("name", {
       header: "Название",
     }),
-    columnHelper.accessor("description", {
-      header: "Описание",
-    }),
     columnHelper.accessor((row) => row.category?.name ?? "-", {
       id: "category.name",
       header: "Категория",
     }),
+    columnHelper.accessor("price", {
+      header: "Цена",
+    }),
+    columnHelper.accessor("quantity", {
+      header: "Количество",
+    }),
+    columnHelper.accessor("description", {
+      header: "Описание",
+    }),
     columnHelper.accessor("published", {
       header: "Опубликован",
       cell: ({ getValue }) => {
-        const value = getValue(); 
-        const color = value ? "success" : "light"; // success = зелёный, error = красный
+        const value = getValue();
+        const color = value ? "success" : "light";
         const text = value ? "Да" : "Нет";
-
         return (
           <Badge size="sm" color={color}>
             {text}
@@ -51,7 +65,16 @@ const ProductsPage = () => {
       size: 260,
       cell: ({ row }) => (
         <div className="flex justify-center gap-3">
-          <Button variant="danger" size="tiny">
+          <Button
+            variant="danger"
+            size="tiny"
+            onClick={() => handleDelete(row.original.id)}
+          >
+            {isDeletingProduct && deletingId === row.original.id ? (
+              <Loader />
+            ) : (
+              <Trash2 className="size-4" />
+            )}
             Удалить
           </Button>
           <Link href={`/admin/products/edit/${row.original.id}`}>

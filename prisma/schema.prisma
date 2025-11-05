@@ -37,6 +37,7 @@ model Product {
   image       String?  @default("https://img.freepik.com/free-vector/smartphone-cartoon_78370-590.jpg?w=740&t=st=1716205026~exp=1716205626~hmac=d514ec9889a7c40481421379ef067469a4c6e2ea8cf2302d391c93f11545cc79")
   views       Int      @default(0)
   price       Float    @default(0)
+  quantity    Int      @default(0)
   userId      String   @map("user_id")
   categoryId  String   @map("category_id")
   createdAt   DateTime @default(now()) @map("created_at")

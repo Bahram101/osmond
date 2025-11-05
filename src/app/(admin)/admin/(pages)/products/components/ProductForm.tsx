@@ -40,8 +40,6 @@ const ProductForm: FC<ProductFormProps> = ({
     },
   });
 
-  console.log("defaultValues", defaultValues);
-
   useEffect(() => {
     if (defaultValues) {
       reset(defaultValues);
@@ -54,8 +52,11 @@ const ProductForm: FC<ProductFormProps> = ({
   }));
 
   const handleFormSubmit: SubmitHandler<ProductCreateDTO> = (data) => {
-    // onSubmit(data);
-    onSubmit({...data, price: Number(data.price)});
+    onSubmit({
+      ...data,
+      price: Number(data.price),
+      quantity: Number(data.quantity),
+    });
     if (clearOnSubmit) reset();
   };
 
@@ -101,7 +102,17 @@ const ProductForm: FC<ProductFormProps> = ({
           control={control}
           rules={{
             required: "Заполните поле",
-            // valueAsNumber: true,
+          }}
+        />
+      </div>
+      <div>
+        <Label htmlFor="quantity">Количество</Label>
+        <Field<ProductCreateDTO>
+          name="quantity"
+          type="number"
+          control={control}
+          rules={{
+            required: "Заполните поле",
           }}
         />
       </div>

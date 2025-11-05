@@ -15,6 +15,7 @@ export async function GET(_req: NextRequest, { params }: IParams) {
         description: true,
         published: true,
         price: true,
+        quantity: true,
         categoryId: true,
         createdAt: true,
       },
@@ -63,7 +64,7 @@ export async function PUT(req: NextRequest, { params }: IParams) {
 }
 
 // /api/products/id
-export async function DEL(req: NextRequest, { params }: IParams) {
+export async function DELETE(req: NextRequest, { params }: IParams) {
   try {
     const { id } = params;
     const product = await prisma.product.findUnique({ where: { id } });

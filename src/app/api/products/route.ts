@@ -10,7 +10,7 @@ export async function GET() {
     });
 
     return NextResponse.json(products);
-  } catch (e: unknown) {
+  } catch (e) {
     if (e instanceof Error) {
       return NextResponse.json(
         { message: `Ошибка при получении товаров: ${e.message}` },

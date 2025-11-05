@@ -3,6 +3,7 @@ export interface IProduct {
   name: string;
   description?: string;
   price: number;
+  quantity: number;
   categoryId?: string;
   published: boolean;
   createdAt: string;
@@ -14,10 +15,10 @@ export interface IProduct {
 
 export type ProductCreateDTO = Pick<
   IProduct,
-  "name" | "description" | "price" | "categoryId" | "published"
+  "name" | "description" | "price" | "categoryId" | "published" | "quantity"
 >;
 
-export type ProductUpdateDTO = Partial<ProductCreateDTO>
+export type ProductUpdateDTO = Partial<ProductCreateDTO>;
 
 export type PublishedOption = {
   value: boolean;
