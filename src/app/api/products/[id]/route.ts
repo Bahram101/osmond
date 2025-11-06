@@ -1,12 +1,14 @@
 import { prisma } from "@/lib/prisma";
-import { IParams } from "@/types/category.interface";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 // /api/products/id
-export async function GET(_req: NextRequest, { params }: IParams) {
+export async function GET(
+  _req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
     const product = await prisma.product.findUnique({
       where: { id },
       select: {
@@ -37,9 +39,12 @@ export async function GET(_req: NextRequest, { params }: IParams) {
 }
 
 // /api/products/id
-export async function PUT(req: NextRequest, { params }: IParams) {
+export async function PUT(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id } = await params;
+    const { id } = await context.params;
     const data = await req.json();
     const updated = await prisma.product.update({
       where: { id },
@@ -64,9 +69,12 @@ export async function PUT(req: NextRequest, { params }: IParams) {
 }
 
 // /api/products/id
-export async function DELETE(req: NextRequest, { params }: IParams) {
+export async function DELETE(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
     const product = await prisma.product.findUnique({ where: { id } });
     if (!product) {
       return NextResponse.json({ message: "Товар не найден" }, { status: 404 });

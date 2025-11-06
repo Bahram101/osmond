@@ -4,7 +4,7 @@ import ComponentCard from "../../common/ComponentCard";
 import Label from "../Label";
 import Input from "../input/InputField";
 import Select from "../Select"; 
-import DatePicker from "@/components/form/date-picker";
+import DatePicker from "../date-picker";
 import { ChevronDown, Clock3, Eye, EyeOff } from "lucide-react";
 
 export default function DefaultInputs() {

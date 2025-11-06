@@ -7,6 +7,7 @@ export async function POST(req: NextRequest) {
     const product = await prisma.product.findUnique({
       where: { barcode },
     });
+    console.log('producT',product)
     if (!product) {
       return NextResponse.json({ message: "Товар не найден" }, { status: 404 });
     }
@@ -28,8 +29,9 @@ export async function POST(req: NextRequest) {
       data: { quantity: { decrement: quantity } },
     });
     return NextResponse.json({ sale, updateProduct });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: "Ошибка сервера" }, { status: 500 });
+  } catch (e) {
+    if (e instanceof Error) {
+      return NextResponse.json({ message: "Ошибка сервера" }, { status: 500 });
+    }
   }
 }

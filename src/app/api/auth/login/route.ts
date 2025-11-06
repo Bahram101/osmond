@@ -30,7 +30,11 @@ export async function POST(req: Request) {
       status: 200,
     });
 
-    res.cookies.set("token", token, { httpOnly: true });
+    res.cookies.set("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
 
     return res;
   } catch (e) {

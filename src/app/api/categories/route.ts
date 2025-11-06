@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // /api/categories
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const type = searchParams.get("type");
 
@@ -24,11 +24,13 @@ export async function GET(req: Request) {
       return NextResponse.json(categories);
     }
   } catch (e) {
-    return NextResponse.json(
-      {
-        message: "Ошибка при получении  категории",
-      },
-      { status: 500 }
-    );
+    if (e instanceof Error) {
+      return NextResponse.json(
+        {
+          message: "Ошибка при получении  категории",
+        },
+        { status: 500 }
+      );
+    }
   }
 }
