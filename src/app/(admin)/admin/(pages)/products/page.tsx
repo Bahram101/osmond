@@ -75,12 +75,10 @@ const ProductsPage = () => {
             ) : (
               <Trash2 className="size-4" />
             )}
-            Удалить
           </Button>
           <Link href={`/admin/products/edit/${row.original.id}`}>
-            <Button variant="primary" size="tiny">
+            <Button variant="primary" size="xs">
               <Pencil className="size-4" />
-              Редактировать
             </Button>
           </Link>
         </div>
