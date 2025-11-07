@@ -16,7 +16,7 @@ const ProductCreatePage = () => {
         items={[
           { label: "Home", href: "/admin" },
           { label: "Товары", href: "/admin/products" },
-          { label: "Создание товара" },
+          { label: "Создать товара" },
         ]}
       />
       <div className="grid xl:grid-cols-2">
