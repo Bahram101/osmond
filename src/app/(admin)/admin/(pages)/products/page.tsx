@@ -39,6 +39,9 @@ const ProductsPage = () => {
     columnHelper.accessor("quantity", {
       header: "Количество",
     }),
+    columnHelper.accessor("barcode", {
+      header: "Штрих-код",
+    }),
     columnHelper.accessor("description", {
       header: "Описание",
     }),
@@ -62,7 +65,7 @@ const ProductsPage = () => {
     columnHelper.display({
       id: "actions",
       header: "",
-      size: 260,
+      size: 100,
       cell: ({ row }) => (
         <div className="flex justify-center gap-3">
           <Button
