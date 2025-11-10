@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:local": "NEXT_PUBLIC_API_URL=http://localhost:3000/api next build",
+    "start:local": "npm run build:local && next start",
+    "build:prod": "NEXT_PUBLIC_API_URL=https://osmond-bjb.netlify.app/api next build",
+    "start:prod": "npm run build:prod && next start"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
