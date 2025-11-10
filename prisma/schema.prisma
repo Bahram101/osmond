@@ -39,6 +39,7 @@ model Product {
   price       Float    @default(0)
   quantity    Int      @default(0)
   barcode     String?  @unique
+  barcode2    String? 
   userId      String   @map("user_id")
   categoryId  String   @map("category_id")
   createdAt   DateTime @default(now()) @map("created_at")
@@ -61,7 +62,7 @@ model Category {
 
   parent   Category?  @relation("Subcategories", fields: [parentId], references: [id])
   children Category[] @relation("Subcategories")
-  products Product[] 
+  products Product[]
 
   @@map("category")
 }
@@ -84,7 +85,7 @@ model Arrival {
   quantity  Int
   createdAt DateTime @default(now()) @map("created_at")
 
-  product    Product   @relation(fields: [productId], references: [id]) 
+  product Product @relation(fields: [productId], references: [id])
 
   @@map("arrival")
 }
