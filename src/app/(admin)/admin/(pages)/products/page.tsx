@@ -43,7 +43,7 @@ const ProductsPage = () => {
       header: "Штрих-код",
     }),
     columnHelper.accessor("abc", {
-      header: "Abc",
+      header: "abc",
     }),
     columnHelper.accessor("description", {
       header: "Описание",
