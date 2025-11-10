@@ -46,7 +46,8 @@ model Product {
   user        User     @relation(fields: [userId], references: [id])
   category    Category @relation(fields: [categoryId], references: [id])
 
-  Sales Sale[]
+  Sales   Sale[]
+  arrival Arrival[]
 
   @@map("product")
 }
@@ -58,9 +59,10 @@ model Category {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  products Product[]
   parent   Category?  @relation("Subcategories", fields: [parentId], references: [id])
   children Category[] @relation("Subcategories")
+  products Product[]
+  arrivals Arrival[]
 
   @@map("category")
 }
@@ -75,4 +77,17 @@ model Sale {
   product Product @relation(fields: [productId], references: [id])
 
   @@map("sale")
+}
+
+model Arrival {
+  id        Int      @id @default(autoincrement())
+  productId String
+  quantity  Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  product    Product   @relation(fields: [productId], references: [id])
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+
+  @@map("arrival")
 }
