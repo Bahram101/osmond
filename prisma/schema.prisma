@@ -39,7 +39,7 @@ model Product {
   price       Float    @default(0)
   quantity    Int      @default(0)
   barcode     String?  @unique
-  barcode2    String?  @unique
+  barcode2    String? 
   userId      String   @map("user_id")
   categoryId  String   @map("category_id")
   createdAt   DateTime @default(now()) @map("created_at")
