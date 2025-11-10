@@ -14,7 +14,7 @@ import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { ICategory } from "@/types/category.interface";
 
 const Categories = () => {
-  const { categories, isFetchingCategories} = useGetCategories();
+  const { categories, isFetchingCategories } = useGetCategories();
   const { deleteCategory, isDeleting } = useDeleteCategory();
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -52,12 +52,10 @@ const Categories = () => {
               ) : (
                 <Trash2 className="size-4" />
               )}
-              Удалить
             </Button>
             <Link href={`/admin/categories/edit/${row.original.id}`}>
               <Button variant="primary" size="tiny">
                 <Pencil className="size-4" />
-                Редактировать
               </Button>
             </Link>
           </div>
