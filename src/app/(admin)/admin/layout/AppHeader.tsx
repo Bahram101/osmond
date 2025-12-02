@@ -87,7 +87,7 @@ const AppHeader: React.FC = () => {
         </div>
         <div
           className={`${
-            isApplicationMenuOpen ? "flex" : "hidden"
+            isApplicationMenuOpen ? "flex justify-end" : "hidden"
           } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}
         >
           <UserDropdown />

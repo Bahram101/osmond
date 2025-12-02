@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";  
+import { Prisma } from "@/generated/prisma/client";
 import { NextResponse } from "next/server";
 
-// api/categories/create
+// /api/categories/create
 export async function POST(req: Request) {
   try {
     const data = await req.json();
