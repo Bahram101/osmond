@@ -8,7 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 // api/auth/login
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json();
+    const { email } = await req.json();
 
     const user = await prisma.user.findUnique({
       where: { email },
@@ -38,6 +38,7 @@ export async function POST(req: Request) {
 
     return res;
   } catch (e) {
+    console.log(e)
     return NextResponse.json({ error: "Login failed" }, { status: 500 });
   }
 }

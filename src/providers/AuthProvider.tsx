@@ -1,5 +1,4 @@
 "use client";
-import Loader from "@/components/shared/Loader";
 import { AuthService } from "@/services/auth.service";
 import { IUser } from "@/types/user.interface";
 import { usePathname, useRouter } from "next/navigation";

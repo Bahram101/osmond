@@ -34,7 +34,7 @@ const CategoryForm: FC<CategoryFormProps> = ({
 
   useEffect(() => {
     if (defaultValues) reset(defaultValues);
-  }, [defaultValues]);
+  }, [defaultValues, reset]);
 
   const categoryOptions = categories.map((cat) => ({
     value: cat.id ?? "",

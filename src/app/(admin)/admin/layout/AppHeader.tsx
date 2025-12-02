@@ -1,9 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState, useEffect, useRef } from "react";
-import { ThemeToggleButton } from "../components/common/ThemeToggleButton";
-import Image from "next/image";
-import NotificationDropdown from "../components/header/NotificationDropdown";
+import React, { useState, useEffect, useRef } from "react";  
 import UserDropdown from "../components/header/UserDropdown";
 import { useSidebar } from "../context/SidebarContext";
 import { Ellipsis, Menu, Search } from "lucide-react";
@@ -11,7 +8,7 @@ import { Ellipsis, Menu, Search } from "lucide-react";
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
 
-  const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
+  const { toggleSidebar, toggleMobileSidebar } = useSidebar();
 
   const handleToggle = () => {
     if (window.innerWidth >= 1024) {

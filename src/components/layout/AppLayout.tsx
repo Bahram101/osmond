@@ -11,6 +11,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const authPaths = ["/auth/login", "/register", "/forgot-password"];
 
   const isAuthPage = authPaths.some((path) => pathname.startsWith(path));
+  console.log(isAuthPage);
 
   return (
     <Container>
