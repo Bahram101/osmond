@@ -42,9 +42,6 @@ const ProductsPage = () => {
     columnHelper.accessor("barcode", {
       header: "Штрих-код",
     }),
-    columnHelper.accessor("abc", {
-      header: "abc",
-    }),
     columnHelper.accessor("description", {
       header: "Описание",
     }),

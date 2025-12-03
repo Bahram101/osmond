@@ -7,7 +7,6 @@ export interface IProduct {
   categoryId?: string;
   published: boolean;
   barcode?: string;
-  abc?: string;
   createdAt: string;
   category: {
     id: string;

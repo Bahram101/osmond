@@ -9,7 +9,6 @@ export const productSelect = {
   quantity: true,
   createdAt: true,
   barcode: true,
-  abc: true,
   category: {
     select: {
       id: true,
