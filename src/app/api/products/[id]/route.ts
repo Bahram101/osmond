@@ -1,8 +1,7 @@
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-// /api/products/id
+// GET /api/products/id
 export async function GET(
   _req: NextRequest,
   context: { params: Promise<{ id: string }> }
@@ -27,7 +26,7 @@ export async function GET(
     }
     return NextResponse.json(product);
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+    if (e instanceof Error) {
       return NextResponse.json(
         {
           message: "Ошибка при получении товара",
@@ -38,7 +37,7 @@ export async function GET(
   }
 }
 
-// /api/products/id
+//PUT /api/products/id
 export async function PUT(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
@@ -52,13 +51,8 @@ export async function PUT(
     });
     return NextResponse.json(updated);
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      if (e.code === "P2025") {
-        return NextResponse.json(
-          { message: "Товар не найден" },
-          { status: 404 }
-        );
-      }
+    if (e instanceof Error) {
+      return NextResponse.json({ message: "Товар не найден" }, { status: 404 });
     }
 
     return NextResponse.json(
@@ -68,23 +62,25 @@ export async function PUT(
   }
 }
 
-// /api/products/id
+//DELETE /api/products/id
 export async function DELETE(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params;
+  console.log("IDIDID", id);
   try {
-    const { id } = await context.params;
+    console.log('TRY')
     const product = await prisma.product.findUnique({ where: { id } });
     if (!product) {
       return NextResponse.json({ message: "Товар не найден" }, { status: 404 });
     }
     await prisma.product.delete({ where: { id } });
-    return NextResponse.json({ message: "Товаруспешно удален!" });
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    return NextResponse.json({ message: "Товар успешно удален!" });
+  } catch (e) {
+    if (e instanceof Error) {
       return NextResponse.json(
-        { message: "Ошибка при удалении" },
+        { message: "Ошибка при удалении товара!" },
         { status: 500 }
       );
     }

@@ -10,8 +10,13 @@ import { DataTable } from "@/components/common/DataTable";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { IProduct } from "@/types/product.interface";
 import Badge from "../../components/ui/badge/Badge";
+import { useModal } from "../../hooks/useModal";
+import { Modal } from "../../components/ui/modal";
+import Label from "../../components/form/Label";
+import { Input } from "@/components/ui/input";
 
 const ProductsPage = () => {
+  const { isOpen, openModal, closeModal } = useModal();
   const { products, isFetchingProducts } = useGetProducts();
   const { deleteProduct, isDeletingProduct } = useDeleteProduct();
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -24,6 +29,11 @@ const ProductsPage = () => {
   };
 
   const columnHelper = createColumnHelper<IProduct>();
+
+  const handleOpenModal = () => {
+    console.log("open modal");
+    openModal();
+  };
 
   const columns: ColumnDef<IProduct, any>[] = [
     columnHelper.accessor("name", {
@@ -65,7 +75,7 @@ const ProductsPage = () => {
     columnHelper.display({
       id: "actions",
       header: "",
-      size: 100,
+      size: 170,
       cell: ({ row }) => (
         <div className="flex justify-center gap-3">
           <Button
@@ -84,6 +94,9 @@ const ProductsPage = () => {
               <Pencil className="size-4" />
             </Button>
           </Link>
+          <Button variant="warning" size="tiny" onClick={handleOpenModal}>
+            Приход
+          </Button>
         </div>
       ),
     }),
@@ -91,6 +104,53 @@ const ProductsPage = () => {
 
   return (
     <div className="col-span-12 xl:col-span-7">
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        className="max-w-[584px] p-5 lg:p-10"
+      >
+        <form className="">
+          <h4 className="mb-6 text-lg font-medium text-gray-800 dark:text-white/90">
+            Personal Information
+          </h4>
+
+          <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
+            <div className="col-span-1">
+              <Label>First Name</Label>
+              <Input type="text" placeholder="Emirhan" />
+            </div>
+
+            <div className="col-span-1">
+              <Label>Last Name</Label>
+              <Input type="text" placeholder="Boruch" />
+            </div>
+
+            <div className="col-span-1">
+              <Label>Last Name</Label>
+              <Input type="email" placeholder="emirhanboruch55@gmail.com" />
+            </div>
+
+            <div className="col-span-1">
+              <Label>Phone</Label>
+              <Input type="text" placeholder="+09 363 398 46" />
+            </div>
+
+            <div className="col-span-1 sm:col-span-2">
+              <Label>Bio</Label>
+              <Input type="text" placeholder="Team Manager" />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end w-full gap-3 mt-6">
+            <Button size="sm" variant="outline" onClick={closeModal}>
+              Close
+            </Button>
+            <Button size="sm">
+              Save Changes
+            </Button>
+          </div>
+        </form>
+      </Modal>
       <BreadCrumb
         items={[{ label: "Home", href: "/admin" }, { label: "Товары" }]}
       />

@@ -10,7 +10,7 @@ import { useModal } from "../../../hooks/useModal";
 export default function FormInModal() {
   const { isOpen, openModal, closeModal } = useModal();
   const handleSave = () => {
-    // Handle save logic here 
+    // Handle save logic here
     closeModal();
   };
   return (
@@ -32,21 +32,6 @@ export default function FormInModal() {
             <div className="col-span-1">
               <Label>First Name</Label>
               <Input type="text" placeholder="Emirhan" />
-            </div>
-
-            <div className="col-span-1">
-              <Label>Last Name</Label>
-              <Input type="text" placeholder="Boruch" />
-            </div>
-
-            <div className="col-span-1">
-              <Label>Last Name</Label>
-              <Input type="email" placeholder="emirhanboruch55@gmail.com" />
-            </div>
-
-            <div className="col-span-1">
-              <Label>Phone</Label>
-              <Input type="text" placeholder="+09 363 398 46" />
             </div>
 
             <div className="col-span-1 sm:col-span-2">

@@ -2,17 +2,20 @@ import { getUserFromToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { generateEAN13 } from "@/lib/utils/helpers";
 
 // /api/products/create
 export async function POST(req: NextRequest) {
   try {
     const decoded = await getUserFromToken(req);
     const data = await req.json();
+    const barcode = generateEAN13()
     const dataParsed = {
       ...data,
       price: Number(data.price),
       userId: decoded?.userId,
       published: data.published === "true" || data.published === true,
+      barcode
     };
     const createdProduct = await prisma.product.create({ data: dataParsed });
 
@@ -20,17 +23,11 @@ export async function POST(req: NextRequest) {
       { success: true, data: createdProduct },
       { status: 201 }
     );
-  } catch (e) { 
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      if (e.code === "P2002") {
-        return NextResponse.json(
-          { message: "Товар с таким названием уже существует!" },
-          { status: 400 }
-        );
-      }
+  } catch (e) {
+    if (e instanceof Error) {
       return NextResponse.json(
-        { message: "Произошла ошибка при создании товара" },
-        { status: 500 }
+        { message: "Товар с таким названием уже существует!" },
+        { status: 400 }
       );
     }
   }
