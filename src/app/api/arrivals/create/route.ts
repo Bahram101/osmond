@@ -1,13 +1,11 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextResponse) {
-  console.log("POST ARRIVAL");
+export async function POST(req: NextRequest) {
   try {
     const { productId, qty, note } = await req.json();
 
-    const qtyNumber = Number(qty); // ← преобразуем
-    console.log(productId, qtyNumber, note);
+    const qtyNumber = Number(qty);
 
     if (!productId || !qtyNumber) {
       return NextResponse.json(

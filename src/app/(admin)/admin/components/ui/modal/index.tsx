@@ -9,7 +9,7 @@ interface ModalProps {
   children: React.ReactNode;
   showCloseButton?: boolean; 
   isFullscreen?: boolean; 
-  title: string
+  title?: string
 }
 
 export const Modal: React.FC<ModalProps> = ({
