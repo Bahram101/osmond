@@ -52,6 +52,7 @@ const ProductForm: FC<ProductFormProps> = ({
   }));
 
   const handleFormSubmit: SubmitHandler<ProductCreateDTO> = (data) => {
+    // console.log('ddd',data)
     onSubmit({
       ...data,
       price: Number(data.price),

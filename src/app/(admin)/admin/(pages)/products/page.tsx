@@ -8,21 +8,24 @@ import { useDeleteProduct, useGetProducts } from "@/hooks/product/useProducts";
 import Loader from "@/components/shared/Loader";
 import { DataTable } from "@/components/common/DataTable";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { IProduct } from "@/types/product.interface";
+import { IProduct, ProductCreateDTO } from "@/types/product.interface";
 import Badge from "../../components/ui/badge/Badge";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../../components/ui/modal";
 import ArrivalForm from "./components/ArrivalForm";
-import { useForm } from "react-hook-form";
-import { IArrivalForm } from "@/types/arrival-form.interface";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { IArrivalForm, IArrivalRequest } from "@/types/arrival.interface";
+import { useArrival } from "@/hooks/arrival/useArrival";
 
 const ProductsPage = () => {
-  const { isOpen, openModal, closeModal } = useModal();
   const { control, handleSubmit } = useForm<IArrivalForm>();
+  const { isOpen, openModal, closeModal } = useModal();
   const { products, isFetchingProducts } = useGetProducts();
+  const { createArrival, isCreatingArrival } = useArrival();
   const { deleteProduct, isDeletingProduct } = useDeleteProduct();
+
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [arrivalProduct, setArrivalProduct] = useState(null);
+  const [arrivalProduct, setArrivalProduct] = useState<IProduct | null>(null);
 
   const handleDelete = (id: string) => {
     if (confirm("Точно удалить товар?")) {
@@ -111,17 +114,25 @@ const ProductsPage = () => {
     }),
   ];
 
-  const handleArrivalFormSubmit = (data:any) => {
-    console.log('Arrival sbmit')
-    closeModal()
-  }
+  const handleArrivalFormSubmit = (data: IArrivalForm) => {
+    if (!arrivalProduct) return;
+    const body: IArrivalRequest = {
+      productId: arrivalProduct?.id,
+      qty: Number(data.qty),
+      note: data.note,
+    };
+
+    createArrival(body);
+
+    closeModal();
+  };
 
   return (
     <div className="col-span-12 xl:col-span-7">
       <Modal
         isOpen={isOpen}
         onClose={closeModal}
-        className="max-w-[584px] p-5 lg:p-10"
+        className="max-w-[584px] p-4 lg:p-6"
         title="Приход товара"
       >
         <ArrivalForm

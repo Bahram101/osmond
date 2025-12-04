@@ -21,20 +21,20 @@ export const ProductService = {
     });
   },
   async getById(id: string) {
-    return await request<IProduct>({
+    return request<IProduct>({
       url: `/products/${id}`,
       method: "GET",
     });
   },
   async update(id: string, data: ProductUpdateDTO) {
-    return await request<IProduct>({
+    return request<IProduct>({
       url: `/products/${id}`,
       method: "PUT",
       data,
     });
   },
   async delete(id: string) {
-    return await request<DeleteResponse>({
+    return request<DeleteResponse>({
       url: `/products/${id}`,
       method: "DELETE",
     });

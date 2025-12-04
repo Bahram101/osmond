@@ -2,10 +2,14 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(req: NextResponse) {
+  console.log("POST ARRIVAL");
   try {
     const { productId, qty, note } = await req.json();
 
-    if (!productId || !qty) {
+    const qtyNumber = Number(qty); // ← преобразуем
+    console.log(productId, qtyNumber, note);
+
+    if (!productId || !qtyNumber) {
       return NextResponse.json(
         {
           message: "productId и qty обязательны",
@@ -18,7 +22,7 @@ export async function POST(req: NextResponse) {
     const arrival = await prisma.arrival.create({
       data: {
         productId,
-        qty,
+        qty: qtyNumber,
         note,
       },
     });
@@ -29,7 +33,7 @@ export async function POST(req: NextResponse) {
         id: productId,
       },
       data: {
-        quantity: { increment: qty },
+        quantity: { increment: qtyNumber },
       },
     });
 

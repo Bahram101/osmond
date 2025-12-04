@@ -3,8 +3,8 @@ import React, { FC } from "react";
 import Button from "../../../components/ui/button/Button";
 import Label from "../../../components/form/Label";
 import Field from "@/components/shared/field/Field";
-import { Control, FieldValues, useForm, UseFormHandleSubmit } from "react-hook-form";
-import { IArrivalForm } from "@/types/arrival-form.interface";
+import { Control, FieldValues, UseFormHandleSubmit } from "react-hook-form";
+import { IArrivalForm } from "@/types/arrival.interface";
 
 type ArrivalFormProps = {
   closeModal: () => void;
@@ -31,7 +31,7 @@ const ArrivalForm: FC<ArrivalFormProps> = ({
       <div>
         <Label htmlFor="quantity">Количество</Label>
         <Field
-          name="quantity"
+          name="qty"
           type="number"
           control={control}
           rules={{
@@ -44,10 +44,10 @@ const ArrivalForm: FC<ArrivalFormProps> = ({
       </div>
 
       <div className="flex items-center justify-end w-full gap-3 mt-6">
-        <Button size="sm" variant="outline" onClick={closeModal}>
-          Close
+        <Button size="xs" variant="outline" onClick={closeModal}>
+          Закрыть
         </Button>
-        <Button size="sm">Добавить приход</Button>
+        <Button size="xs">Добавить приход</Button>
       </div>
     </form>
   );
