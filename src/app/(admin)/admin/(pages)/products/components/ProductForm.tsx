@@ -37,6 +37,7 @@ const ProductForm: FC<ProductFormProps> = ({
     defaultValues: {
       ...defaultValues,
       published: defaultValues?.published ?? true,
+      quantity: 0
     },
   });
 
@@ -112,9 +113,10 @@ const ProductForm: FC<ProductFormProps> = ({
           name="quantity"
           type="number"
           control={control}
-          rules={{
-            required: "Заполните поле",
-          }}
+          disabled
+          // rules={{
+          //   required: "Заполните поле",
+          // }}
         />
       </div>
       <div>

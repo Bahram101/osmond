@@ -3,7 +3,7 @@ export interface IProduct {
   name: string;
   description?: string;
   price: number;
-  quantity: number;
+  quantity?: number;
   categoryId?: string;
   published: boolean;
   barcode?: string;

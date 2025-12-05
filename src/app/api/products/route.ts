@@ -2,11 +2,12 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { productSelect } from "../../../../prisma/selects/product.select";
 
-// /api/products
+//GET /api/products
 export async function GET() {
   try {
     const products = await prisma.product.findMany({
       select: productSelect,
+      orderBy: { createdAt: "desc" },
     });
 
     return NextResponse.json(products);

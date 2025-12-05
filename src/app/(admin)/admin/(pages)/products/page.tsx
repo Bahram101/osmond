@@ -18,7 +18,7 @@ import { IArrivalForm, IArrivalRequest } from "@/types/arrival.interface";
 import { useArrival } from "@/hooks/arrival/useArrival";
 
 const ProductsPage = () => {
-  const { control, handleSubmit } = useForm<IArrivalForm>();
+  const { control, handleSubmit, reset } = useForm<IArrivalForm>();
   const { isOpen, openModal, closeModal } = useModal();
   const { products, isFetchingProducts } = useGetProducts();
   const { createArrival, isCreatingArrival } = useArrival();
@@ -121,10 +121,12 @@ const ProductsPage = () => {
       qty: Number(data.qty),
       note: data.note,
     };
-
-    createArrival(body);
-
-    closeModal();
+    createArrival(body, {
+      onSuccess: () => {
+        reset();
+        closeModal();
+      },
+    });
   };
 
   return (

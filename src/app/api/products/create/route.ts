@@ -1,6 +1,5 @@
 import { getUserFromToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { generateEAN13 } from "@/lib/utils/helpers";
 
@@ -26,7 +25,7 @@ export async function POST(req: NextRequest) {
   } catch (e) {
     if (e instanceof Error) {
       return NextResponse.json(
-        { message: "Товар с таким названием уже существует!" },
+        { message: "Ошибка при создании товара!" },
         { status: 400 }
       );
     }
