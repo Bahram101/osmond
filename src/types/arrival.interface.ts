@@ -4,6 +4,10 @@ export interface IArrival {
   qty: number;
   note?: string;
   createdAt: string;
+  product:{
+    id: string,
+    name: string
+  }
 }
 
 export interface IArrivalForm {

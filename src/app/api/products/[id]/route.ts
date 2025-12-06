@@ -1,3 +1,4 @@
+import { Prisma } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -26,14 +27,12 @@ export async function GET(
     }
     return NextResponse.json(product);
   } catch (e) {
-    if (e instanceof Error) {
-      return NextResponse.json(
-        {
-          message: "Ошибка при получении товара",
-        },
-        { status: 500 }
-      );
-    }
+    return NextResponse.json(
+      {
+        message: "Ошибка при получении товара",
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -68,21 +67,26 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;
-  console.log("IDIDID", id);
   try {
-    console.log('TRY')
     const product = await prisma.product.findUnique({ where: { id } });
     if (!product) {
       return NextResponse.json({ message: "Товар не найден" }, { status: 404 });
     }
     await prisma.product.delete({ where: { id } });
     return NextResponse.json({ message: "Товар успешно удален!" });
-  } catch (e) {
-    if (e instanceof Error) {
+  } catch (e: any) {
+    if (e?.code === "P2003") {
       return NextResponse.json(
-        { message: "Ошибка при удалении товара!" },
-        { status: 500 }
+        {
+          message:
+            "Нельзя удалить товар, так как он связан с приходами или продажами.",
+        },
+        { status: 400 }
       );
     }
+    return NextResponse.json(
+      { message: "Ошибка при удалении товара!" },
+      { status: 500 }
+    );
   }
 }

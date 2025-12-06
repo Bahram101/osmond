@@ -5,4 +5,7 @@ export const ArrivalService = {
   async create(data: IArrivalRequest) {
     return request<IArrival>({ url: "/arrivals/create", method: "POST", data });
   },
+  async getAll() {
+    return request<IArrival[]>({ url: "/arrivals", method: "GET" });
+  },
 };

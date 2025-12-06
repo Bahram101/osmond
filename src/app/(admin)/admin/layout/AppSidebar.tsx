@@ -9,6 +9,7 @@ import {
   LayoutGrid,
   PanelsTopLeft,
   ShoppingCart,
+  Truck,
   Users,
 } from "lucide-react";
 
@@ -40,6 +41,11 @@ const navItems: NavItem[] = [
     icon: <Users />,
     name: "Пользователи",
     path: "/admin/users",
+  },
+  {
+    icon: <Truck />,
+    name: "Оприходования",
+    path: "/admin/arrivals",
   },
 ];
 

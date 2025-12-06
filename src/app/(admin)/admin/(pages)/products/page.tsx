@@ -8,20 +8,20 @@ import { useDeleteProduct, useGetProducts } from "@/hooks/product/useProducts";
 import Loader from "@/components/shared/Loader";
 import { DataTable } from "@/components/common/DataTable";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { IProduct, ProductCreateDTO } from "@/types/product.interface";
+import { IProduct } from "@/types/product.interface";
 import Badge from "../../components/ui/badge/Badge";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../../components/ui/modal";
 import ArrivalForm from "./components/ArrivalForm";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { IArrivalForm, IArrivalRequest } from "@/types/arrival.interface";
-import { useArrival } from "@/hooks/arrival/useArrival";
+import { useCreateArrival } from "@/hooks/arrival/useArrival";
 
 const ProductsPage = () => {
   const { control, handleSubmit, reset } = useForm<IArrivalForm>();
   const { isOpen, openModal, closeModal } = useModal();
   const { products, isFetchingProducts } = useGetProducts();
-  const { createArrival, isCreatingArrival } = useArrival();
+  const { createArrival, isCreatingArrival } = useCreateArrival();
   const { deleteProduct, isDeletingProduct } = useDeleteProduct();
 
   const [deletingId, setDeletingId] = useState<string | null>(null);

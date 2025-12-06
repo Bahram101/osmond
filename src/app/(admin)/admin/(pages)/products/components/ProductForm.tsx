@@ -107,7 +107,7 @@ const ProductForm: FC<ProductFormProps> = ({
           }}
         />
       </div>
-      <div>
+      {/* <div>
         <Label htmlFor="quantity">Количество</Label>
         <Field<ProductCreateDTO>
           name="quantity"
@@ -118,7 +118,7 @@ const ProductForm: FC<ProductFormProps> = ({
           //   required: "Заполните поле",
           // }}
         />
-      </div>
+      </div> */}
       <div>
         <Label>Категория</Label>
         {isFetchingCategories ? (

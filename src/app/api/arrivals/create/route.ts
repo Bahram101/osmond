@@ -16,7 +16,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Create Arrival
     const arrival = await prisma.arrival.create({
       data: {
         productId,
@@ -25,7 +24,6 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Update product's qty
     await prisma.product.update({
       where: {
         id: productId,
