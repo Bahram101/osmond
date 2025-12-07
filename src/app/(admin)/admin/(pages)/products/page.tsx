@@ -81,7 +81,7 @@ const ProductsPage = () => {
     columnHelper.display({
       id: "actions",
       header: "",
-      size: 170,
+      size: 230,
       cell: ({ row }) => {
         return (
           <div className="flex justify-center gap-3">
@@ -106,7 +106,7 @@ const ProductsPage = () => {
               size="tiny"
               onClick={() => handleOpenModal(row)}
             >
-              Приход
+              Оприходовать
             </Button>
           </div>
         );
