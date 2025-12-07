@@ -30,7 +30,7 @@
     "jsonwebtoken": "^9.0.2",
     "lucide": "^0.545.0",
     "lucide-react": "^0.544.0",
-    "next": "15.5.4",
+    "next": "^16.0.7",
     "next-auth": "^4.24.11",
     "next-themes": "^0.4.6",
     "rc-table": "^7.55.1",
