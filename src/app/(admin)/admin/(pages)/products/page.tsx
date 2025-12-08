@@ -1,7 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import BreadCrumb from "../../components/common/BreadCrumb";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import {
+  EllipsisVertical,
+  Pencil,
+  Plus,
+  ScanBarcode,
+  Trash2,
+  Van,
+} from "lucide-react";
 import Button from "../../components/ui/button/Button";
 import Link from "next/link";
 import { useDeleteProduct, useGetProducts } from "@/hooks/product/useProducts";
@@ -16,10 +23,16 @@ import ArrivalForm from "./components/ArrivalForm";
 import { useForm } from "react-hook-form";
 import { IArrivalForm, IArrivalRequest } from "@/types/arrival.interface";
 import { useCreateArrival } from "@/hooks/arrival/useArrival";
+import { Dropdown } from "../../components/ui/dropdown/Dropdown";
+import { DropdownItem } from "../../components/ui/dropdown/DropdownItem";
+import { useRouter } from "next/navigation";
 
 const ProductsPage = () => {
+  const router = useRouter();
+
   const { control, handleSubmit, reset } = useForm<IArrivalForm>();
   const { isOpen, openModal, closeModal } = useModal();
+  const [openRowId, setOpenRowId] = useState<string | null>(null);
   const { products, isFetchingProducts } = useGetProducts();
   const { createArrival, isCreatingArrival } = useCreateArrival();
   const { deleteProduct, isDeletingProduct } = useDeleteProduct();
@@ -34,12 +47,20 @@ const ProductsPage = () => {
     }
   };
 
-  const columnHelper = createColumnHelper<IProduct>();
-
   const handleOpenModal = (currentProduct: any) => {
     setArrivalProduct(currentProduct.original);
     openModal();
   };
+
+  function toggleDropdown(data: IProduct) {
+    setOpenRowId((prev) => (prev === data.id ? null : data.id));
+  }
+
+  function closeDropdown() {
+    setOpenRowId(null);
+  }
+
+  const columnHelper = createColumnHelper<IProduct>();
 
   const columns: ColumnDef<IProduct, any>[] = [
     columnHelper.accessor("name", {
@@ -81,33 +102,67 @@ const ProductsPage = () => {
     columnHelper.display({
       id: "actions",
       header: "",
-      size: 230,
+      size: 50,
       cell: ({ row }) => {
         return (
           <div className="flex justify-center gap-3">
-            <Button
-              variant="danger"
-              size="tiny"
-              onClick={() => handleDelete(row.original.id)}
+            <button
+              onClick={() => toggleDropdown(row.original)}
+              className="dropdown-toggle"
             >
-              {isDeletingProduct && deletingId === row.original.id ? (
-                <Loader />
-              ) : (
-                <Trash2 className="size-4" />
-              )}
-            </Button>
-            <Link href={`/admin/products/edit/${row.original.id}`}>
-              <Button variant="primary" size="xs">
-                <Pencil className="size-4" />
-              </Button>
-            </Link>
-            <Button
-              variant="warning"
-              size="tiny"
-              onClick={() => handleOpenModal(row)}
+              <EllipsisVertical className="cursor-pointer" />
+            </button>
+            <Dropdown
+              isOpen={openRowId === row.original.id}
+              onClose={closeDropdown}
+              className="w-40 p-2"
             >
-              Оприходовать
-            </Button>
+              <DropdownItem
+                onClick={() => handleOpenModal(row)}
+                onItemClick={closeDropdown}
+                className="action-button"
+              >
+                <div className="flex justify-between items-center pl-0">
+                  <Van className="size-4" color="green" />
+                  <p className="ml-2">Оприходовать</p>
+                </div>
+              </DropdownItem>
+
+              <DropdownItem
+                onClick={() => handleOpenModal(row)}
+                onItemClick={closeDropdown}
+                className="action-button"
+              >
+                <div className="flex justify-between items-center pl-0">
+                  <ScanBarcode className="size-4" />
+                  <p className="ml-2">Распечатать</p>
+                </div>
+              </DropdownItem>
+
+              <DropdownItem
+                onItemClick={() => {
+                  closeDropdown();
+                  router.push(`/admin/products/edit/${row.original.id}`);
+                }}
+                className="action-button"
+              >
+                <div className="flex justify-between items-center pl-0">
+                  <Pencil className="size-4" color="blue" />
+                  <p className="ml-2">Изменить</p>
+                </div>
+              </DropdownItem>
+
+              <DropdownItem
+                onClick={() => handleDelete(row.original.id)}
+                onItemClick={closeDropdown}
+                className="action-button"
+              >
+                <div className="flex justify-between items-center pl-0">
+                  <Trash2 className="size-4" color="red" />
+                  <p className="ml-2">Delete</p>
+                </div>
+              </DropdownItem>
+            </Dropdown>
           </div>
         );
       },

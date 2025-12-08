@@ -21,7 +21,7 @@ const ArrivalForm: FC<ArrivalFormProps> = ({
   handleSubmit,
   handleArrivalFormSubmit
 }) => {
-  console.log(arrivalProduct);
+
   return (
     <form onSubmit={handleSubmit(handleArrivalFormSubmit)}>
       <h4 className="mb-6 text-lg font-medium text-gray-800 dark:text-white/90">

@@ -8,6 +8,7 @@ import {
   Ellipsis,
   LayoutGrid,
   PanelsTopLeft,
+  ShoppingBag,
   ShoppingCart,
   Truck,
   Users,
@@ -43,7 +44,7 @@ const navItems: NavItem[] = [
     path: "/admin/arrivals",
   },
   {
-    icon: <ShoppingCart />,
+    icon: <ShoppingBag />,
     name: "Продажи",
     path: "/admin/sales",
   },

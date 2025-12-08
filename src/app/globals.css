@@ -123,3 +123,6 @@
   width: 100%;
   min-width: 900px;
 }
+.action-button {
+  @apply flex w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700
+}
