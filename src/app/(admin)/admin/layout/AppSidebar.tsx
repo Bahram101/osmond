@@ -43,6 +43,11 @@ const navItems: NavItem[] = [
     path: "/admin/arrivals",
   },
   {
+    icon: <ShoppingCart />,
+    name: "Продажи",
+    path: "/admin/sales",
+  },
+  {
     icon: <Users />,
     name: "Пользователи",
     path: "/admin/users",

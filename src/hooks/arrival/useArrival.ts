@@ -26,5 +26,6 @@ export const useGetArrivals = () => {
     queryKey: ["get-arrivals"],
     queryFn: () => ArrivalService.getAll(),
   });
+  
   return { arrivals, isFetchingArrivals };
 };
