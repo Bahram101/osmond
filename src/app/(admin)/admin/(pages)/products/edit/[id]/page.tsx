@@ -10,7 +10,7 @@ import { IProduct } from "@/types/product.interface";
 import Loader from "@/components/shared/Loader";
 
 const ProductUpdatePage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: number }>();
   const { categories, isFetchingCategories } = useGetCategories();
   const { product, isFetchingProduct } = useGetProduct(id);
   const { updateProduct, isUpdatingProduct } = useUpdateProduct();
@@ -34,7 +34,7 @@ const ProductUpdatePage = () => {
               isFetchingCategories={isFetchingCategories}
               categories={categories || []}
               submitText="Изменить"
-              onSubmit={(data) => updateProduct({ id: id as string, data })}
+              onSubmit={(data) => updateProduct({ id: id as number, data })}
               isSubmitting={isUpdatingProduct}
             />
           )}

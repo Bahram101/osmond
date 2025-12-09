@@ -4,11 +4,15 @@ import { NextRequest, NextResponse } from "next/server";
 // GET /api/categories/id
 export async function GET(
   _req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await context.params;
+  const { id } = await params;
+  const numericId = Number(id);
+
   try {
-    const category = await prisma.category.findUnique({ where: { id } });
+    const category = await prisma.category.findUnique({
+      where: { id: numericId },
+    });
     if (!category) {
       return NextResponse.json(
         { message: "Категория не найдена" },
@@ -33,13 +37,15 @@ export async function GET(
 //PUT /api/categories/id
 export async function PUT(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
+  const data = await req.json();
+  const numericId = Number(id);
+
   try {
-    const { id } = await context.params;
-    const data = await req.json();
     const updatedCategory = await prisma.category.update({
-      where: { id },
+      where: { id: numericId },
       data,
     });
 
@@ -61,18 +67,21 @@ export async function PUT(
 //DELETE /api/categories/id
 export async function DELETE(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await context.params;
+  const { id } = await params;
+  const numericId = Number(id);
   try {
-    const category = await prisma.category.findUnique({ where: { id } });
+    const category = await prisma.category.findUnique({
+      where: { id: numericId },
+    });
     if (!category) {
       return NextResponse.json(
         { message: "Категория не найдена" },
         { status: 404 }
       );
     }
-    await prisma.category.delete({ where: { id } });
+    await prisma.category.delete({ where: { id: numericId } });
     return NextResponse.json({ message: "Категория успешно удалена" });
   } catch (e) {
     if (e instanceof Error) {

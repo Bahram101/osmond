@@ -20,20 +20,20 @@ export const ProductService = {
       method: "GET",
     });
   },
-  async getById(id: string) {
+  async getById(id: number) {
     return request<IProduct>({
       url: `/products/${id}`,
       method: "GET",
     });
   },
-  async update(id: string, data: ProductUpdateDTO) {
+  async update(id: number, data: ProductUpdateDTO) {
     return request<IProduct>({
       url: `/products/${id}`,
       method: "PUT",
       data,
     });
   },
-  async delete(id: string) {
+  async delete(id: number) {
     return request<DeleteResponse>({
       url: `/products/${id}`,
       method: "DELETE",

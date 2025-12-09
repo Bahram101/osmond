@@ -36,10 +36,10 @@ export const useGetProducts = () => {
   return { products, isFetchingProducts };
 };
 
-export const useGetProduct = (id?: string) => {
+export const useGetProduct = (id?: number) => {
   const { data: product, isPending: isFetchingProduct } = useQuery<IProduct>({
     queryKey: ["get-product", id],
-    queryFn: () => ProductService.getById(id as string),
+    queryFn: () => ProductService.getById(id as number),
     enabled: !!id,
   });
   return { product, isFetchingProduct };
@@ -52,7 +52,7 @@ export const useUpdateProduct = () => {
   const { mutate: updateProduct, isPending: isUpdatingProduct } = useMutation<
     IProduct,
     Error,
-    { id: string; data: ProductUpdateDTO }
+    { id: number; data: ProductUpdateDTO }
   >({
     mutationKey: ["updateProduct"],
     mutationFn: ({ id, data }) => ProductService.update(id, data),
@@ -71,7 +71,7 @@ export const useDeleteProduct = () => {
   const { mutate: deleteProduct, isPending: isDeletingProduct } = useMutation<
     DeleteResponse,
     Error,
-    string
+    number
   >({
     mutationKey: ["delete-product"],
     mutationFn: (id) => ProductService.delete(id),

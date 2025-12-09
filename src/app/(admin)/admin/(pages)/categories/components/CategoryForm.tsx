@@ -71,7 +71,7 @@ const CategoryForm: FC<CategoryFormProps> = ({
         {isFetchingCategories ? (
           <Loader />
         ) : (
-          <ControlledSelect<CategoryCreateDTO, string>
+          <ControlledSelect<CategoryCreateDTO, number>
             name="parentId"
             control={control}
             options={categoryOptions}

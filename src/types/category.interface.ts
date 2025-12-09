@@ -1,11 +1,11 @@
 export interface ICategory {
-  id?: string;
+  id?: number;
   name: string;
   parentId?: string;
   createdAt?: string;
   updatedAt?: string;
   parent?: {
-    id: string;
+    id: number;
     name: string;
   } | null;
 }
@@ -16,6 +16,6 @@ export type CategoryUpdateDTO = Partial<CategoryCreateDTO>;
 
 export interface IParams {
   params: {
-    id: string;
+    id: number;
   };
 }

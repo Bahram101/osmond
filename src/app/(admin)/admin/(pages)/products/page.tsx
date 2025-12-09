@@ -32,15 +32,15 @@ const ProductsPage = () => {
 
   const { control, handleSubmit, reset } = useForm<IArrivalForm>();
   const { isOpen, openModal, closeModal } = useModal();
-  const [openRowId, setOpenRowId] = useState<string | null>(null);
+  const [openRowId, setOpenRowId] = useState<number | null>(null);
   const { products, isFetchingProducts } = useGetProducts();
   const { createArrival, isCreatingArrival } = useCreateArrival();
   const { deleteProduct, isDeletingProduct } = useDeleteProduct();
 
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const [arrivalProduct, setArrivalProduct] = useState<IProduct | null>(null);
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: number) => {
     if (confirm("Точно удалить товар?")) {
       deleteProduct(id);
       setDeletingId(id);

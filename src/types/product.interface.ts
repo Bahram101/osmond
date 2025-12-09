@@ -1,5 +1,5 @@
 export interface IProduct {
-  id: string;
+  id: number;
   name: string;
   description?: string;
   price: number;
@@ -9,7 +9,7 @@ export interface IProduct {
   barcode?: string;
   createdAt: string;
   category: {
-    id: string;
+    id: number;
     name: string;
   };
 }

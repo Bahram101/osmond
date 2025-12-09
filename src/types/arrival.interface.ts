@@ -1,11 +1,11 @@
 export interface IArrival {
   id: number;
-  productId: string;
+  productId: number;
   qty: number;
   note?: string;
   createdAt: string;
   product:{
-    id: string,
+    id: number,
     name: string
   }
 }
@@ -16,5 +16,5 @@ export interface IArrivalForm {
 }
 
 export interface IArrivalRequest extends IArrivalForm {
-  productId: string;
+  productId: number;
 }

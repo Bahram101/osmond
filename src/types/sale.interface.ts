@@ -1,5 +1,5 @@
 export interface ISale{
-  id: string
+  id: number
   productId: string
   quantity: number
   price?: number

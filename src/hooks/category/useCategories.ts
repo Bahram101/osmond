@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export interface DeleteResponse {
-  message: string;
+  message: number;
 }
 
 export const useCreateCategory = () => {
@@ -33,11 +33,11 @@ export const useCreateCategory = () => {
   return { createCategory, isCreatingCategory };
 };
 
-export const useGetCategoryById = (id?: string) => {
+export const useGetCategoryById = (id?: number) => {
   const { data: category, isPending: isFetchingCategory } = useQuery<ICategory>(
     {
       queryKey: ["get-category", id],
-      queryFn: () => CategoryService.getCategory(id as string),
+      queryFn: () => CategoryService.getCategory(id as number),
       enabled: !!id,
     }
   );
@@ -57,7 +57,7 @@ export const useDeleteCategory = () => {
   const { mutate: deleteCategory, isPending: isDeleting } = useMutation<
     DeleteResponse,
     AxiosError,
-    string
+    number
   >({
     mutationKey: ["delete-category"],
     mutationFn: (id) => CategoryService.deleteCategory(id),
@@ -79,7 +79,7 @@ export const useUpdateCategory = () => {
   const { mutate: updateCategory, isPending: isUpdatingCategory } = useMutation<
     ICategory,
     AxiosError,
-    { id: string; data: CategoryUpdateDTO }
+    { id: number; data: CategoryUpdateDTO }
   >({
     mutationKey: ["updateCategory"],
     mutationFn: ({ id, data }) => CategoryService.updateCategory(id, data),

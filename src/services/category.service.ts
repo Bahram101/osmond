@@ -16,7 +16,7 @@ export const CategoryService = {
     return res;
   },
 
-  async getCategory(id: string): Promise<ICategory> {
+  async getCategory(id: number): Promise<ICategory> {
     const res = await request<ICategory>({
       url: `/categories/${id}`,
       method: "GET",
@@ -38,7 +38,7 @@ export const CategoryService = {
     });
   },
 
-  async deleteCategory(id: string): Promise<DeleteResponse> {
+  async deleteCategory(id: number): Promise<DeleteResponse> {
     return await request<DeleteResponse>({
       url: `/categories/${id}`,
       method: "DELETE",
@@ -46,7 +46,7 @@ export const CategoryService = {
   },
 
   async updateCategory(
-    id: string,
+    id: number,
     data: CategoryUpdateDTO
   ): Promise<ICategory> {
     return await request({

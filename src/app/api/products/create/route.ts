@@ -12,6 +12,7 @@ export async function POST(req: NextRequest) {
     const dataParsed = {
       ...data,
       price: Number(data.price),
+      categoryId: Number(data.categoryId),
       userId: decoded?.userId,
       published: data.published === "true" || data.published === true,
       barcode,

@@ -9,17 +9,18 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  username  String?   @unique
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String?  @unique
   fullName  String?
   password  String
   phone     String?
-  avatarUrl String    @default("https://www.gravatar.com/avatar")
-  role      Role      @default(CUSTOMER)
-  products  Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  avatarUrl String   @default("https://www.gravatar.com/avatar")
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
 
   @@map("user")
 }
@@ -30,7 +31,7 @@ enum Role {
 }
 
 model Product {
-  id          String   @id @default(cuid())
+  id          Int      @id @default(autoincrement())
   name        String
   description String?
   published   Boolean  @default(true)
@@ -39,36 +40,38 @@ model Product {
   price       Float    @default(0)
   quantity    Int      @default(0)
   barcode     String?  @unique
-  userId      String   @map("user_id")
-  categoryId  String   @map("category_id")
+  userId      Int      @map("user_id")
+  categoryId  Int      @map("category_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  user        User     @relation(fields: [userId], references: [id])
-  category    Category @relation(fields: [categoryId], references: [id])
 
-  Sales   Sale[]
-  arrival Arrival[]
+  user     User     @relation(fields: [userId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  sales    Sale[]
+  arrivals Arrival[]
 
   @@map("product")
 }
 
 model Category {
-  id        String   @id @default(cuid())
+  id        Int      @id @default(autoincrement())
   name      String   @unique
-  parentId  String?  @map("parent_id")
+  parentId  Int?     @map("parent_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   parent   Category?  @relation("Subcategories", fields: [parentId], references: [id])
   children Category[] @relation("Subcategories")
+
   products Product[]
 
   @@map("category")
 }
 
 model Sale {
-  id        String   @id @default(cuid())
-  productId String
+  id        Int      @id @default(autoincrement())
+  productId Int
   quantity  Int      @default(1)
   price     Float
   createdAt DateTime @default(now()) @map("created_at")
@@ -80,7 +83,7 @@ model Sale {
 
 model Arrival {
   id        Int      @id @default(autoincrement())
-  productId String
+  productId Int
   qty       Int
   note      String?
   costPrice Decimal?

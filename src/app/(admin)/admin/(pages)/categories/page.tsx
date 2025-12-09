@@ -16,9 +16,9 @@ import { ICategory } from "@/types/category.interface";
 const Categories = () => {
   const { categories, isFetchingCategories } = useGetCategories();
   const { deleteCategory, isDeleting } = useDeleteCategory();
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     if (confirm("Точно удалить категорию?")) {
       deleteCategory(id);
       setDeletingId(id);

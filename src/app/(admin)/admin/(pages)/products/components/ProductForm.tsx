@@ -124,7 +124,7 @@ const ProductForm: FC<ProductFormProps> = ({
         {isFetchingCategories ? (
           <Loader />
         ) : (
-          <ControlledSelect<ProductCreateDTO, string>
+          <ControlledSelect<ProductCreateDTO, number>
             name="categoryId"
             control={control}
             rules={{ required: "Заполните поле" }}
