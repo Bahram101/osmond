@@ -44,13 +44,10 @@ export function ControlledSelect<T extends FieldValues, TValue>({
       render={({ field: { value, onChange }, fieldState: { error } }) => (
         <div>
           <Select
-            value={value !== undefined ? String(value) : ""}
+            value={value !== undefined && value !== null ? String(value) : ""}
             onValueChange={(val) => {
-              if (val === "true" || val === "false") {
-                onChange(val === "true");
-              } else {
-                onChange(val);
-              }
+              const num = Number(val);
+              onChange(isNaN(num) ? null : num);
             }}
           >
             <SelectTrigger className={cn("w-full", error && "border-red-400")}>

@@ -13,10 +13,10 @@ import Loader from "@/components/shared/Loader";
 import { ICategory } from "@/types/category.interface";
 
 const CategoryEditPage = () => {
-  const { id } = useParams<{ id: number }>();
-
+  const { id } = useParams<{ id: string }>();
+  const numericId = Number(id);
   const { categories, isFetchingCategories } = useGetCategories();
-  const { category, isFetchingCategory } = useGetCategoryById(id);
+  const { category, isFetchingCategory } = useGetCategoryById(numericId);
   const { updateCategory, isUpdatingCategory } = useUpdateCategory();
 
   if (isFetchingCategory) return <Loader />;
@@ -37,7 +37,9 @@ const CategoryEditPage = () => {
             defaultValues={category as ICategory}
             isFetchingCategories={isFetchingCategories}
             categories={categories || []}
-            onSubmit={(data) => updateCategory({ id: id as number, data })}
+            onSubmit={(data) =>
+              updateCategory({ id: numericId as number, data })
+            }
             isSubmitting={isUpdatingCategory}
             submitText="Изменить"
           />

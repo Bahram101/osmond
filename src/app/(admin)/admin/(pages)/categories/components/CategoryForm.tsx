@@ -37,7 +37,7 @@ const CategoryForm: FC<CategoryFormProps> = ({
   }, [defaultValues, reset]);
 
   const categoryOptions = categories.map((cat) => ({
-    value: cat.id ?? "",
+    value: cat.id ?? null,
     label: cat.name,
   }));
 
@@ -71,7 +71,7 @@ const CategoryForm: FC<CategoryFormProps> = ({
         {isFetchingCategories ? (
           <Loader />
         ) : (
-          <ControlledSelect<CategoryCreateDTO, number>
+          <ControlledSelect<CategoryCreateDTO, number | null>
             name="parentId"
             control={control}
             options={categoryOptions}
