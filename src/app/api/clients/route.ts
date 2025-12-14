@@ -8,12 +8,11 @@ export async function GET() {
         createdAt: "desc",
       },
     });
-    console.log('ccc',clients); 
 
     return NextResponse.json(clients, { status: 200 });
 
   } catch (e) {
-    
+
     return NextResponse.json(
       { message: "Ошибка при получении клиентов" },
       { status: 500 }

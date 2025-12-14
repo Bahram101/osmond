@@ -10,7 +10,9 @@ import {
   PanelsTopLeft,
   ShoppingBag,
   ShoppingCart,
+  SquareUser,
   Truck,
+  User,
   Users,
 } from "lucide-react";
 
@@ -47,6 +49,11 @@ const navItems: NavItem[] = [
     icon: <ShoppingBag />,
     name: "Продажи",
     path: "/admin/sales",
+  },
+  {
+    icon: <SquareUser />,
+    name: "Клиенты",
+    path: "/admin/clients",
   },
   {
     icon: <Users />,
