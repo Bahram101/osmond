@@ -69,7 +69,6 @@ const Categories = () => {
       <BreadCrumb
         items={[{ label: "Home", href: "/admin" }, { label: "Категория" }]}
       />
-
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
         <div className="flex justify-between items-center pb-5">
           <h3 className="text-lg">Список категории</h3>
