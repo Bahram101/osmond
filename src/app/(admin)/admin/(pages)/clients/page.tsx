@@ -2,7 +2,7 @@
 import { useGetClients } from "@/hooks/client/useClient";
 import { IClient, IClientForm } from "@/types/client.interface";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { Loader, Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import BreadCrumb from "../../components/common/BreadCrumb";
 import { DataTable } from "@/components/common/DataTable";
@@ -12,6 +12,7 @@ import { useModal } from "../../hooks/useModal";
 import { Modal } from "../../components/ui/modal";
 import ClientForm from "./components/ClientForm";
 import { useForm } from "react-hook-form";
+import Loader from "@/components/shared/Loader";
 
 const ClientPage = () => {
   const { isOpen, openModal, closeModal } = useModal();
@@ -38,7 +39,7 @@ const ClientPage = () => {
     //   qty: Number(data.qty),
     //   note: data.note,
     // };
-    
+
     // createArrival(body, {
     //   onSuccess: () => {
     //     reset();
@@ -73,7 +74,7 @@ const ClientPage = () => {
             <Button
               variant="danger"
               size="tiny"
-              // onClick={() => handleDelete(row.original.id!)}
+            // onClick={() => handleDelete(row.original.id!)}
             >
               <Trash2 className="size-4" />
             </Button>
@@ -113,11 +114,11 @@ const ClientPage = () => {
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
         <div className="flex justify-between items-center pb-5">
           <h3 className="text-lg">Список клиентов</h3>
-          <Link href="/admin/clients/create">
-            <Button size="xs" variant="primary" startIcon={<Plus />}>
-              Создать
-            </Button>
-          </Link>
+
+          <Button size="xs" variant="primary" startIcon={<Plus />} onClick={() => handleOpenModal(2)}>
+            Создать
+          </Button>
+
         </div>
 
         {isFetchingClients ? (
@@ -126,7 +127,7 @@ const ClientPage = () => {
           <DataTable columns={columns} data={clients} />
         )}
       </div>
-    </div>
+    </div >
   );
 };
 

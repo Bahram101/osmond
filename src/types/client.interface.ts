@@ -5,9 +5,5 @@ export interface IClient {
   note?: string;
   createdAt: string;
 }
+export type IClientForm = Pick<IClient, "fullName" | "phone" | "note">;
 
-export interface IClientForm {
-  fullName: string;
-  phone?: string;
-  note?: string;
-}

@@ -11,14 +11,13 @@ type ClientFormProps = {
   closeModal: () => void;
   control: Control<IClientForm>;
   arrivalProduct: any;
-  handleSubmit:UseFormHandleSubmit<FieldValues>
-  handleClientFormSubmit:(param:any) => void
+  handleSubmit: UseFormHandleSubmit<FieldValues>
+  handleClientFormSubmit: (param: any) => void
 };
 
 const ClientForm: FC<ClientFormProps> = ({
   closeModal,
   control,
-  arrivalProduct,
   handleSubmit,
   handleClientFormSubmit
 }) => {
@@ -26,29 +25,51 @@ const ClientForm: FC<ClientFormProps> = ({
   return (
     <form onSubmit={handleSubmit(handleClientFormSubmit)}>
       <h4 className="mb-6 text-lg font-medium text-gray-800 dark:text-white/90">
-        {arrivalProduct.name}
+        {/* {arrivalProduct.name} */}
       </h4>
+      <div className="flex flex-col gap-3">
+        <div>
+          <Label htmlFor="quantity">Количество</Label>
+          <Field
+            name="fullName"
+            control={control}
+            rules={{
+              required: "Заполните поле",
+              min: {
+                value: 1, message: 'Минимум 1'
+              }
+            }}
+          />
+        </div>
 
-      <div>
-        <Label htmlFor="quantity">Количество</Label>
-        <Field
-          type="number"
-          name="fullName"
-          control={control}
-          rules={{
-            required: "Заполните поле",
-            min: {
-              value: 1, message: 'Минимум 1'
-            }
-          }}
-        />
+        <div>
+          <Label htmlFor="quantity">Телефон</Label>
+          <Field
+            name="phone"
+            control={control}
+            rules={{
+              required: "Заполните поле",
+            }}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="quantity">Заметка</Label>
+          <Field
+            name="note"
+            control={control}
+            rules={{
+              required: "Заполните поле",
+            }}
+          />
+        </div>
       </div>
 
       <div className="flex items-center justify-end w-full gap-3 mt-6">
         <Button size="xs" variant="outline" onClick={closeModal}>
           Закрыть
         </Button>
-        <Button size="xs">Добавить приход</Button>
+        <Button size="xs">Создать мастер</Button>
       </div>
     </form>
   );
