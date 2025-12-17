@@ -48,12 +48,11 @@ const ProductForm: FC<ProductFormProps> = ({
   }, [defaultValues, reset]);
 
   const categoryOptions = categories.map((cat) => ({
-    value: cat.id ?? "",
+    value: cat.id ?? null,
     label: cat.name,
   }));
 
   const handleFormSubmit: SubmitHandler<ProductCreateDTO> = (data) => {
-    // console.log('ddd',data)
     onSubmit({
       ...data,
       price: Number(data.price),
@@ -124,7 +123,7 @@ const ProductForm: FC<ProductFormProps> = ({
         {isFetchingCategories ? (
           <Loader />
         ) : (
-          <ControlledSelect<ProductCreateDTO, number>
+          <ControlledSelect<ProductCreateDTO, number | null>
             name="categoryId"
             control={control}
             rules={{ required: "Заполните поле" }}

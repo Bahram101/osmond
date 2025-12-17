@@ -3,14 +3,12 @@ import React, { FC } from "react";
 import Button from "../../../components/ui/button/Button";
 import Label from "../../../components/form/Label";
 import Field from "@/components/shared/field/Field";
-import { Control, FieldValues, UseFormHandleSubmit } from "react-hook-form";
-import { IArrivalForm } from "@/types/arrival.interface";
+import { Control, FieldValues, UseFormHandleSubmit } from "react-hook-form"; 
 import { IClientForm } from "@/types/client.interface";
 
 type ClientFormProps = {
   closeModal: () => void;
   control: Control<IClientForm>;
-  arrivalProduct: any;
   handleSubmit: UseFormHandleSubmit<FieldValues>
   handleClientFormSubmit: (param: any) => void
 };
@@ -24,12 +22,9 @@ const ClientForm: FC<ClientFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit(handleClientFormSubmit)}>
-      <h4 className="mb-6 text-lg font-medium text-gray-800 dark:text-white/90">
-        {/* {arrivalProduct.name} */}
-      </h4>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 pt-5">
         <div>
-          <Label htmlFor="quantity">Количество</Label>
+          <Label htmlFor="quantity">Имя</Label>
           <Field
             name="fullName"
             control={control}
@@ -69,7 +64,7 @@ const ClientForm: FC<ClientFormProps> = ({
         <Button size="xs" variant="outline" onClick={closeModal}>
           Закрыть
         </Button>
-        <Button size="xs">Создать мастер</Button>
+        <Button size="xs">Создать клиент</Button>
       </div>
     </form>
   );

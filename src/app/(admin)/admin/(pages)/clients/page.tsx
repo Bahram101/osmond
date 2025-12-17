@@ -18,6 +18,8 @@ const ClientPage = () => {
   const { isOpen, openModal, closeModal } = useModal();
   const { control, handleSubmit, reset } = useForm<IClientForm>();
   const { clients, isFetchingClients } = useGetClients();
+  const [currentClient, setCurrentClient] = useState<IClient | null>(null);
+
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const handleDelete = async (id: number) => {
@@ -27,18 +29,35 @@ const ClientPage = () => {
     }
   };
 
-  const handleOpenModal = (currentProduct: any) => {
-    // setArrivalProduct(currentProduct.original);
+  const handleOpenModal = (client: IClient | null) => {
+    setCurrentClient(client);
+    if (client) {
+      reset({
+        fullName: client.fullName,
+        phone: client.phone,
+        note: client.note,
+      });
+    } else {
+      reset({
+        fullName: "",
+        phone: "",
+        note: "",
+      });
+    }
     openModal();
   };
 
   const handleClientFormSubmit = (data: IClientForm) => {
-    // if (!arrivalProduct) return;
-    // const body: IArrivalRequest = {
-    //   productId: arrivalProduct?.id,
-    //   qty: Number(data.qty),
-    //   note: data.note,
-    // };
+    console.log("data", data);
+
+    if (currentClient) {
+      // updateClient({
+      //   id: currentClient.id,
+      //   ...data
+      // });
+    } else {
+      //createClient(data)
+    }
 
     // createArrival(body, {
     //   onSuccess: () => {
@@ -74,7 +93,7 @@ const ClientPage = () => {
             <Button
               variant="danger"
               size="tiny"
-            // onClick={() => handleDelete(row.original.id!)}
+              // onClick={() => handleDelete(row.original.id!)}
             >
               <Trash2 className="size-4" />
             </Button>
@@ -82,7 +101,7 @@ const ClientPage = () => {
             <Button
               variant="primary"
               size="tiny"
-              onClick={() => handleOpenModal(row)}
+              onClick={() => handleOpenModal(row.original)}
             >
               <Pencil className="size-4" />
             </Button>
@@ -98,12 +117,11 @@ const ClientPage = () => {
         isOpen={isOpen}
         onClose={closeModal}
         className="max-w-[584px] p-4 lg:p-6"
-        title="Приход товара"
+        title="Создать новый клиент"
       >
         <ClientForm
           closeModal={closeModal}
           control={control}
-          arrivalProduct={null}
           handleSubmit={handleSubmit}
           handleClientFormSubmit={handleClientFormSubmit}
         />
@@ -115,10 +133,14 @@ const ClientPage = () => {
         <div className="flex justify-between items-center pb-5">
           <h3 className="text-lg">Список клиентов</h3>
 
-          <Button size="xs" variant="primary" startIcon={<Plus />} onClick={() => handleOpenModal(2)}>
+          <Button
+            size="xs"
+            variant="primary"
+            startIcon={<Plus />}
+            onClick={() => handleOpenModal(null)}
+          >
             Создать
           </Button>
-
         </div>
 
         {isFetchingClients ? (
@@ -127,7 +149,7 @@ const ClientPage = () => {
           <DataTable columns={columns} data={clients} />
         )}
       </div>
-    </div >
+    </div>
   );
 };
 
