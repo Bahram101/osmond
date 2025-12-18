@@ -4,12 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 //POST /api/clients/create
 export async function POST(req: NextRequest) {
   try {
-    const data = await req.json(); 
+    const data = await req.json();
 
     if (!data.fullName) {
       return NextResponse.json(
         {
-          message: "Имя клиента объязательно",
+          fullName: "Имя клиента объязательно для заполнения",
         },
         { status: 400 }
       );

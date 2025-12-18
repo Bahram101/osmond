@@ -7,6 +7,8 @@ export interface IClient {
 }
 export type IClientForm = Pick<IClient, "fullName" | "phone" | "note">;
 
+export type ClientCreateDTO = IClientForm;
+
 export type ClientUpdateDTO = IClientForm & {
   id: number;
 };

@@ -42,9 +42,9 @@ const ClientForm: FC<ClientFormProps> = ({
           <Field
             name="phone"
             control={control}
-            rules={{
-              required: "Заполните поле",
-            }}
+            // rules={{
+            //   required: "Заполните поле",
+            // }}
           />
         </div>
 
@@ -52,10 +52,7 @@ const ClientForm: FC<ClientFormProps> = ({
           <Label htmlFor="quantity">Заметка</Label>
           <Field
             name="note"
-            control={control}
-            rules={{
-              required: "Заполните поле",
-            }}
+            control={control} 
           />
         </div>
       </div>

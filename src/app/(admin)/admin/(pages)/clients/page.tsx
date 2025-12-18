@@ -1,5 +1,10 @@
 "use client";
-import { useGetClients } from "@/hooks/client/useClient";
+import {
+  useCreateClient,
+  useDeleteClient,
+  useGetClients,
+  useUpdateClient,
+} from "@/hooks/client/useClient";
 import { IClient, IClientForm } from "@/types/client.interface";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { Pencil, Plus, Trash2 } from "lucide-react";
@@ -18,14 +23,16 @@ const ClientPage = () => {
   const { isOpen, openModal, closeModal } = useModal();
   const { control, handleSubmit, reset } = useForm<IClientForm>();
   const { clients, isFetchingClients } = useGetClients();
+  const { updateClient, isUpdatingClient } = useUpdateClient();
+  const { createClient, isCreatingClient } = useCreateClient();
+  const { deleteClient, isDeletingClient } = useDeleteClient();
   const [currentClient, setCurrentClient] = useState<IClient | null>(null);
-
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const handleDelete = async (id: number) => {
     if (confirm("Точно удалить категорию?")) {
-      // deleteCategory(id);
       setDeletingId(id);
+      deleteClient(id);
     }
   };
 
@@ -47,24 +54,27 @@ const ClientPage = () => {
     openModal();
   };
 
+  const onSuccessHandler = () => {
+    reset();
+    closeModal();
+  };
+
   const handleClientFormSubmit = (data: IClientForm) => {
-    console.log("data", data);
-
     if (currentClient) {
-      // updateClient({
-      //   id: currentClient.id,
-      //   ...data
-      // });
+      updateClient(
+        {
+          id: currentClient.id,
+          ...data,
+        },
+        {
+          onSuccess: onSuccessHandler,
+        }
+      );
     } else {
-      //createClient(data)
+      createClient(data, {
+        onSuccess: onSuccessHandler,
+      });
     }
-
-    // createArrival(body, {
-    //   onSuccess: () => {
-    //     reset();
-    //     closeModal();
-    //   },
-    // });
   };
 
   const columnHelper = createColumnHelper<IClient>();
@@ -93,9 +103,13 @@ const ClientPage = () => {
             <Button
               variant="danger"
               size="tiny"
-              // onClick={() => handleDelete(row.original.id!)}
+              onClick={() => handleDelete(row.original.id!)}
             >
-              <Trash2 className="size-4" />
+              {isDeletingClient && deletingId === row.original.id ? (
+                <Loader />
+              ) : (
+                <Trash2 className="size-4" />
+              )}
             </Button>
 
             <Button
