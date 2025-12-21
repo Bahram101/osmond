@@ -147,12 +147,7 @@ const ClientPage = () => {
         <div className="flex justify-between items-center pb-5">
           <h3 className="text-lg">Список клиентов</h3>
 
-          <Button
-            size="xs"
-            variant="primary"
-            startIcon={<Plus />}
-            onClick={() => handleOpenModal(null)}
-          >
+          <Button size="xs" variant="primary" startIcon={<Plus />} onClick={() => handleOpenModal(null)}>
             Создать
           </Button>
         </div>

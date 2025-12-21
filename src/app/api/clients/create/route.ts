@@ -23,11 +23,8 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (e) {
-    return NextResponse.json(
-      {
-        message: "Ошибка создания клиента",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      message: "Ошибка при создании клиента",
+    }, { status: 500 });
   }
 }
