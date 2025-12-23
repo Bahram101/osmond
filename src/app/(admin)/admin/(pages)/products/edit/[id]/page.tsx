@@ -1,7 +1,6 @@
 "use client";
 import BreadCrumb from "@/app/(admin)/admin/components/common/BreadCrumb";
 import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard";
-import React from "react";
 import ProductForm from "../../components/ProductForm";
 import { useGetCategories } from "@/hooks/category/useCategories";
 import { useParams } from "next/navigation";
@@ -10,9 +9,10 @@ import { IProduct } from "@/types/product.interface";
 import Loader from "@/components/shared/Loader";
 
 const ProductUpdatePage = () => {
-  const { id } = useParams<{ id: number }>();
+  const { id } = useParams<{ id: string }>();
+  const productId = Number(id);
   const { categories, isFetchingCategories } = useGetCategories();
-  const { product, isFetchingProduct } = useGetProduct(id);
+  const { product, isFetchingProduct } = useGetProduct(productId);
   const { updateProduct, isUpdatingProduct } = useUpdateProduct();
 
   return (
@@ -34,7 +34,7 @@ const ProductUpdatePage = () => {
               isFetchingCategories={isFetchingCategories}
               categories={categories || []}
               submitText="Изменить"
-              onSubmit={(data) => updateProduct({ id: id as number, data })}
+              onSubmit={(data) => updateProduct({ id: productId as number, data })}
               isSubmitting={isUpdatingProduct}
             />
           )}

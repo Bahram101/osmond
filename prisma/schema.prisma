@@ -48,9 +48,9 @@ model Product {
   user     User     @relation(fields: [userId], references: [id])
   category Category @relation(fields: [categoryId], references: [id])
 
-  sales       Sale[]
-  arrivals    Arrival[]
-  clientDebts ClientDebt[]
+  sales      Sale[]
+  arrivals   Arrival[]
+  visitItems VisitItem[]
 
   @@map("product")
 }
@@ -96,40 +96,59 @@ model Arrival {
 }
 
 model Client {
-  id             Int             @id @default(autoincrement())
-  fullName       String
-  phone          String?
-  note           String?
-  createdAt      DateTime        @default(now()) @map("created_at")
-  clientDebts    ClientDebt[]
-  clientPayments ClientPayment[]
+  id        Int      @id @default(autoincrement())
+  fullName  String
+  phone     String?
+  note      String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  visits Visit[]
 
   @@map("client")
 }
 
-model ClientDebt {
-  id        Int      @id @default(autoincrement())
+model Visit {
+  id        Int         @id @default(autoincrement())
   clientId  Int
-  productId Int
-  qty       Int
-  price     Float
-  note      String?
-  createdAt DateTime @default(now()) @map("created_at")
+  status    VisitStatus @default(OPEN)
+  createdAt DateTime    @default(now())
 
-  client  Client  @relation(fields: [clientId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
+  client   Client      @relation(fields: [clientId], references: [id])
+  items    VisitItem[]
+  payments Payment[]
 
-  @@map("client_debt")
+  @@map("visit")
 }
 
-model ClientPayment {
+enum VisitStatus {
+  OPEN
+  PARTIAL
+  PAID
+}
+
+model VisitItem {
+  id         Int   @id @default(autoincrement())
+  visitId    Int
+  productId  Int
+  qty        Int
+  price      Float
+  total      Float
+  paidAmount Float @default(0)
+
+  visit   Visit   @relation(fields: [visitId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("visit_item")
+}
+
+model Payment {
   id        Int      @id @default(autoincrement())
-  clientId  Int
+  visitId   Int
   amount    Float
   note      String?
   createdAt DateTime @default(now()) @map("created_at")
 
-  client Client @relation(fields: [clientId], references: [id])
+  visit Visit @relation(fields: [visitId], references: [id])
 
-  @@map("client_payment")
+  @@map("payment")
 }

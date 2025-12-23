@@ -6,12 +6,11 @@ export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
-  const numericId = Number(id);
+  const id = Number((await params).id);
 
   try {
     const category = await prisma.category.findUnique({
-      where: { id: numericId },
+      where: { id },
     });
     if (!category) {
       return NextResponse.json(
@@ -39,13 +38,12 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
+  const id = Number((await params).id);
   const data = await req.json();
-  const numericId = Number(id);
 
   try {
     const updatedCategory = await prisma.category.update({
-      where: { id: numericId },
+      where: { id },
       data,
     });
 
@@ -69,11 +67,11 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
-  const numericId = Number(id);
+  const id = Number((await params).id);
+
   try {
     const category = await prisma.category.findUnique({
-      where: { id: numericId },
+      where: { id },
     });
     if (!category) {
       return NextResponse.json(
@@ -81,7 +79,7 @@ export async function DELETE(
         { status: 404 }
       );
     }
-    await prisma.category.delete({ where: { id: numericId } });
+    await prisma.category.delete({ where: { id } });
     return NextResponse.json({ message: "Категория успешно удалена" });
   } catch (e) {
     if (e instanceof Error) {

@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { useParams } from "next/navigation";
 import BreadCrumb from "@/app/(admin)/admin/components/common/BreadCrumb";
 import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard";
@@ -14,9 +13,9 @@ import { ICategory } from "@/types/category.interface";
 
 const CategoryEditPage = () => {
   const { id } = useParams<{ id: string }>();
-  const numericId = Number(id);
+  const categoryId = Number(id);
   const { categories, isFetchingCategories } = useGetCategories();
-  const { category, isFetchingCategory } = useGetCategoryById(numericId);
+  const { category, isFetchingCategory } = useGetCategoryById(categoryId);
   const { updateCategory, isUpdatingCategory } = useUpdateCategory();
 
   if (isFetchingCategory) return <Loader />;
@@ -38,7 +37,7 @@ const CategoryEditPage = () => {
             isFetchingCategories={isFetchingCategories}
             categories={categories || []}
             onSubmit={(data) =>
-              updateCategory({ id: numericId as number, data })
+              updateCategory({ id: categoryId as number, data })
             }
             isSubmitting={isUpdatingCategory}
             submitText="Изменить"

@@ -17,7 +17,7 @@ export const useCreateProduct = () => {
     ProductCreateDTO
   >({
     mutationKey: ["createProduct"],
-    mutationFn: (formData) => ProductService.createProduct(formData),
+    mutationFn: (formData) => ProductService.create(formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["get-products"] });
       toast.success("Товар успешно создан!");

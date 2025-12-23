@@ -28,7 +28,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -51,6 +51,25 @@ export async function DELETE(
       {
         message: "Ошибка при удалении клиента",
       },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const id = Number((await params).id);
+    const client = await prisma.client.findUnique({
+      where: { id },
+    });
+
+    return NextResponse.json(client, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Ошибка при получении клиента" },
       { status: 500 }
     );
   }

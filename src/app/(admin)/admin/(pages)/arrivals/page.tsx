@@ -1,9 +1,7 @@
 "use client";
 import { useGetArrivals } from "@/hooks/arrival/useArrival";
 import { IArrival } from "@/types/arrival.interface";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import Button from "../../components/ui/button/Button";
-import { Link, Pencil, Plus, Trash2 } from "lucide-react";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table"; 
 import BreadCrumb from "../../components/common/BreadCrumb";
 import Loader from "@/components/shared/Loader";
 import { DataTable } from "@/components/common/DataTable";

@@ -7,7 +7,7 @@ import {
 } from "@/hooks/client/useClient";
 import { IClient, IClientForm } from "@/types/client.interface";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Eye, Pencil, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import BreadCrumb from "../../components/common/BreadCrumb";
 import { DataTable } from "@/components/common/DataTable";
@@ -18,8 +18,10 @@ import { Modal } from "../../components/ui/modal";
 import ClientForm from "./components/ClientForm";
 import { useForm } from "react-hook-form";
 import Loader from "@/components/shared/Loader";
+import { useRouter } from "next/navigation";
 
 const ClientPage = () => {
+  const router = useRouter()
   const { isOpen, openModal, closeModal } = useModal();
   const { control, handleSubmit, reset } = useForm<IClientForm>();
   const { clients, isFetchingClients } = useGetClients();
@@ -101,6 +103,22 @@ const ClientPage = () => {
         return (
           <div className="flex justify-center gap-3">
             <Button
+              variant="primary"
+              size="tiny"
+              onClick={() => router.push(`/admin/clients/${row.original.id}`)}
+            >
+              <Eye className="size-4" />
+            </Button>
+
+            <Button
+              variant="primary"
+              size="tiny"
+              onClick={() => handleOpenModal(row.original)}
+            >
+              <Pencil className="size-4" />
+            </Button>
+
+            <Button
               variant="danger"
               size="tiny"
               onClick={() => handleDelete(row.original.id!)}
@@ -110,14 +128,6 @@ const ClientPage = () => {
               ) : (
                 <Trash2 className="size-4" />
               )}
-            </Button>
-
-            <Button
-              variant="primary"
-              size="tiny"
-              onClick={() => handleOpenModal(row.original)}
-            >
-              <Pencil className="size-4" />
             </Button>
           </div>
         );
@@ -147,7 +157,12 @@ const ClientPage = () => {
         <div className="flex justify-between items-center pb-5">
           <h3 className="text-lg">Список клиентов</h3>
 
-          <Button size="xs" variant="primary" startIcon={<Plus />} onClick={() => handleOpenModal(null)}>
+          <Button
+            size="xs"
+            variant="primary"
+            startIcon={<Plus />}
+            onClick={() => handleOpenModal(null)}
+          >
             Создать
           </Button>
         </div>

@@ -41,7 +41,7 @@ const SalesPage = () => {
   return (
     <div className="col-span-12 xl:col-span-7">
       <BreadCrumb
-        items={[{ label: "Home", href: "/admin" }, { label: "Оприходование" }]}
+        items={[{ label: "Home", href: "/admin" }, { label: "Продажа" }]}
       />
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
         <div className="flex justify-between items-center pb-5">

@@ -18,12 +18,12 @@ const CategoryCreatePage = () => {
         items={[
           { label: "Home", href: "/admin" },
           { label: "Категории", href: "/admin/categories" },
-          { label: "Создание категорию" },
+          { label: "Создание категории" },
         ]}
       />
 
       <div className="grid xl:grid-cols-2">
-        <ComponentCard title="Создание товара">
+        <ComponentCard title="Создание категории">
           <CategoryForm
             submitText='Создать' 
             isFetchingCategories={isFetchingCategories}

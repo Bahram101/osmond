@@ -205,7 +205,7 @@ const ProductsPage = () => {
       />
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
         <div className="flex justify-between items-center pb-5">
-          <h3 className="text-lg">Товары</h3>
+          <h3 className="text-lg">Список товаров</h3>
 
           <Link href="/admin/products/create">
             <Button size="xs" variant="primary" startIcon={<Plus />}>

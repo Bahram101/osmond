@@ -9,7 +9,7 @@ import {
 export const CategoryService = {
   async createCategory(data: CategoryCreateDTO): Promise<ICategory> {
     const res = await request<ICategory>({
-      url: "/categories/create",
+      url: "/categories",
       method: "POST",
       data,
     });

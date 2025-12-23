@@ -1,13 +1,16 @@
 import { request } from "@/lib/api/request.api";
-import { ClientCreateDTO, ClientUpdateDTO, IClient } from "@/types/client.interface";
+import {
+  ClientCreateDTO,
+  ClientUpdateDTO,
+  IClient,
+} from "@/types/client.interface";
 
 export const ClientService = {
   async getAll() {
     return request<IClient[]>({ url: "/clients", method: "GET" });
   },
-
   async update(data: ClientUpdateDTO) {
-    const {id, ...body} = data
+    const { id, ...body } = data;
     return request<IClient>({
       url: `/clients/${id}`,
       method: "PUT",
@@ -16,15 +19,18 @@ export const ClientService = {
   },
   async create(data: ClientCreateDTO) {
     return request<IClient>({
-      url: `/clients/create`,
+      url: `/clients`,
       method: "POST",
       data,
     });
   },
-  async delete(id: number){
+  async delete(id: number) {
     return request({
       url: `/clients/${id}`,
       method: "DELETE",
-    })
-  }
+    });
+  },
+  async getOne(id: number)  {
+    return request<IClient>({ url: `/clients/${id}`, method: "GET" });
+  },
 };

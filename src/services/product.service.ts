@@ -7,9 +7,9 @@ import {
 } from "@/types/product.interface";
 
 export const ProductService = {
-  async createProduct(data: ProductCreateDTO) {
+  async create(data: ProductCreateDTO) {
     return request<IProduct>({
-      url: "/products/create",
+      url: "/products",
       method: "POST",
       data,
     });
