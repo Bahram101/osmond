@@ -25,3 +25,8 @@ export type PublishedOption = {
   value: boolean;
   label: string;
 };
+
+export type IProductSelect = Pick<
+  IProduct,
+  "id" | "name" | "quantity" | "price"
+>;

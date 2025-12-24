@@ -1,22 +1,103 @@
 "use client";
 import BreadCrumb from "@/app/(admin)/admin/components/common/BreadCrumb";
 import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import Button from "@/app/(admin)/admin/components/ui/button/Button";
+import { Modal } from "@/app/(admin)/admin/components/ui/modal";
+import { useModal } from "@/app/(admin)/admin/hooks/useModal";
 import { useGetClient } from "@/hooks/client/useClient";
+import { useGetProducts } from "@/hooks/product/useProducts";
+import { IProduct, IProductSelect } from "@/types/product.interface";
+import { Check, Plus, Trash2, X } from "lucide-react";
 import { useParams } from "next/navigation";
+import { useState } from "react";
+import { ProductSelectTable } from "./components/ProductSelectTable";
+import { DataTable } from "@/components/common/DataTable";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { VisitItemForm } from "@/types/visit.interface";
 
 const VisitCreatePage = () => {
   const { id } = useParams<{ id: string }>();
   const clientId = Number(id);
+  const { isOpen, openModal, closeModal } = useModal();
+  const { products, isFetchingProducts } = useGetProducts();
+  const [items, setItems] = useState<VisitItemForm[]>([]);
+
   if (Number.isNaN(clientId)) return null;
 
   const { client, isFetchingClient } = useGetClient(clientId);
+
+  const productsForSelect: IProductSelect[] = products.map((p) => ({
+    id: p.id,
+    name: p.name,
+    quantity: p.quantity,
+    price: p.price,
+  }));
+
+  const onSelectProduct = (product: IProductSelect) => {
+    console.log("products", product);
+    setItems((prev) => {
+      const exists = prev.find((item) => item.productId === product.id);
+
+      if (exists) return prev;
+
+      return [
+        ...prev,
+        {
+          productId: product.id,
+          name: product.name,
+          price: product.price,
+          quantity: 1,
+          total: product.price,
+        },
+      ];
+    });
+  };
+
+  const columnHelper = createColumnHelper<VisitItemForm>();
+
+  const columns: ColumnDef<VisitItemForm>[] = [
+    {
+      accessorKey: "name",
+      header: "Название товара",
+    },
+    {
+      accessorKey: "price",
+      header: "Цена",
+    },
+    {
+      accessorKey: "quantity",
+      header: "Кол-во",
+    },
+    {
+      id: "total",
+      header: "Сумма",
+      cell: ({ row }) => {
+        const price = row.original.price;
+        const qty = row.original.quantity ?? 0;
+        return <span>{qty * price}</span>;
+      },
+    },
+    columnHelper.display({
+      id: "actions",
+      header: () => null,
+      size: 260,
+      cell: ({ row }) => {
+        return (
+          <div className="flex justify-center gap-3">
+            <Button
+              variant="danger"
+              size="tiny"
+              // onClick={() => handleDelete(row.original.id!)}
+            >
+              <X className="size-3" />
+            </Button>
+          </div>
+        );
+      },
+    }),
+  ];
+
+  console.log("items", items);
 
   return (
     <>
@@ -31,46 +112,45 @@ const VisitCreatePage = () => {
           { label: "Новый визит" },
         ]}
       />
-      {/* <div className="col-span-12 xl:col-span-7">
-        <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
-          <div className="flex justify-between items-center pb-5">
-            <h3 className="text-xl font-semibold">{client?.fullName}</h3>
-          </div>
-          <div className="grid xl:grid-cols-2">
-            <ComponentCard title="Создание товара">sdf</ComponentCard>
-          </div>
-        </div>
-      </div> */}
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        className="max-w-[584px] p-4 lg:p-6"
+        title="Выберите товар"
+      >
+        <ProductSelectTable
+          products={productsForSelect}
+          onSelect={onSelectProduct}
+        />
+      </Modal>
+
       <div className="grid xl:grid-cols-3">
         <div className="xl:col-span-2">
           <ComponentCard title={client?.fullName}>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableCell>Товар</TableCell>
-                  <TableCell>Кол-во</TableCell>
-                  <TableCell>Цена</TableCell>
-                  <TableCell>Сумма</TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell>А35</TableCell>
-                  <TableCell>2</TableCell>
-                  <TableCell>3000</TableCell>
-                  <TableCell>6000</TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>ACB</TableCell>
-                  <TableCell>1</TableCell>
-                  <TableCell>12000</TableCell>
-                  <TableCell>12000</TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+            <DataTable columns={columns} data={items} />
+
+            <div className="border-t border-gray-100 pt-5 flex justify-between">
+              <Button
+                size="xs"
+                variant="primary"
+                startIcon={<Plus size="18" />}
+                onClick={openModal}
+              >
+                Выбрать товар
+              </Button>
+              <div className="space-x-2">
+                <Button size="xs" variant="danger" startIcon={<X size="18" />}>
+                  Отмена
+                </Button>
+                <Button
+                  size="xs"
+                  variant="success"
+                  startIcon={<Check size="18" />}
+                >
+                  Сохранить
+                </Button>
+              </div>
+            </div>
           </ComponentCard>
         </div>
       </div>

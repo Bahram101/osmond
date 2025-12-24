@@ -73,13 +73,13 @@ export const Modal: React.FC<ModalProps> = ({
         {showCloseButton && (
           <button
             onClick={onClose}
-            className="absolute right-3 top-3 z-999 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:right-6 sm:top-6 sm:h-11 sm:w-11"
+            className="absolute right-3 top-3 z-999 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700 sm:right-6 sm:top-6 sm:h-6 sm:w-6"
           >
-            <X  className="h-4 md:h-5"/>
+            <X  className="h-3 md:h-4"/>
           </button>
         )}
         <div>
-          <h1 className="text-center font-semibold text-xl">{title}</h1>
+          <h1 className="text-center font-semibold text-xl mb-3">{title}</h1>
           {children}
         </div>
       </div>
