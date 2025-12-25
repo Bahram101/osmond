@@ -110,8 +110,8 @@ model Client {
 model Visit {
   id          Int         @id @default(autoincrement())
   clientId    Int
-  status      VisitStatus @default(OPEN)
   totalAmount Decimal     @default(0) @db.Decimal(10, 2)
+  status      VisitStatus @default(OPEN)
   createdAt   DateTime    @default(now())
 
   client   Client      @relation(fields: [clientId], references: [id])

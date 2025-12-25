@@ -14,12 +14,14 @@ import { ProductSelectTable } from "./components/ProductSelectTable";
 import { DataTable } from "@/components/common/DataTable";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { VisitItemForm } from "@/types/visit.interface";
+import { useCreateVisit } from "@/hooks/visit/useVisit";
 
 const VisitCreatePage = () => {
   const { id } = useParams<{ id: string }>();
   const clientId = Number(id);
   const { isOpen, openModal, closeModal } = useModal();
   const { products, isFetchingProducts } = useGetProducts();
+  const { createVisit, isCreatingVisit } = useCreateVisit();
   const [items, setItems] = useState<VisitItemForm[]>([]);
 
   if (Number.isNaN(clientId)) return null;
@@ -34,7 +36,6 @@ const VisitCreatePage = () => {
   }));
 
   const onSelectProduct = (product: IProductSelect) => {
-    console.log("products", product);
     setItems((prev) => {
       const exists = prev.find((item) => item.productId === product.id);
 
@@ -51,6 +52,12 @@ const VisitCreatePage = () => {
         },
       ];
     });
+  };
+
+  const handleSaveVisit = () => {
+    createVisit({ clientId, items }, 
+      // { onSuccess: () => {} }
+    );
   };
 
   const columnHelper = createColumnHelper<VisitItemForm>();
@@ -146,6 +153,7 @@ const VisitCreatePage = () => {
                   size="xs"
                   variant="success"
                   startIcon={<Check size="18" />}
+                  onClick={handleSaveVisit}
                 >
                   Сохранить
                 </Button>

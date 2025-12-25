@@ -12,9 +12,7 @@ export interface VisitCreateDTO {
 }
 
 export interface VisitItemCreateDTO {
-  items: {
-    productId: number;
-    price: number;
-    quantity: number;
-  };
+  productId: number;
+  price: number;
+  quantity: number;
 }
