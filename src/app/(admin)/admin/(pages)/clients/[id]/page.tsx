@@ -43,7 +43,7 @@ const ClientViewPage = () => {
             </Link>
           </div>
 
-          <Tabs defaultValue="visit" className="w-[400px]">
+          <Tabs defaultValue="visit" className="">
             <TabsList>
               <TabsTrigger value="visit">Визиты / Долги</TabsTrigger>
               <TabsTrigger value="history">История оплат</TabsTrigger>

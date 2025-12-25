@@ -108,10 +108,11 @@ model Client {
 }
 
 model Visit {
-  id        Int         @id @default(autoincrement())
-  clientId  Int
-  status    VisitStatus @default(OPEN)
-  createdAt DateTime    @default(now())
+  id          Int         @id @default(autoincrement())
+  clientId    Int
+  status      VisitStatus @default(OPEN)
+  totalAmount Decimal     @default(0) @db.Decimal(10, 2)
+  createdAt   DateTime    @default(now())
 
   client   Client      @relation(fields: [clientId], references: [id])
   items    VisitItem[]
@@ -130,7 +131,7 @@ model VisitItem {
   id         Int   @id @default(autoincrement())
   visitId    Int
   productId  Int
-  qty        Int
+  quantity   Int
   price      Float
   total      Float
   paidAmount Float @default(0)

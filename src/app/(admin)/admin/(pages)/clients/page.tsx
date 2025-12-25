@@ -140,7 +140,7 @@ const ClientPage = () => {
       <Modal
         isOpen={isOpen}
         onClose={closeModal}
-        className="max-w-[584px] p-4 lg:p-6"
+        className="max-w-146 p-4 lg:p-6"
         title="Создать новый клиент"
       >
         <ClientForm

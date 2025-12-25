@@ -89,7 +89,7 @@ const VisitCreatePage = () => {
               size="tiny"
               // onClick={() => handleDelete(row.original.id!)}
             >
-              <X className="size-3" />
+              <X className="size-4" />
             </Button>
           </div>
         );
@@ -115,7 +115,7 @@ const VisitCreatePage = () => {
       <Modal
         isOpen={isOpen}
         onClose={closeModal}
-        className="max-w-[584px] p-4 lg:p-6"
+        className="max-w-146 p-4 lg:p-6"
         title="Выберите товар"
       >
         <ProductSelectTable
@@ -139,7 +139,7 @@ const VisitCreatePage = () => {
                 Выбрать товар
               </Button>
               <div className="space-x-2">
-                <Button size="xs" variant="danger" startIcon={<X size="18" />}>
+                <Button size="xs" variant="outline" startIcon={<X size="18" />}>
                   Отмена
                 </Button>
                 <Button

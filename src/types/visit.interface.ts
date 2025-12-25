@@ -5,3 +5,16 @@ export interface VisitItemForm {
   quantity: number;
   total: number;
 }
+
+export interface VisitCreateDTO {
+  clientId: number;
+  items: VisitItemCreateDTO[];
+}
+
+export interface VisitItemCreateDTO {
+  items: {
+    productId: number;
+    price: number;
+    quantity: number;
+  };
+}
