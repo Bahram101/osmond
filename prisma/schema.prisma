@@ -107,6 +107,12 @@ model Client {
   @@map("client")
 }
 
+enum VisitStatus {
+  OPEN
+  PARTIAL
+  PAID
+}
+
 model Visit {
   id          Int         @id @default(autoincrement())
   clientId    Int
@@ -119,12 +125,6 @@ model Visit {
   payments Payment[]
 
   @@map("visit")
-}
-
-enum VisitStatus {
-  OPEN
-  PARTIAL
-  PAID
 }
 
 model VisitItem {

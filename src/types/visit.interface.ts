@@ -16,3 +16,13 @@ export interface VisitItemCreateDTO {
   price: number;
   quantity: number;
 }
+
+export type VisitStatus = "OPEN" | "PARTIAL" | "PAID";
+export interface ClientVisitItem {
+  id: number;
+  date: string;
+  totalAmount: number;
+  paidAmount: number;
+  debtAmount: number;
+  status: VisitStatus;
+}

@@ -26,7 +26,7 @@ const VisitCreatePage = () => {
 
   if (Number.isNaN(clientId)) return null;
 
-  const { client, isFetchingClient } = useGetClient(clientId);
+  const { client, isLoadingClient } = useGetClient(clientId);
 
   const productsForSelect: IProductSelect[] = products.map((p) => ({
     id: p.id,

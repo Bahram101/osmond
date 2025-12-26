@@ -1,6 +1,6 @@
 import { VisitService } from "@/services/visit.service";
 import { VisitCreateDTO } from "@/types/visit.interface";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useCreateVisit = () => {
@@ -12,4 +12,13 @@ export const useCreateVisit = () => {
     },
   });
   return { createVisit, isCreatingVisit };
+};
+
+export const useGetClientVisits = (clientId: number) => {
+  const { data: clientVisits, isPending: isLoadingClientVisits } = useQuery({
+    queryKey: ["getClientVisits"],
+    queryFn: () => VisitService.getClientVisits(clientId),
+    enabled: !!clientId,
+  });
+  return { clientVisits, isLoadingClientVisits };
 };

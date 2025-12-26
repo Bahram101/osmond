@@ -9,13 +9,17 @@ import HistoryTab from "./components/tabs/HistoryTab";
 import InfoTab from "./components/tabs/InfoTab";
 import { useParams } from "next/navigation";
 import { useGetClient } from "@/hooks/client/useClient";
+import { useGetClientVisits } from "@/hooks/visit/useVisit";
 
 const ClientViewPage = () => {
   const { id } = useParams<{ id: string }>();
   const clientId = Number(id);
   if (Number.isNaN(clientId)) return null;
 
-  const { client, isFetchingClient } = useGetClient(clientId);
+  const { client, isLoadingClient } = useGetClient(clientId);
+  const { clientVisits, isLoadingClientVisits } = useGetClientVisits(clientId);
+
+  console.log('clientVisits',clientVisits)
 
   return (
     <>
@@ -44,17 +48,21 @@ const ClientViewPage = () => {
           </div>
 
           <Tabs defaultValue="visit" className="">
+
             <TabsList>
               <TabsTrigger value="visit">Визиты / Долги</TabsTrigger>
               <TabsTrigger value="history">История оплат</TabsTrigger>
               <TabsTrigger value="info">Информация</TabsTrigger>
             </TabsList>
+
             <TabsContent value="visit">
               <VisitTab />
             </TabsContent>
+
             <TabsContent value="history">
               <HistoryTab />
             </TabsContent>
+            
             <TabsContent value="info">
               <InfoTab />
             </TabsContent>

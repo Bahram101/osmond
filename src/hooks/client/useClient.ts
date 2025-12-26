@@ -60,10 +60,10 @@ export const useDeleteClient = () => {
 };
 
 export const useGetClient = (id: number) => {
-  const { data: client, isPending: isFetchingClient } = useQuery<IClient>({
+  const { data: client, isPending: isLoadingClient } = useQuery<IClient>({
     queryKey: ["get-client", id],
     queryFn: () => ClientService.getOne(id),
     enabled: !!id,
   });
-  return { client, isFetchingClient };
+  return { client, isLoadingClient };
 };

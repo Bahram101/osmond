@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const VisitTab = () => {
-  return (
-    <div>VisitTab</div>
-  )
-}
+  return <div>VisitTab</div>;
+};
 
-export default VisitTab
+export default VisitTab;
