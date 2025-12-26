@@ -15,5 +15,8 @@ export const VisitService = {
       url: `/clients/${clientId}/visits`,
       method: 'GET'
     })
-  }
+  },
+
+  
+
 };
