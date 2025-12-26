@@ -8,18 +8,14 @@ import VisitTab from "./components/tabs/VisitTab";
 import HistoryTab from "./components/tabs/HistoryTab";
 import InfoTab from "./components/tabs/InfoTab";
 import { useParams } from "next/navigation";
-import { useGetClient } from "@/hooks/client/useClient";
-import { useGetClientVisits } from "@/hooks/visit/useVisit";
+import { useGetClient } from "@/hooks/client/useClient"; 
 
 const ClientViewPage = () => {
   const { id } = useParams<{ id: string }>();
   const clientId = Number(id);
   if (Number.isNaN(clientId)) return null;
 
-  const { client, isLoadingClient } = useGetClient(clientId);
-  const { clientVisits, isLoadingClientVisits } = useGetClientVisits(clientId);
-
-  console.log('clientVisits',clientVisits)
+  const { client } = useGetClient(clientId);
 
   return (
     <>
@@ -27,7 +23,7 @@ const ClientViewPage = () => {
         items={[
           { label: "Home", href: "/admin" },
           { label: "Клиенты", href: "/admin/clients" },
-          { label: client?.fullName ?? 'Клиент' },
+          { label: client?.fullName ?? "Клиент" },
         ]}
       />
 
@@ -47,9 +43,8 @@ const ClientViewPage = () => {
             </Link>
           </div>
 
-          <Tabs defaultValue="visit" className="">
-
-            <TabsList>
+          <Tabs defaultValue="visit">
+            <TabsList className="mb-3">
               <TabsTrigger value="visit">Визиты / Долги</TabsTrigger>
               <TabsTrigger value="history">История оплат</TabsTrigger>
               <TabsTrigger value="info">Информация</TabsTrigger>
@@ -62,7 +57,7 @@ const ClientViewPage = () => {
             <TabsContent value="history">
               <HistoryTab />
             </TabsContent>
-            
+
             <TabsContent value="info">
               <InfoTab />
             </TabsContent>

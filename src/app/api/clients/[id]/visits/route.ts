@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
+//GET /api/clients/[id]/visits
 export async function GET(
   _req: NextRequest,
   { params }: { params: { id: string } }

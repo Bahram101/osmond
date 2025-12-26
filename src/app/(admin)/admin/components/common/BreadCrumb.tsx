@@ -27,13 +27,13 @@ const BreadCrumb: React.FC<BreadcrumbProps> = ({ items }) => {
                 {item.href && !isLast ? (
                   <Link
                     href={item.href}
-                    className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 underline underline-offset-4"
+                    className="inline-flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 underline underline-offset-4"
                   >
                     {item.label}
-                    <ChevronRight size='18'/>
+                    <ChevronRight size='18' />
                   </Link>
                 ) : (
-                  <span className="text-sm text-gray-800 dark:text-white/90">
+                  <span className="text-sm text-gray-500 dark:text-white/90">
                     {item.label}
                   </span>
                 )}

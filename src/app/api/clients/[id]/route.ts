@@ -27,6 +27,7 @@ export async function PUT(
   }
 }
 
+//DELETE /api/clients/id
 export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -56,6 +57,7 @@ export async function DELETE(
   }
 }
 
+//GET /api/clients/id
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }

@@ -104,8 +104,6 @@ const VisitCreatePage = () => {
     }),
   ];
 
-  console.log("items", items);
-
   return (
     <>
       <BreadCrumb

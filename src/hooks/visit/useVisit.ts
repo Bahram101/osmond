@@ -18,6 +18,7 @@ export const useGetClientVisits = (clientId: number) => {
   const { data: clientVisits, isPending: isLoadingClientVisits } = useQuery({
     queryKey: ["getClientVisits"],
     queryFn: () => VisitService.getClientVisits(clientId),
+    staleTime: 1000 * 60 * 5, 
     enabled: !!clientId,
   });
   return { clientVisits, isLoadingClientVisits };
