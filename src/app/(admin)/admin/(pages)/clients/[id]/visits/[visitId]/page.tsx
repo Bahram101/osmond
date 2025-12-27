@@ -1,18 +1,14 @@
 "use client";
 import BreadCrumb from "@/app/(admin)/admin/components/common/BreadCrumb";
-import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard";
-import Badge from "@/app/(admin)/admin/components/ui/badge/Badge";
+import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard"; 
 import { DataTable } from "@/components/common/DataTable";
 import Loader from "@/components/shared/Loader";
 import { useGetClient } from "@/hooks/client/useClient";
-import { useGetVisit } from "@/hooks/visit/useVisit";
-import { formatDateTime } from "@/lib/utils/date";
-import { formatCurrency } from "@/lib/utils/helpers";
+import { useGetVisit } from "@/hooks/visit/useVisit";  
 import { VisitDetailItem } from "@/types/visit.interface";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { useParams } from "next/navigation";
-import SummaryItem from "./components/SummaryItem";
-import { VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants/visit";
+import { useParams } from "next/navigation"; 
+import VisitSummary from "./components/VisitSummary";
 
 const ClientVisitPage = () => {
   const { id, visitId } = useParams<{ id: string; visitId: string }>();
@@ -49,8 +45,6 @@ const ClientVisitPage = () => {
     },
   ];
 
-  console.log("visit", visit);
-
   return (
     <>
       <BreadCrumb
@@ -63,39 +57,8 @@ const ClientVisitPage = () => {
       />
 
       <ComponentCard>
-        <div className="grid grid-cols-6">
-          <div className="flex flex-col gap-1">
-            <SummaryItem label="Сумма">
-              {formatCurrency(visit?.totalAmount)}
-            </SummaryItem>
-
-            <SummaryItem label="Оплачено">
-              {formatCurrency(visit?.paidAmount)}
-            </SummaryItem>
-
-            <SummaryItem label="Долг">
-              {formatCurrency(visit?.debtAmount)}
-            </SummaryItem>
-          </div>
-          <div className="flex flex-col gap-1">
-            <SummaryItem label="Статус">
-              <Badge
-                variant="light"
-                color={VISIT_STATUS_COLOR[visit.status]}
-              >
-                {VISIT_STATUS_LABEL[visit.status]}
-              </Badge>
-            </SummaryItem>
-            <SummaryItem label="Дата">
-              {formatDateTime(visit?.createdAt)}
-            </SummaryItem>
-          </div>
-          {/* <div>sdf</div>
-          <div>sdf</div> */}
-        </div>
-
+        <VisitSummary visit={visit}/>
         <hr />
-
         <DataTable columns={columns} data={visit?.items} />
       </ComponentCard>
     </>

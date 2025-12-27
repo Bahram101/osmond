@@ -47,6 +47,7 @@ export async function GET(
 
     return NextResponse.json({
       ...visit,
+      totalAmount: Number(visit.totalAmount),
       paidAmount,
       debtAmount: Number(visit.totalAmount) - paidAmount,
     });

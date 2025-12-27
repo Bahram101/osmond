@@ -4,7 +4,7 @@ import { DataTable } from "@/components/common/DataTable";
 import Loader from "@/components/shared/Loader";
 import { useGetClientVisits } from "@/hooks/visit/useVisit";
 import { VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants/visit";
-import { formatDateTime } from "@/lib/utils/date";
+import { formatDateTime } from "@/lib/utils/helpers";
 import { ClientVisitItem } from "@/types/visit.interface";
 import { ColumnDef } from "@tanstack/react-table";
 import { useParams, useRouter } from "next/navigation";

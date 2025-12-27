@@ -8,8 +8,8 @@ type SummaryItemProps = {
 const SummaryItem = ({ label, children }: SummaryItemProps) => {
   return (
     <div className="flex gap-2 items-center">
-      <p className="">{label}: </p>
-      <p className={`text-[17px] font-semibold`}>{children}</p>
+      <p className="text-sm text-gray-500">{label}: </p>
+      <p className={` font-semibold`}>{children}</p>
     </div>
   );
 };
