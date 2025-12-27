@@ -13,4 +13,21 @@ export const generateEAN13 = () => {
   const checksum = (10 - (sum % 10)) % 10;
 
   return base.join("") + checksum;
-}
+};
+
+export const formatDateTime = (iso: string) => {
+  return new Date(iso).toLocaleString("ru-RU", {
+    timeZone: "Asia/Almaty",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+export const formatCurrency = (value: number, symbol: string = "₸"): string => {
+  if (value == null || isNaN(value)) return `0 ${symbol}`;
+
+  return value.toLocaleString("ru-RU") + ` ${symbol}`;
+};

@@ -49,23 +49,9 @@ export interface VisitDetail {
   id: number;
   totalAmount: number;
   status: VisitStatus;
+  createdAt: string;
+  paidAmount: number;
+  debtAmount: number;
   items: VisitDetailItem[];
   payments: VisitPayment[];
 }
-
-// {
-//   "id": 123,
-//   "status": "OPEN",
-//   "totalAmount": 6200,
-//   "items": [
-//     {
-//       "id": 1,
-//       "productId": 4,
-//       "quantity": 1,
-//       "price": 2500,
-//       "total": 2500,
-//       "product": { "name": "Батарейка A51" }
-//     }
-//   ],
-//   "payments": []
-// }

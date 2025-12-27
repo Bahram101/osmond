@@ -8,7 +8,7 @@ import { useGetClient } from "@/hooks/client/useClient";
 import { useGetProducts } from "@/hooks/product/useProducts";
 import { IProduct, IProductSelect } from "@/types/product.interface";
 import { Check, Plus, Trash2, X } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { ProductSelectTable } from "./components/ProductSelectTable";
 import { DataTable } from "@/components/common/DataTable";
@@ -17,6 +17,7 @@ import { VisitItemForm } from "@/types/visit.interface";
 import { useCreateVisit } from "@/hooks/visit/useVisit";
 
 const VisitCreatePage = () => {
+  const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const clientId = Number(id);
   const { isOpen, openModal, closeModal } = useModal();
@@ -55,8 +56,13 @@ const VisitCreatePage = () => {
   };
 
   const handleSaveVisit = () => {
-    createVisit({ clientId, items }, 
-      // { onSuccess: () => {} }
+    createVisit(
+      { clientId, items },
+      {
+        onSuccess: () => {
+          router.push(`/admin/clients/${clientId}`);
+        },
+      }
     );
   };
 

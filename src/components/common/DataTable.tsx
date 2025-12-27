@@ -25,6 +25,8 @@ export function DataTable<TData>({
     columnResizeMode: "onChange",
   });
 
+  const hasFooter = table.getAllColumns().some((col) => col.columnDef.footer);
+
   return (
     <div className="overflow-x-auto w-full">
       <table className="min-w-full border border-gray-200 table-fixed ">
@@ -60,6 +62,24 @@ export function DataTable<TData>({
             </tr>
           ))}
         </tbody>
+        {hasFooter && (
+          <tfoot>
+            {table.getFooterGroups().map((footerGroup) => (
+              <tr key={footerGroup.id}>
+                {footerGroup.headers.map((header) => (
+                  <td key={header.id} className="px-3 py-2">
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.footer,
+                          header.getContext()
+                        )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tfoot>
+        )}
       </table>
     </div>
   );

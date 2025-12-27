@@ -6,10 +6,7 @@ export async function GET(
   { params }: { params: { visitId: string } }
 ) {
   try {
-    // const visitId = Number(params.visitId);
     const visitId = Number((await params).visitId);
-
-    console.log("visitID", visitId);
 
     if (isNaN(visitId)) {
       return NextResponse.json(
@@ -43,8 +40,17 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(visit)
+    const paidAmount = visit.payments.reduce(
+      (sum, p) => sum + Number(p.amount),
+      0
+    );
 
+    return NextResponse.json({
+      ...visit,
+      paidAmount,
+      debtAmount: Number(visit.totalAmount) - paidAmount,
+    });
+    
   } catch (error) {
     return NextResponse.json(
       { message: "Internal server error" },
