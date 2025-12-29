@@ -24,10 +24,15 @@ export async function GET(
           include: {
             product: {
               select: { name: true },
-            },
+            }, 
           },
         },
         payments: true,
+        client:{
+          select: {
+            fullName: true
+          }
+        }
       },
     });
 

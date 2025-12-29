@@ -1,17 +1,17 @@
-import SummaryItem from './SummaryItem'
-import { formatCurrency, formatDateTime } from '@/lib/utils/helpers'
-import Badge from '@/app/(admin)/admin/components/ui/badge/Badge'
-import { VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from '@/lib/constants/visit'
-import { VisitDetail } from '@/types/visit.interface'
+import SummaryItem from "./SummaryItem";
+import { formatCurrency, formatDateTime } from "@/lib/utils/helpers";
+import Badge from "@/app/(admin)/admin/components/ui/badge/Badge";
+import { VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants/visit";
+import { VisitDetail } from "@/types/visit.interface"; 
 
 type VisitSummaryProps = {
-  visit: VisitDetail
-}
+  visit: VisitDetail;
+  clientId: number;
+};
 
-const VisitSummary = ({ visit }: VisitSummaryProps) => {
+const VisitSummary = ({ visit  }: VisitSummaryProps) => {
   return (
-
-    <div className="grid lg:grid-cols-4 sm:grid-cols-2 ">
+    <div className="flex flex-col sm:flex-row gap-3 sm:gap-16">
       <div className="flex flex-col gap-1">
         <SummaryItem label="Сумма">
           {formatCurrency(visit?.totalAmount)}
@@ -25,12 +25,9 @@ const VisitSummary = ({ visit }: VisitSummaryProps) => {
           {formatCurrency(visit?.debtAmount)}
         </SummaryItem>
       </div>
-      <div className="flex flex-col gap-1 mt-1 sm:mt-0">
+      <div className="flex flex-col gap-1">
         <SummaryItem label="Статус">
-          <Badge
-            variant="light"
-            color={VISIT_STATUS_COLOR[visit.status]}
-          >
+          <Badge variant="light" color={VISIT_STATUS_COLOR[visit.status]}>
             {VISIT_STATUS_LABEL[visit.status]}
           </Badge>
         </SummaryItem>
@@ -39,9 +36,7 @@ const VisitSummary = ({ visit }: VisitSummaryProps) => {
         </SummaryItem>
       </div>
     </div>
+  );
+};
 
-
-  )
-}
-
-export default VisitSummary
+export default VisitSummary;

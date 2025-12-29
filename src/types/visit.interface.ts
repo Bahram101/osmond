@@ -54,4 +54,5 @@ export interface VisitDetail {
   debtAmount: number;
   items: VisitDetailItem[];
   payments: VisitPayment[];
+  client: { fullName: string };
 }

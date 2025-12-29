@@ -4,11 +4,10 @@ import { DataTable } from "@/components/common/DataTable";
 import Loader from "@/components/shared/Loader";
 import { useGetClientVisits } from "@/hooks/visit/useVisit";
 import { VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants/visit";
-import { formatDateTime } from "@/lib/utils/helpers";
+import { formatCurrency, formatDateTime } from "@/lib/utils/helpers";
 import { ClientVisitItem } from "@/types/visit.interface";
 import { ColumnDef } from "@tanstack/react-table";
 import { useParams, useRouter } from "next/navigation";
-import React from "react";
 
 const VisitTab = () => {
   const router = useRouter();
@@ -20,19 +19,56 @@ const VisitTab = () => {
 
   const columns: ColumnDef<ClientVisitItem>[] = [
     {
+      header: "Визит",
+      accessorKey: "id",
+      cell: ({ row }) => <div className="text-center">{row.original.id}</div>,
+    },
+    {
       header: "Дата",
       accessorKey: "date",
-      cell: ({ row }) => formatDateTime(row.original.date),
+      cell: ({ row }) => (
+        <div className="text-center">{formatDateTime(row.original.date)}</div>
+      ),
     },
-    { header: "Сумма", accessorKey: "totalAmount" },
-    { header: "Оплачено", accessorKey: "paidAmount" },
-    { header: "Долг", accessorKey: "debtAmount" },
+    {
+      header: "Сумма",
+      accessorKey: "totalAmount",
+      cell: ({ row }) => (
+        <div className="text-center">
+          {formatCurrency(row.original.totalAmount)}
+        </div>
+      ),
+    },
+
+    {
+      header: "Оплачено",
+      accessorKey: "paidAmount",
+      cell: ({ row }) => {
+        const val = row.original.paidAmount;
+        return (
+          <div className="text-center">{val > 0 ? formatCurrency(val) : 0}</div>
+        );
+      },
+    },
+    {
+      header: "Долг",
+      accessorKey: "debtAmount",
+      cell: ({ row }) => {
+        const val = row.original.debtAmount;
+        return (
+          <div className="text-center">{val > 0 ? formatCurrency(val) : 0}</div>
+        );
+      },
+    },
     {
       header: "Статус",
       accessorKey: "status",
       cell: ({ row }) => (
         <div className="flex justify-center">
-          <Badge variant="light" color={VISIT_STATUS_COLOR[row.original.status]}>
+          <Badge
+            variant="light"
+            color={VISIT_STATUS_COLOR[row.original.status]}
+          >
             {VISIT_STATUS_LABEL[row.original.status]}
           </Badge>
         </div>

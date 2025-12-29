@@ -2,15 +2,16 @@
 import BreadCrumb from "../../../components/common/BreadCrumb";
 import Link from "next/link";
 import Button from "../../../components/ui/button/Button";
-import { Plus } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VisitTab from "./components/tabs/VisitTab";
 import HistoryTab from "./components/tabs/HistoryTab";
 import InfoTab from "./components/tabs/InfoTab";
-import { useParams } from "next/navigation";
-import { useGetClient } from "@/hooks/client/useClient"; 
+import { useParams, useRouter } from "next/navigation";
+import { useGetClient } from "@/hooks/client/useClient";
 
 const ClientViewPage = () => {
+  const router = useRouter()
   const { id } = useParams<{ id: string }>();
   const clientId = Number(id);
   if (Number.isNaN(clientId)) return null;
@@ -29,18 +30,27 @@ const ClientViewPage = () => {
 
       <div className="col-span-12 xl:col-span-7">
         <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
-          <div className="flex justify-between items-center pb-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center pb-5  ">
             <h3 className="text-lg">Данные о клиента</h3>
-
-            <Link href={`/admin/clients/${clientId}/visits/create`}>
+            <div className="flex gap-2">
               <Button
                 size="xs"
-                variant="primary"
-                startIcon={<Plus size="18" />}
+                variant="outline"
+                startIcon={<ArrowLeft size="18" />}
+                onClick={()=> router.push(`/admin/clients`)}
               >
-                Новый визит (долг)
+                Назад
               </Button>
-            </Link>
+              <Link href={`/admin/clients/${clientId}/visits/create`}>
+                <Button
+                  size="xs"
+                  variant="success"
+                  startIcon={<Plus size="18" />}
+                >
+                  Новый визит (долг)
+                </Button>
+              </Link>
+            </div>
           </div>
 
           <Tabs defaultValue="visit">

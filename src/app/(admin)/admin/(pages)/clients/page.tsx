@@ -84,16 +84,13 @@ const ClientPage = () => {
   const columns: ColumnDef<IClient, any>[] = [
     columnHelper.accessor("fullName", {
       header: "Имя",
-    }),
-    columnHelper.accessor("phone", {
-      header: "Телефон",
-    }),
+    }),    
     columnHelper.accessor("note", {
       header: "Заметки",
     }),
     columnHelper.accessor("createdAt", {
       header: "Дата создания",
-      cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("ru-RU"),
+      cell: ({ getValue }) => <div className="text-center">{new Date(getValue()).toLocaleDateString("ru-RU")}</div>,
     }),
     columnHelper.display({
       id: "actions",
