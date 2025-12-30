@@ -21,7 +21,7 @@ import { useModal } from "../../hooks/useModal";
 import { Modal } from "../../components/ui/modal";
 import ArrivalForm from "./components/ArrivalForm";
 import { useForm } from "react-hook-form";
-import { IArrivalForm, IArrivalRequest } from "@/types/arrival.interface";
+import { IArrivalForm, ArrivalCreateDTO } from "@/types/arrival.interface";
 import { useCreateArrival } from "@/hooks/arrival/useArrival";
 import { Dropdown } from "../../components/ui/dropdown/Dropdown";
 import { DropdownItem } from "../../components/ui/dropdown/DropdownItem";
@@ -171,7 +171,7 @@ const ProductsPage = () => {
 
   const handleArrivalFormSubmit = (data: IArrivalForm) => {
     if (!arrivalProduct) return;
-    const body: IArrivalRequest = {
+    const body: ArrivalCreateDTO = {
       productId: arrivalProduct?.id,
       qty: Number(data.qty),
       note: data.note,

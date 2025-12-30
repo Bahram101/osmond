@@ -1,8 +1,8 @@
 import { request } from "@/lib/api/request.api";
-import { IArrival, IArrivalRequest } from "@/types/arrival.interface";
+import { IArrival, ArrivalCreateDTO } from "@/types/arrival.interface";
 
 export const ArrivalService = {
-  async create(data: IArrivalRequest) {
+  async create(data: ArrivalCreateDTO) {
     return request<IArrival>({ url: "/arrivals", method: "POST", data });
   },
   async getAll() {

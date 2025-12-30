@@ -1,5 +1,5 @@
 import { ArrivalService } from "@/services/arrival.service";
-import { IArrival, IArrivalRequest } from "@/types/arrival.interface";
+import { IArrival, ArrivalCreateDTO } from "@/types/arrival.interface";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -8,7 +8,7 @@ export const useCreateArrival = () => {
   const { mutate: createArrival, isPending: isCreatingArrival } = useMutation<
     IArrival,
     Error,
-    IArrivalRequest
+    ArrivalCreateDTO
   >({
     mutationKey: ["createArrival"],
     mutationFn: (formData) => ArrivalService.create(formData),

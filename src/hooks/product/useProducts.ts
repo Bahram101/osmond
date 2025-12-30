@@ -57,7 +57,7 @@ export const useUpdateProduct = () => {
     mutationKey: ["updateProduct"],
     mutationFn: ({ id, data }) => ProductService.update(id, data),
     onSuccess: (updatedProduct, { id }) => {
-      queryClient.setQueryData(["get-product", id], updatedProduct);
+      // queryClient.setQueryData(["get-product", id], updatedProduct);
       queryClient.invalidateQueries({ queryKey: ["get-products"] });
       toast.success("Товар успешно обновлено");
       router.push("/admin/products");

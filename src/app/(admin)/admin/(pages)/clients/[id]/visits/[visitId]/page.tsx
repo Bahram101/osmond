@@ -13,10 +13,16 @@ import Button from "@/app/(admin)/admin/components/ui/button/Button";
 import { ArrowLeft, Plus } from "lucide-react";
 import { Modal } from "@/app/(admin)/admin/components/ui/modal";
 import { useModal } from "@/app/(admin)/admin/hooks/useModal";
+import PaymentForm from "./components/PaymentForm";
+import { useForm } from "react-hook-form";
+import { IPaymentForm, PaymentCreateDTO } from "@/types/payment.interface";
+import { useCreatePayment } from "@/hooks/payment/usePayments";
 
 const ClientVisitPage = () => {
   const router = useRouter();
+  const { control, handleSubmit, reset } = useForm<IPaymentForm>();
   const { isOpen, openModal, closeModal } = useModal();
+  const { createPayment, isCreatingPayment } = useCreatePayment();
   const { id, visitId } = useParams<{ id: string; visitId: string }>();
   const clientId = Number(id);
   const visId = Number(visitId);
@@ -66,6 +72,24 @@ const ClientVisitPage = () => {
     },
   ];
 
+  const handlePaymentFormSubmit = (data: IPaymentForm) => {
+    const body: PaymentCreateDTO = {
+      visitId: visId,
+      amount: Number(data.amount),
+      note: data.note,
+    };
+
+    createPayment(
+      { id: visId, clientId, data: body },
+      {
+        onSuccess: () => {
+          reset();
+          closeModal();
+        },
+      }
+    );
+  };
+
   return (
     <>
       <BreadCrumb
@@ -85,7 +109,13 @@ const ClientVisitPage = () => {
         className="max-w-146 p-4 lg:p-6"
         title="Принят оплату"
       >
-        asdf
+        <PaymentForm
+          closeModal={closeModal}
+          control={control}
+          // arrivalProduct={arrivalProduct}
+          handleSubmit={handleSubmit}
+          handlePaymentFormSubmit={handlePaymentFormSubmit}
+        />
       </Modal>
 
       <ComponentCard>

@@ -15,6 +15,6 @@ export interface IArrivalForm {
   note?: string;
 }
 
-export interface IArrivalRequest extends IArrivalForm {
+export interface ArrivalCreateDTO extends IArrivalForm {
   productId: number;
 }
