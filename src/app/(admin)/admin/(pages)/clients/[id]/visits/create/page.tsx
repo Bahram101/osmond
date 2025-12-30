@@ -6,7 +6,7 @@ import { Modal } from "@/app/(admin)/admin/components/ui/modal";
 import { useModal } from "@/app/(admin)/admin/hooks/useModal";
 import { useGetClient } from "@/hooks/client/useClient";
 import { useGetProducts } from "@/hooks/product/useProducts";
-import { IProduct, IProductSelect } from "@/types/product.interface";
+import { IProductSelect } from "@/types/product.interface";
 import { Check, Plus, Trash2, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -15,6 +15,7 @@ import { DataTable } from "@/components/common/DataTable";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { VisitItemForm } from "@/types/visit.interface";
 import { useCreateVisit } from "@/hooks/visit/useVisit";
+import { Input } from "@/components/ui/input";
 
 const VisitCreatePage = () => {
   const router = useRouter();
@@ -66,6 +67,10 @@ const VisitCreatePage = () => {
     );
   };
 
+  // const handleDeleteItem = (id) =>{
+
+  // }
+
   const columnHelper = createColumnHelper<VisitItemForm>();
 
   const columns: ColumnDef<VisitItemForm>[] = [
@@ -80,6 +85,28 @@ const VisitCreatePage = () => {
     {
       accessorKey: "quantity",
       header: "Кол-во",
+      cell: ({ row }) => {
+        return (
+          <div className='flex justify-center'>
+            <Input
+              type="number"
+              min={1}
+              className="w-20 border text-center"
+              value={row.original.quantity}
+              onChange={(e) => {
+                console.log("onChange");
+                const qty = Number(e.target.value);
+
+                setItems((prev) =>
+                  prev.map((item, idx) =>
+                    idx === row.index ? { ...item, quantity: qty } : item
+                  )
+                );
+              }}
+            />
+          </div>
+        );
+      },
     },
     {
       id: "total",
@@ -97,13 +124,9 @@ const VisitCreatePage = () => {
       cell: ({ row }) => {
         return (
           <div className="flex justify-center gap-3">
-            <Button
-              variant="danger"
-              size="tiny"
-              // onClick={() => handleDelete(row.original.id!)}
-            >
-              <X className="size-4" />
-            </Button>
+            <div className="cursor-pointer" onClick={() => console.log("del")}>
+              <Trash2 className="size-4.5" color="red" />
+            </div>
           </div>
         );
       },

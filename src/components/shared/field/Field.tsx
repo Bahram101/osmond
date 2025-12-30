@@ -23,7 +23,7 @@ const Field = <T extends FieldValues>({
       }) => {
 
         return (
-          <div className={cn("", className)}>
+          <div className={cn(className)}>
             <Input
               className={cn(error && "border-red-400")}
               value={(value || "").toString()}
