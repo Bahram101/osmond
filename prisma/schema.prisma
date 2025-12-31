@@ -48,7 +48,6 @@ model Product {
   user     User     @relation(fields: [userId], references: [id])
   category Category @relation(fields: [categoryId], references: [id])
 
-  sales      Sale[]
   arrivals   Arrival[]
   visitItems VisitItem[]
 
@@ -68,18 +67,6 @@ model Category {
   products Product[]
 
   @@map("category")
-}
-
-model Sale {
-  id        Int      @id @default(autoincrement())
-  productId Int
-  quantity  Int      @default(1)
-  price     Float
-  createdAt DateTime @default(now()) @map("created_at")
-
-  product Product @relation(fields: [productId], references: [id])
-
-  @@map("sale")
 }
 
 model Arrival {
@@ -128,13 +115,12 @@ model Visit {
 }
 
 model VisitItem {
-  id         Int   @id @default(autoincrement())
-  visitId    Int
-  productId  Int
-  quantity   Int
-  price      Float
-  total      Float
-  paidAmount Float @default(0)
+  id        Int   @id @default(autoincrement())
+  visitId   Int
+  productId Int
+  quantity  Int
+  price     Float
+  total     Float
 
   visit   Visit   @relation(fields: [visitId], references: [id])
   product Product @relation(fields: [productId], references: [id])

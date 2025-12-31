@@ -9,7 +9,7 @@ import { useGetProducts } from "@/hooks/product/useProducts";
 import { IProductSelect } from "@/types/product.interface";
 import { Check, Plus, Trash2, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ProductSelectTable } from "./components/ProductSelectTable";
 import { DataTable } from "@/components/common/DataTable";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
@@ -25,8 +25,11 @@ const VisitCreatePage = () => {
   const { products, isFetchingProducts } = useGetProducts();
   const { createVisit, isCreatingVisit } = useCreateVisit();
   const [items, setItems] = useState<VisitItemForm[]>([]);
-
+  const [barcode, setBarcode] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
   if (Number.isNaN(clientId)) return null;
+
+  const isSelectedProducts = items.length > 0
 
   const { client, isLoadingClient } = useGetClient(clientId);
 
@@ -67,11 +70,29 @@ const VisitCreatePage = () => {
     );
   };
 
-  // const handleDeleteItem = (id) =>{
+  const handleDeleteItem = (id: number) => {
+    setItems((prev) => {
+      return prev.filter((item) => item.productId !== id);
+    });
+  };
 
-  // }
+  const handleScan = async (code: string) => {
+    console.log("code", code);
+    if (!code) return;
 
-  const columnHelper = createColumnHelper<VisitItemForm>();
+    // const product = products.find((p) => p.barcode === code);
+    // if (!product) {
+    //   // toast + sound
+    //   return;
+    // }
+
+    // onSelectProduct({
+    //   id: product.id,
+    //   name: product.name,
+    //   price: product.price,
+    //   quantity: product.quantity,
+    // });
+  };
 
   const columns: ColumnDef<VisitItemForm>[] = [
     {
@@ -87,7 +108,7 @@ const VisitCreatePage = () => {
       header: "Кол-во",
       cell: ({ row }) => {
         return (
-          <div className='flex justify-center'>
+          <div className="flex justify-center">
             <Input
               type="number"
               min={1}
@@ -117,20 +138,27 @@ const VisitCreatePage = () => {
         return <span>{qty * price}</span>;
       },
     },
-    columnHelper.display({
-      id: "actions",
-      header: () => null,
-      size: 260,
-      cell: ({ row }) => {
-        return (
-          <div className="flex justify-center gap-3">
-            <div className="cursor-pointer" onClick={() => console.log("del")}>
-              <Trash2 className="size-4.5" color="red" />
-            </div>
-          </div>
-        );
-      },
-    }),
+    ...(isSelectedProducts
+      ? [
+          {
+            id: "actions",
+            header: () => null,
+            size: 260,
+            cell: ({ row }: { row: any }) => {
+              return (
+                <div className="flex justify-center gap-3">
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => handleDeleteItem(row.original.productId)}
+                  >
+                    <Trash2 className="size-4.5" color="red" />
+                  </div>
+                </div>
+              );
+            },
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -145,6 +173,20 @@ const VisitCreatePage = () => {
           },
           { label: "Новый визит" },
         ]}
+      />
+      <input
+        ref={inputRef}
+        autoFocus
+        value={barcode}
+        onChange={(e) => setBarcode(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleScan(barcode);
+            setBarcode("");
+          }
+        }}
+        className="absolute opacity-0 pointer-events-none"
+        // className="border border-black"
       />
       <Modal
         isOpen={isOpen}
@@ -181,6 +223,7 @@ const VisitCreatePage = () => {
                   variant="success"
                   startIcon={<Check size="18" />}
                   onClick={handleSaveVisit}
+                  disabled={!isSelectedProducts}
                 >
                   Сохранить
                 </Button>
