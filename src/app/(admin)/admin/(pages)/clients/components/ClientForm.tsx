@@ -61,7 +61,7 @@ const ClientForm: FC<ClientFormProps> = ({
         <Button size="xs" variant="outline" onClick={closeModal}>
           Закрыть
         </Button>
-        <Button size="xs">Создать клиент</Button>
+        <Button size="xs">Создать мастер</Button>
       </div>
     </form>
   );

@@ -1,15 +1,13 @@
 import { FC } from "react";
 import Field from "@/components/shared/field/Field";
 import { Control, FieldValues, UseFormHandleSubmit } from "react-hook-form";
-import { IArrivalForm } from "@/types/arrival.interface";
 import Label from "@/app/(admin)/admin/components/form/Label";
 import Button from "@/app/(admin)/admin/components/ui/button/Button";
-import { IPaymentForm } from "@/types/payment.interface";
+import { PaymentFormValues } from "@/types/payment.interface";
 
 type ArrivalFormProps = {
   closeModal: () => void;
-  control: Control<IPaymentForm>;
-  // arrivalProduct: any;
+  control: Control<PaymentFormValues>;
   handleSubmit: UseFormHandleSubmit<FieldValues>;
   handlePaymentFormSubmit: (param: any) => void;
 };
@@ -17,7 +15,6 @@ type ArrivalFormProps = {
 const PaymentForm: FC<ArrivalFormProps> = ({
   closeModal,
   control,
-  // arrivalProduct,
   handleSubmit,
   handlePaymentFormSubmit,
 }) => {

@@ -20,7 +20,7 @@ export async function PUT(
   } catch (e) {
     return NextResponse.json(
       {
-        message: "Ошибка при обновлении клиента",
+        message: "Ошибка при обновлении мастера",
       },
       { status: 500 }
     );
@@ -39,18 +39,18 @@ export async function DELETE(
     const client = await prisma.client.findUnique({ where: { id: numericId } });
     if (!client) {
       return NextResponse.json(
-        { message: "Клиент не найден" },
+        { message: "Мастер не найден" },
         { status: 404 }
       );
     }
 
     await prisma.client.delete({ where: { id: numericId } });
 
-    return NextResponse.json({ message: "Клиент успешно удален!" });
+    return NextResponse.json({ message: "Мастер успешно удален!" });
   } catch (e) {
     return NextResponse.json(
       {
-        message: "Ошибка при удалении клиента",
+        message: "Ошибка при удалении мастера",
       },
       { status: 500 }
     );
@@ -71,7 +71,7 @@ export async function GET(
     return NextResponse.json(client, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { message: "Ошибка при получении клиента" },
+      { message: "Ошибка при получении мастера" },
       { status: 500 }
     );
   }

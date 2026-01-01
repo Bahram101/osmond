@@ -14,7 +14,7 @@ export async function GET() {
   } catch (e) {
 
     return NextResponse.json(
-      { message: "Ошибка при получении клиентов" },
+      { message: "Ошибка при получении мастеров" },
       { status: 500 }
     );
   }
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     if (!data.fullName) {
       return NextResponse.json(
         {
-          fullName: "Имя клиента объязательно для заполнения",
+          fullName: "Имя мастера объязательно для заполнения",
         },
         { status: 400 }
       );
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     );
   } catch (e) {
     return NextResponse.json({
-      message: "Ошибка при создании клиента",
+      message: "Ошибка при создании мастера",
     }, { status: 500 });
   }
 }

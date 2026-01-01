@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
+//POST /api/visits
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();

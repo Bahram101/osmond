@@ -8,19 +8,23 @@ import { VisitDetailItem } from "@/types/visit.interface";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useParams, useRouter } from "next/navigation";
 import VisitSummary from "./components/VisitSummary";
-import { formatCurrency } from "@/lib/utils/helpers";
+import { formatCurrency, formatDateTime } from "@/lib/utils/helpers";
 import Button from "@/app/(admin)/admin/components/ui/button/Button";
 import { ArrowLeft, Plus } from "lucide-react";
 import { Modal } from "@/app/(admin)/admin/components/ui/modal";
 import { useModal } from "@/app/(admin)/admin/hooks/useModal";
 import PaymentForm from "./components/PaymentForm";
 import { useForm } from "react-hook-form";
-import { IPaymentForm, PaymentCreateDTO } from "@/types/payment.interface";
+import {
+  PaymentFormValues,
+  PaymentCreateDTO,
+  VisitPayment,
+} from "@/types/payment.interface";
 import { useCreatePayment } from "@/hooks/payment/usePayments";
 
 const ClientVisitPage = () => {
   const router = useRouter();
-  const { control, handleSubmit, reset } = useForm<IPaymentForm>();
+  const { control, handleSubmit, reset } = useForm<PaymentFormValues>();
   const { isOpen, openModal, closeModal } = useModal();
   const { createPayment, isCreatingPayment } = useCreatePayment();
   const { id, visitId } = useParams<{ id: string; visitId: string }>();
@@ -72,7 +76,36 @@ const ClientVisitPage = () => {
     },
   ];
 
-  const handlePaymentFormSubmit = (data: IPaymentForm) => {
+  const paymentColumns: ColumnDef<VisitPayment, any>[] = [
+    {
+      header: "#",
+      cell: ({ row }) => <div className="text-center">{row.index + 1}</div>,
+    },
+    {
+      header: "Дата",
+      accessorKey: "createdAt",
+      cell: ({ row }) => (
+        <div className="text-center">
+          {formatDateTime(row.original.createdAt)}
+        </div>
+      ),
+    },
+    {
+      header: "Сумма",
+      accessorKey: "amount",
+      cell: ({ row }) => (
+        <div className="text-center">
+          {formatCurrency(row.original.amount)}
+        </div>
+      ),
+    },
+    {
+      header: "Комментария",
+      accessorKey: "note",
+    },
+  ];
+
+  const handlePaymentFormSubmit = (data: PaymentFormValues) => {
     const body: PaymentCreateDTO = {
       visitId: visId,
       amount: Number(data.amount),
@@ -95,9 +128,9 @@ const ClientVisitPage = () => {
       <BreadCrumb
         items={[
           { label: "Home", href: "/admin" },
-          { label: "Клиенты", href: "/admin/clients" },
+          { label: "Мастеры", href: "/admin/clients" },
           {
-            label: visit.client.fullName ?? "Клиент",
+            label: visit.client.fullName ?? "Мастер",
             href: `/admin/clients/${id}`,
           },
           { label: `Визит №${visId}` },
@@ -112,7 +145,6 @@ const ClientVisitPage = () => {
         <PaymentForm
           closeModal={closeModal}
           control={control}
-          // arrivalProduct={arrivalProduct}
           handleSubmit={handleSubmit}
           handlePaymentFormSubmit={handlePaymentFormSubmit}
         />
@@ -143,6 +175,10 @@ const ClientVisitPage = () => {
 
         <hr />
         <DataTable columns={columns} data={visit?.items} />
+
+        <div className="text-lg font-semibold">История оплат</div>
+
+        <DataTable columns={paymentColumns} data={visit?.payments} />
       </ComponentCard>
     </>
   );

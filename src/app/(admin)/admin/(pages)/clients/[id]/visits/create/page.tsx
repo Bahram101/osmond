@@ -166,9 +166,9 @@ const VisitCreatePage = () => {
       <BreadCrumb
         items={[
           { label: "Home", href: "/admin" },
-          { label: "Клиенты", href: "/admin/clients" },
+          { label: "Мастеры", href: "/admin/clients" },
           {
-            label: client?.fullName ?? "Клиент",
+            label: client?.fullName ?? "Мастер",
             href: `/admin/clients/${client?.id}`,
           },
           { label: "Новый визит" },

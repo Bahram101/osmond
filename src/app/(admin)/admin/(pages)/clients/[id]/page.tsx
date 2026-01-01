@@ -23,15 +23,15 @@ const ClientViewPage = () => {
       <BreadCrumb
         items={[
           { label: "Home", href: "/admin" },
-          { label: "Клиенты", href: "/admin/clients" },
-          { label: client?.fullName ?? "Клиент" },
+          { label: "Мастеры", href: "/admin/clients" },
+          { label: client?.fullName ?? "Мастер" },
         ]}
       />
 
       <div className="col-span-12 xl:col-span-7">
         <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center pb-5  ">
-            <h3 className="text-lg">Данные о клиента</h3>
+            <h3 className="text-lg">Данные о мастера</h3>
             <div className="flex gap-2">
               <Button
                 size="xs"
