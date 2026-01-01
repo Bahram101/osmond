@@ -53,7 +53,7 @@ const VisitCreatePage = () => {
           name: product.name,
           price: product.price,
           quantity: 1,
-          total: product.price,
+          // total: product.price,
         },
       ];
     });
@@ -115,7 +115,6 @@ const VisitCreatePage = () => {
               className="w-20 border text-center"
               value={row.original.quantity}
               onChange={(e) => {
-                console.log("onChange");
                 const qty = Number(e.target.value);
 
                 setItems((prev) =>

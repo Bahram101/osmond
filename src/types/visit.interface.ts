@@ -3,7 +3,7 @@ export interface VisitItemForm {
   name: string;
   price: number;
   quantity: number;
-  total: number;
+  // total: number;
 }
 
 export interface VisitCreateDTO {
