@@ -1,4 +1,4 @@
-export interface IProduct {
+export interface ProductResponse {
   id: number;
   name: string;
   description?: string;
@@ -15,7 +15,7 @@ export interface IProduct {
 }
 
 export type ProductCreateDTO = Pick<
-  IProduct,
+  ProductResponse,
   "name" | "description" | "price" | "categoryId" | "published" | "quantity"
 >;
 
@@ -26,7 +26,7 @@ export type PublishedOption = {
   label: string;
 };
 
-export type IProductSelect = Pick<
-  IProduct,
-  "id" | "name" | "quantity" | "price"
+export type ProductShortDTO = Pick<
+  ProductResponse,
+  "id" | "name" | "price" | "quantity"
 >;

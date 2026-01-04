@@ -5,7 +5,7 @@ import ProductForm from "../../components/ProductForm";
 import { useGetCategories } from "@/hooks/category/useCategories";
 import { useParams } from "next/navigation";
 import { useGetProduct, useUpdateProduct } from "@/hooks/product/useProducts";
-import { IProduct } from "@/types/product.interface";
+import { ProductResponse } from "@/types/product.interface";
 import Loader from "@/components/shared/Loader";
 
 const ProductUpdatePage = () => {
@@ -30,7 +30,7 @@ const ProductUpdatePage = () => {
             <Loader />
           ) : (
             <ProductForm
-              defaultValues={product as IProduct}
+              defaultValues={product as ProductResponse}
               isFetchingCategories={isFetchingCategories}
               categories={categories || []}
               submitText="Изменить"

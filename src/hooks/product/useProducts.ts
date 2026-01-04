@@ -1,8 +1,9 @@
 import { ProductService } from "@/services/product.service";
 import {
-  IProduct,
+  ProductResponse,
   ProductCreateDTO,
   ProductUpdateDTO,
+  ProductShortDTO,
 } from "@/types/product.interface";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -12,7 +13,7 @@ import { DeleteResponse } from "../category/useCategories";
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
   const { mutate: createProduct, isPending: isCreatingProduct } = useMutation<
-    IProduct,
+    ProductResponse,
     Error,
     ProductCreateDTO
   >({
@@ -28,7 +29,7 @@ export const useCreateProduct = () => {
 
 export const useGetProducts = () => {
   const { data: products = [], isPending: isFetchingProducts } = useQuery<
-    IProduct[]
+    ProductResponse[]
   >({
     queryKey: ["get-products"],
     queryFn: () => ProductService.getAll(),
@@ -37,7 +38,7 @@ export const useGetProducts = () => {
 };
 
 export const useGetProduct = (id?: number) => {
-  const { data: product, isPending: isFetchingProduct } = useQuery<IProduct>({
+  const { data: product, isPending: isFetchingProduct } = useQuery<ProductResponse>({
     queryKey: ["get-product", id],
     queryFn: () => ProductService.getById(id as number),
     enabled: !!id,
@@ -50,7 +51,7 @@ export const useUpdateProduct = () => {
   const router = useRouter();
 
   const { mutate: updateProduct, isPending: isUpdatingProduct } = useMutation<
-    IProduct,
+    ProductResponse,
     Error,
     { id: number; data: ProductUpdateDTO }
   >({
@@ -83,4 +84,30 @@ export const useDeleteProduct = () => {
     },
   });
   return { deleteProduct, isDeletingProduct };
+};
+
+// export const useGetProductByBarcode = (barcode: string) => {
+//   const { data: productByBarcode, isPending: isFetchingProdByBarcode } = useQuery({
+//     queryKey: ['get-product-by-barcode'],
+//     queryFn: () => ProductService.getProductByBarcode(barcode),
+//     enabled: !!barcode
+//   })
+//   return { productByBarcode, isFetchingProdByBarcode }
+// }
+
+
+export const useGetProductByBarcode = () => {
+  const {
+    mutateAsync: getProductByBarcode,
+    isPending: isFetchingProdByBarcode,
+  } = useMutation<ProductShortDTO, Error, string>({
+    mutationKey: ["get-product-by-barcode"],
+    mutationFn: (barcode: string) =>
+      ProductService.getProductByBarcode(barcode),
+  });
+
+  return {
+    getProductByBarcode,
+    isFetchingProdByBarcode,
+  };
 };

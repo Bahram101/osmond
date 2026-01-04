@@ -15,7 +15,7 @@ import { useDeleteProduct, useGetProducts } from "@/hooks/product/useProducts";
 import Loader from "@/components/shared/Loader";
 import { DataTable } from "@/components/common/DataTable";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { IProduct } from "@/types/product.interface";
+import { ProductResponse } from "@/types/product.interface";
 import Badge from "../../components/ui/badge/Badge";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../../components/ui/modal";
@@ -38,7 +38,7 @@ const ProductsPage = () => {
   const { deleteProduct, isDeletingProduct } = useDeleteProduct();
 
   const [deletingId, setDeletingId] = useState<number | null>(null);
-  const [arrivalProduct, setArrivalProduct] = useState<IProduct | null>(null);
+  const [arrivalProduct, setArrivalProduct] = useState<ProductResponse | null>(null);
 
   const handleDelete = (id: number) => {
     if (confirm("Точно удалить товар?")) {
@@ -52,7 +52,7 @@ const ProductsPage = () => {
     openModal();
   };
 
-  function toggleDropdown(data: IProduct) {
+  function toggleDropdown(data: ProductResponse) {
     setOpenRowId((prev) => (prev === data.id ? null : data.id));
   }
 
@@ -60,9 +60,9 @@ const ProductsPage = () => {
     setOpenRowId(null);
   }
 
-  const columnHelper = createColumnHelper<IProduct>();
+  const columnHelper = createColumnHelper<ProductResponse>();
 
-  const columns: ColumnDef<IProduct, any>[] = [
+  const columns: ColumnDef<ProductResponse, any>[] = [
     columnHelper.accessor("name", {
       header: "Название",
     }),

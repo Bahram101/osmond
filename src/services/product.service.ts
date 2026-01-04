@@ -1,33 +1,34 @@
 import { DeleteResponse } from "@/hooks/category/useCategories";
 import { request } from "@/lib/api/request.api";
 import {
-  IProduct,
+  ProductResponse,
   ProductCreateDTO,
   ProductUpdateDTO,
+  ProductShortDTO,
 } from "@/types/product.interface";
 
 export const ProductService = {
   async create(data: ProductCreateDTO) {
-    return request<IProduct>({
+    return request<ProductResponse>({
       url: "/products",
       method: "POST",
       data,
     });
   },
   async getAll() {
-    return request<IProduct[]>({
+    return request<ProductResponse[]>({
       url: "/products",
       method: "GET",
     });
   },
   async getById(id: number) {
-    return request<IProduct>({
+    return request<ProductResponse>({
       url: `/products/${id}`,
       method: "GET",
     });
   },
   async update(id: number, data: ProductUpdateDTO) {
-    return request<IProduct>({
+    return request<ProductResponse>({
       url: `/products/${id}`,
       method: "PUT",
       data,
@@ -39,4 +40,7 @@ export const ProductService = {
       method: "DELETE",
     });
   },
+  async getProductByBarcode(barcode: string) {
+    return request<ProductShortDTO>({ url: `/products/barcode/${barcode}`, method: 'GET' })
+  }
 };

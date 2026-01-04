@@ -26,8 +26,6 @@ export async function GET(
       orderBy: { createdAt: "desc" },
     });
 
-    console.log("visits", visits);
-
     const result = visits.map((visit) => {
       const paid = visit.payments.reduce((sum, p) => sum + Number(p.amount), 0);
 

@@ -1,18 +1,18 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/common/DataTable";
-import { IProductSelect } from "@/types/product.interface";
+import { ProductShortDTO } from "@/types/product.interface";
 import { cn } from "@/lib/utils/cn";
 
 type ProductSelectTableProps = {
-  products: IProductSelect[];
-  onSelect: (product: IProductSelect) => void;
+  products: ProductShortDTO[];
+  onSelect: (product: ProductShortDTO) => void;
 };
 
 export const ProductSelectTable = ({
   products,
   onSelect,
 }: ProductSelectTableProps) => {
-  const columns: ColumnDef<IProductSelect>[] = [
+  const columns: ColumnDef<ProductShortDTO>[] = [
     {
       accessorKey: "name",
       header: "Товар",

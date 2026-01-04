@@ -5,8 +5,8 @@ import Button from "@/app/(admin)/admin/components/ui/button/Button";
 import { Modal } from "@/app/(admin)/admin/components/ui/modal";
 import { useModal } from "@/app/(admin)/admin/hooks/useModal";
 import { useGetClient } from "@/hooks/client/useClient";
-import { useGetProducts } from "@/hooks/product/useProducts";
-import { IProductSelect } from "@/types/product.interface";
+import { useGetProductByBarcode, useGetProducts } from "@/hooks/product/useProducts";
+import { ProductShortDTO } from "@/types/product.interface";
 import { Check, Plus, Trash2, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -26,6 +26,7 @@ const VisitCreatePage = () => {
   const { createVisit, isCreatingVisit } = useCreateVisit();
   const [items, setItems] = useState<VisitItemForm[]>([]);
   const [barcode, setBarcode] = useState("");
+  const { getProductByBarcode, isFetchingProdByBarcode } = useGetProductByBarcode()
   const inputRef = useRef<HTMLInputElement>(null);
   if (Number.isNaN(clientId)) return null;
 
@@ -33,14 +34,14 @@ const VisitCreatePage = () => {
 
   const { client, isLoadingClient } = useGetClient(clientId);
 
-  const productsForSelect: IProductSelect[] = products.map((p) => ({
+  const productsForSelect: ProductShortDTO[] = products.map((p) => ({
     id: p.id,
     name: p.name,
     quantity: p.quantity,
     price: p.price,
   }));
 
-  const onSelectProduct = (product: IProductSelect) => {
+  const onSelectProduct = (product: ProductShortDTO) => {
     setItems((prev) => {
       const exists = prev.find((item) => item.productId === product.id);
 
@@ -79,6 +80,20 @@ const VisitCreatePage = () => {
   const handleScan = async (code: string) => {
     console.log("code", code);
     if (!code) return;
+
+    if (!code || isFetchingProdByBarcode) return;
+
+    try {
+      const product = await getProductByBarcode(code);
+
+      onSelectProduct(product);
+    } catch (error) {
+      // toast.error("Товар не найден");
+      console.error(error);
+    } finally {
+      setBarcode("");
+      inputRef.current?.focus();
+    }
 
     // const product = products.find((p) => p.barcode === code);
     // if (!product) {
@@ -139,24 +154,24 @@ const VisitCreatePage = () => {
     },
     ...(isSelectedProducts
       ? [
-          {
-            id: "actions",
-            header: () => null,
-            size: 260,
-            cell: ({ row }: { row: any }) => {
-              return (
-                <div className="flex justify-center gap-3">
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => handleDeleteItem(row.original.productId)}
-                  >
-                    <Trash2 className="size-4.5" color="red" />
-                  </div>
+        {
+          id: "actions",
+          header: () => null,
+          size: 260,
+          cell: ({ row }: { row: any }) => {
+            return (
+              <div className="flex justify-center gap-3">
+                <div
+                  className="cursor-pointer"
+                  onClick={() => handleDeleteItem(row.original.productId)}
+                >
+                  <Trash2 className="size-4.5" color="red" />
                 </div>
-              );
-            },
+              </div>
+            );
           },
-        ]
+        },
+      ]
       : []),
   ];
 
@@ -184,8 +199,8 @@ const VisitCreatePage = () => {
             setBarcode("");
           }
         }}
-        className="absolute opacity-0 pointer-events-none"
-        // className="border border-black"
+        // className="absolute opacity-0 pointer-events-none"
+        className="border border-black"
       />
       <Modal
         isOpen={isOpen}
