@@ -4,7 +4,7 @@ import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard";
 import { DataTable } from "@/components/common/DataTable";
 import Loader from "@/components/shared/Loader";
 import { useGetVisit } from "@/hooks/visit/useVisit";
-import { VisitDetailItem } from "@/types/visit.interface";
+import { VisitDetailItem, VisitPayment } from "@/types/visit.interface";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useParams, useRouter } from "next/navigation";
 import VisitSummary from "./components/VisitSummary";
@@ -17,8 +17,7 @@ import PaymentForm from "./components/PaymentForm";
 import { useForm } from "react-hook-form";
 import {
   PaymentFormValues,
-  PaymentCreateDTO,
-  VisitPayment,
+  PaymentCreateDTO,  
 } from "@/types/payment.interface";
 import { useCreatePayment } from "@/hooks/payment/usePayments";
 
@@ -76,8 +75,9 @@ const ClientVisitPage = () => {
     },
   ];
 
-  const paymentColumns: ColumnDef<VisitPayment, any>[] = [
+  const paymentColumns: ColumnDef<VisitPayment>[] = [
     {
+      id: "index",
       header: "#",
       cell: ({ row }) => <div className="text-center">{row.index + 1}</div>,
     },
@@ -94,9 +94,7 @@ const ClientVisitPage = () => {
       header: "Сумма",
       accessorKey: "amount",
       cell: ({ row }) => (
-        <div className="text-center">
-          {formatCurrency(row.original.amount)}
-        </div>
+        <div className="text-center">{formatCurrency(row.original.amount)}</div>
       ),
     },
     {

@@ -86,16 +86,6 @@ export const useDeleteProduct = () => {
   return { deleteProduct, isDeletingProduct };
 };
 
-// export const useGetProductByBarcode = (barcode: string) => {
-//   const { data: productByBarcode, isPending: isFetchingProdByBarcode } = useQuery({
-//     queryKey: ['get-product-by-barcode'],
-//     queryFn: () => ProductService.getProductByBarcode(barcode),
-//     enabled: !!barcode
-//   })
-//   return { productByBarcode, isFetchingProdByBarcode }
-// }
-
-
 export const useGetProductByBarcode = () => {
   const {
     mutateAsync: getProductByBarcode,

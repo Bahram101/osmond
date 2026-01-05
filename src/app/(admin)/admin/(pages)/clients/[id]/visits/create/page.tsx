@@ -5,7 +5,10 @@ import Button from "@/app/(admin)/admin/components/ui/button/Button";
 import { Modal } from "@/app/(admin)/admin/components/ui/modal";
 import { useModal } from "@/app/(admin)/admin/hooks/useModal";
 import { useGetClient } from "@/hooks/client/useClient";
-import { useGetProductByBarcode, useGetProducts } from "@/hooks/product/useProducts";
+import {
+  useGetProductByBarcode,
+  useGetProducts,
+} from "@/hooks/product/useProducts";
 import { ProductShortDTO } from "@/types/product.interface";
 import { Check, Plus, Trash2, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -26,11 +29,12 @@ const VisitCreatePage = () => {
   const { createVisit, isCreatingVisit } = useCreateVisit();
   const [items, setItems] = useState<VisitItemForm[]>([]);
   const [barcode, setBarcode] = useState("");
-  const { getProductByBarcode, isFetchingProdByBarcode } = useGetProductByBarcode()
+  const { getProductByBarcode, isFetchingProdByBarcode } =
+    useGetProductByBarcode();
   const inputRef = useRef<HTMLInputElement>(null);
   if (Number.isNaN(clientId)) return null;
 
-  const isSelectedProducts = items.length > 0
+  const isSelectedProducts = items.length > 0;
 
   const { client, isLoadingClient } = useGetClient(clientId);
 
@@ -45,7 +49,13 @@ const VisitCreatePage = () => {
     setItems((prev) => {
       const exists = prev.find((item) => item.productId === product.id);
 
-      if (exists) return prev;
+      if (exists) {
+        return prev.map((item) =>
+          item.productId === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
 
       return [
         ...prev,
@@ -54,7 +64,6 @@ const VisitCreatePage = () => {
           name: product.name,
           price: product.price,
           quantity: 1,
-          // total: product.price,
         },
       ];
     });
@@ -95,18 +104,6 @@ const VisitCreatePage = () => {
       inputRef.current?.focus();
     }
 
-    // const product = products.find((p) => p.barcode === code);
-    // if (!product) {
-    //   // toast + sound
-    //   return;
-    // }
-
-    // onSelectProduct({
-    //   id: product.id,
-    //   name: product.name,
-    //   price: product.price,
-    //   quantity: product.quantity,
-    // });
   };
 
   const columns: ColumnDef<VisitItemForm>[] = [
@@ -154,24 +151,24 @@ const VisitCreatePage = () => {
     },
     ...(isSelectedProducts
       ? [
-        {
-          id: "actions",
-          header: () => null,
-          size: 260,
-          cell: ({ row }: { row: any }) => {
-            return (
-              <div className="flex justify-center gap-3">
-                <div
-                  className="cursor-pointer"
-                  onClick={() => handleDeleteItem(row.original.productId)}
-                >
-                  <Trash2 className="size-4.5" color="red" />
+          {
+            id: "actions",
+            header: () => null,
+            size: 260,
+            cell: ({ row }: { row: any }) => {
+              return (
+                <div className="flex justify-center gap-3">
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => handleDeleteItem(row.original.productId)}
+                  >
+                    <Trash2 className="size-4.5" color="red" />
+                  </div>
                 </div>
-              </div>
-            );
+              );
+            },
           },
-        },
-      ]
+        ]
       : []),
   ];
 
