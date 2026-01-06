@@ -41,6 +41,10 @@ export const ProductService = {
     });
   },
   async getProductByBarcode(barcode: string) {
-    return request<ProductShortDTO>({ url: `/products/barcode/${barcode}`, method: 'GET' })
+    return request<ProductShortDTO>({
+      url: `/products/barcode/${barcode}`,
+      method: 'GET',
+      showToast: false
+    })
   }
 };

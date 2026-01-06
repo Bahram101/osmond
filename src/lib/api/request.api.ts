@@ -21,7 +21,11 @@ export const request = async <T>(config: CustomRequestConfig) => {
 
     if (showToast) toast.error(message);
 
-    return Promise.reject(errorCatch(error));
+    // return Promise.reject(errorCatch(error));
+    return Promise.reject({
+      status: error.response?.status,
+      message,
+    });
   };
 
   return instance<T>(config).then(onSuccess).catch(onError);

@@ -12,13 +12,14 @@ import {
 import { ProductShortDTO } from "@/types/product.interface";
 import { Check, Plus, Trash2, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ProductSelectTable } from "./components/ProductSelectTable";
 import { DataTable } from "@/components/common/DataTable";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { VisitItemForm } from "@/types/visit.interface";
 import { useCreateVisit } from "@/hooks/visit/useVisit";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 const VisitCreatePage = () => {
   const router = useRouter();
@@ -33,10 +34,18 @@ const VisitCreatePage = () => {
     useGetProductByBarcode();
   const inputRef = useRef<HTMLInputElement>(null);
   if (Number.isNaN(clientId)) return null;
+  const { client, isLoadingClient } = useGetClient(clientId);
 
   const isSelectedProducts = items.length > 0;
 
-  const { client, isLoadingClient } = useGetClient(clientId);
+  const successSound = useRef<HTMLAudioElement | null>(null);
+  const errorSound = useRef<HTMLAudioElement | null>(null);
+
+
+  useEffect(() => {
+    successSound.current = new Audio("/sounds/beep.mp3");
+    errorSound.current = new Audio("/sounds/error.wav");
+  }, []);
 
   const productsForSelect: ProductShortDTO[] = products.map((p) => ({
     id: p.id,
@@ -87,19 +96,26 @@ const VisitCreatePage = () => {
   };
 
   const handleScan = async (code: string) => {
-    console.log("code", code);
-    if (!code) return;
 
     if (!code || isFetchingProdByBarcode) return;
 
     try {
       const product = await getProductByBarcode(code);
-
       onSelectProduct(product);
-    } catch (error) {
-      // toast.error("Товар не найден");
-      console.error(error);
-    } finally {
+      successSound.current?.play();
+
+    } catch (error: any) {
+      errorSound.current?.play();
+
+      if (error?.status === 409) {
+        toast.error("Нет на складе");
+      } else if (error.status === 404) {
+        toast.error("Товар не найден");
+      } else {
+        toast.error("Ошибка сканирования");
+      }
+    }
+    finally {
       setBarcode("");
       inputRef.current?.focus();
     }
@@ -151,24 +167,24 @@ const VisitCreatePage = () => {
     },
     ...(isSelectedProducts
       ? [
-          {
-            id: "actions",
-            header: () => null,
-            size: 260,
-            cell: ({ row }: { row: any }) => {
-              return (
-                <div className="flex justify-center gap-3">
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => handleDeleteItem(row.original.productId)}
-                  >
-                    <Trash2 className="size-4.5" color="red" />
-                  </div>
+        {
+          id: "actions",
+          header: () => null,
+          size: 260,
+          cell: ({ row }: { row: any }) => {
+            return (
+              <div className="flex justify-center gap-3">
+                <div
+                  className="cursor-pointer"
+                  onClick={() => handleDeleteItem(row.original.productId)}
+                >
+                  <Trash2 className="size-4.5" color="red" />
                 </div>
-              );
-            },
+              </div>
+            );
           },
-        ]
+        },
+      ]
       : []),
   ];
 

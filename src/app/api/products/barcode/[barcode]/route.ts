@@ -21,6 +21,10 @@ export async function GET(
       return NextResponse.json({ message: 'Product not found' }, { status: 404 })
     }
 
+    if (product.quantity <= 0) {
+      return NextResponse.json({ message: 'Out of stock' }, { status: 409 })
+    }
+
     return NextResponse.json(product, { status: 200 })
 
   } catch (error) {
