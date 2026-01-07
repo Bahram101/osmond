@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-// /api/categories
+//GET /api/categories
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const type = searchParams.get("type");
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 }
 
 
-// /api/categories
+//POST /api/categories
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();

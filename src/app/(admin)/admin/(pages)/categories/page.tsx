@@ -42,21 +42,14 @@ const Categories = () => {
       cell: ({ row }) => {
         return (
           <div className="flex justify-center gap-3">
-            <Button
-              variant="danger"
-              size="tiny"
-              onClick={() => handleDelete(row.original.id!)}
-            >
-              {isDeleting && deletingId === row.original.id ? (
-                <Loader />
-              ) : (
-                <Trash2 className="size-4" />
-              )}
-            </Button>
+            {isDeleting && deletingId === row.original.id ? (
+              <Loader />
+            ) : (
+              <Trash2 className="size-4 cursor-pointer" color='red' 
+                onClick={() => handleDelete(row.original.id!)} />
+            )}
             <Link href={`/admin/categories/edit/${row.original.id}`}>
-              <Button variant="primary" size="tiny">
-                <Pencil className="size-4" />
-              </Button>
+              <Pencil className="size-4" color='blue' />
             </Link>
           </div>
         );

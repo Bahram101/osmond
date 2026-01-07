@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils/cn";
+import { useParams } from "next/navigation";
 import React from "react";
 
 interface ComponentCardProps {
   title?: string | undefined;
   children: React.ReactNode;
-  className?: string; // Additional custom classes for styling
-  desc?: string; // Description text
+  className?: string;
+  desc?: string;
 }
 
 const ComponentCard: React.FC<ComponentCardProps> = ({
@@ -14,6 +15,10 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   className = "",
   desc = "",
 }) => {
+
+  const router = useParams()
+  console.log('router', router);
+
   return (
     <div
       className={`rounded-2xl border border-gray-200 bg-white dark:border-gray-800   ${className}`}

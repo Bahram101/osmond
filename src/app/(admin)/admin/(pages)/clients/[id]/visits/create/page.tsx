@@ -212,8 +212,8 @@ const VisitCreatePage = () => {
             setBarcode("");
           }
         }}
-        // className="absolute opacity-0 pointer-events-none"
-        className="border border-black"
+        className="absolute opacity-0 pointer-events-none"
+        // className="border border-black"
       />
       <Modal
         isOpen={isOpen}

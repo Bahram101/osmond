@@ -9,14 +9,20 @@ import HistoryTab from "./components/tabs/HistoryTab";
 import InfoTab from "./components/tabs/InfoTab";
 import { useParams, useRouter } from "next/navigation";
 import { useGetClient } from "@/hooks/client/useClient";
+import { useGetClientVisits } from "@/hooks/visit/useVisit";
+import { formatCurrency } from "@/lib/utils/helpers";
 
 const ClientViewPage = () => {
   const router = useRouter()
   const { id } = useParams<{ id: string }>();
   const clientId = Number(id);
   if (Number.isNaN(clientId)) return null;
+  const { clientVisits = [], isLoadingClientVisits } =
+    useGetClientVisits(clientId);
 
   const { client } = useGetClient(clientId);
+
+  const totalDebt = clientVisits.reduce((acc, visit) => acc + visit.debtAmount, 0)
 
   return (
     <>
@@ -37,7 +43,7 @@ const ClientViewPage = () => {
                 size="xs"
                 variant="outline"
                 startIcon={<ArrowLeft size="18" />}
-                onClick={()=> router.push(`/admin/clients`)}
+                onClick={() => router.push(`/admin/clients`)}
               >
                 Назад
               </Button>
@@ -54,11 +60,15 @@ const ClientViewPage = () => {
           </div>
 
           <Tabs defaultValue="visit">
-            <TabsList className="mb-3">
-              <TabsTrigger value="visit">Визиты / Долги</TabsTrigger>
-              <TabsTrigger value="history">История оплат</TabsTrigger>
-              <TabsTrigger value="info">Информация</TabsTrigger>
-            </TabsList>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+              <TabsList className="mb-3">
+                <TabsTrigger value="visit">Визиты / Долги</TabsTrigger>
+                <TabsTrigger value="history">История оплат</TabsTrigger>
+                <TabsTrigger value="info">Информация</TabsTrigger>
+              </TabsList>
+
+              <div>Общ долг: <span className="font-bold">{formatCurrency(totalDebt)}</span></div>
+            </div>
 
             <TabsContent value="visit">
               <VisitTab />
