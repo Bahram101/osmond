@@ -25,53 +25,23 @@ export async function GET() {
   const byId: Record<number, CategoryNode> = {};
   const tree: CategoryNode[] = [];
 
-  // console.log("categories", categories);
+  categories.forEach((cat) => {
+    byId[cat.id] = { ...cat, children: [] };
+  });
 
-  // const map = new Map<number, CategoryNode>();
-
-  // categories.forEach((cat) => {
-  //   map.set(cat.id, { ...cat, children: [] });
-  // });
-
-  // const tree: CategoryNode[] = [];
-
-  // console.log("map", map);
-
-  // map.forEach((cat) => {
-  //   console.log("cat", cat);
-  // });
-
-  for (const cat of categories) {
-    // 1. Создаём текущую категорию, если её ещё нет
-    if (!byId[cat.id]) {
-      byId[cat.id] = {
-        id: cat.id,
-        name: cat.name,
-        parentId: cat.parentId,
-        children: [],
-      };
-    }
-
-    // 2. Если есть родитель — добавляем в children родителя
-    if (cat.parentId !== null) {
-      // создаём родителя, если он ещё не создан
-      if (!byId[cat.parentId]) {
-        byId[cat.parentId] = {
-          id: cat.parentId,
-          name: "",
-          parentId: null,
-          children: [],
-        };
-      }
-
-      byId[cat.parentId].children.push(byId[cat.id]);
+  console.log("byId-1", JSON.stringify(byId, null, 2));
+  
+  Object.values(byId).forEach((node) => {
+    if (node.parentId) {
+      byId[node.parentId]?.children.push(node);
     } else {
-      // 3. Корневая категория
-      tree.push(byId[cat.id]);
+      tree.push(node);
     }
+  });
+  
+  console.log("categories", categories);
+  console.log("byId-2", JSON.stringify(byId, null, 2));
+  console.log("tree", JSON.stringify(tree, null, 2));
 
-    console.log('byId',JSON.stringify(byId, null, 2));
-    console.log("tree", JSON.stringify(tree, null, 2));
-  }
   return NextResponse.json({ message: "Not Implemented" }, { status: 501 });
 }
