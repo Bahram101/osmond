@@ -7,6 +7,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import { use } from "react";
 import { toast } from "sonner";
 
 export interface DeleteResponse {
@@ -94,4 +95,25 @@ export const useUpdateCategory = () => {
     },
   });
   return { updateCategory, isUpdatingCategory };
+};
+
+export const useGetCategoriesTree = () => {
+  const { data, isPending: isFetchingCategoriesTree } = useQuery({
+    queryKey: ["get-categories-tree"],
+    queryFn: () => CategoryService.getTree(),
+  });
+
+  return { categoriesTree: data ?? [], isFetchingCategoriesTree };
+};
+
+export const useGetCategoryProducts = (id?: number) => {
+  const { data, isPending } = useQuery({
+    queryKey: ["get-category-products", id],
+    queryFn: () => CategoryService.getCategoryProducts(id as number),
+    enabled: !!id,
+  });
+  return {
+    categoryProducts: data ?? [],
+    isFetchingCategoryProducts: isPending,
+  };
 };

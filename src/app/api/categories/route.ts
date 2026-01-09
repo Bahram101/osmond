@@ -2,39 +2,34 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 //GET /api/categories
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const type = searchParams.get("type");
-
+export async function GET(_req: NextRequest) {
   try {
-    if (type === "flat") {
-      const categories = await prisma.category.findMany({
-        select: {
-          id: true,
-          name: true,
-          parentId: true,
-          parent: {
-            select: {
-              id: true,
-              name: true,
-            },
+    const categories = await prisma.category.findMany({
+      select: {
+        id: true,
+        name: true,
+        parentId: true,
+        parent: {
+          select: {
+            id: true,
+            name: true,
           },
         },
-      });
-      return NextResponse.json(categories);
-    }
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+    return NextResponse.json(categories);
   } catch (e) {
-    if (e instanceof Error) {
-      return NextResponse.json(
-        {
-          message: "Ошибка при получении  категории",
-        },
-        { status: 500 }
-      );
-    }
+    return NextResponse.json(
+      {
+        message: "Ошибка при получении  категории",
+      },
+      { status: 500 }
+    );
   }
 }
-
 
 //POST /api/categories
 export async function POST(req: NextRequest) {

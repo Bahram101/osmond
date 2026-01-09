@@ -6,9 +6,8 @@ export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = Number((await params).id);
-
   try {
+    const id = Number((await params).id);
     const category = await prisma.category.findUnique({
       where: { id },
     });
@@ -38,10 +37,9 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = Number((await params).id);
-  const data = await req.json();
-
   try {
+    const id = Number((await params).id);
+    const data = await req.json();
     const updatedCategory = await prisma.category.update({
       where: { id },
       data,
@@ -67,9 +65,8 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = Number((await params).id);
-
   try {
+    const id = Number((await params).id);
     const category = await prisma.category.findUnique({
       where: { id },
     });

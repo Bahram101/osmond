@@ -4,10 +4,12 @@ import {
   ICategory,
   CategoryCreateDTO,
   CategoryUpdateDTO,
+  CategoryNode,
 } from "@/types/category.interface";
+import { ProductInCategoryDTO } from "@/types/product.interface";
 
 export const CategoryService = {
-  async createCategory(data: CategoryCreateDTO): Promise<ICategory> {
+  async createCategory(data: CategoryCreateDTO){
     const res = await request<ICategory>({
       url: "/categories",
       method: "POST",
@@ -26,19 +28,19 @@ export const CategoryService = {
 
   async getAll(): Promise<ICategory[]> {
     return await request<ICategory[]>({
-      url: "/categories?type=flat",
+      url: "/categories",
       method: "GET",
     });
   },
 
   async getTree() {
-    return await request({
-      url: "/categories?type=tree",
+    return await request<CategoryNode[]>({
+      url: "/categories/tree",
       method: "GET",
     });
   },
 
-  async deleteCategory(id: number): Promise<DeleteResponse> {
+  async deleteCategory(id: number) {
     return await request<DeleteResponse>({
       url: `/categories/${id}`,
       method: "DELETE",
@@ -48,11 +50,18 @@ export const CategoryService = {
   async updateCategory(
     id: number,
     data: CategoryUpdateDTO
-  ): Promise<ICategory> {
-    return await request({
+  ) {
+    return await request<ICategory>({
       url: `/categories/${id}`,
       method: "PUT",
       data,
     });
   },
+
+  async getCategoryProducts(id: number){
+    return await request<ProductInCategoryDTO[]>({
+      url: `/categories/${id}/products`,
+      method: "GET"
+    })
+  }
 };

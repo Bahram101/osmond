@@ -19,3 +19,10 @@ export interface IParams {
     id: number;
   };
 }
+
+export interface CategoryNode {
+  id: number;
+  name: string;
+  parentId: number | null;
+  children: CategoryNode[];
+}
