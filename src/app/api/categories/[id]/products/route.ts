@@ -6,9 +6,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const catId = Number((await params).id);
+    const categoryId = Number((await params).id);
 
-    if (Number.isNaN(catId)) {
+    if (Number.isNaN(categoryId)) {
       return NextResponse.json(
         { message: "Invalid category ID" },
         { status: 400 }
@@ -16,7 +16,7 @@ export async function GET(
     }
 
     const category = await prisma.category.findUnique({
-      where: { id: catId },
+      where: { id: categoryId },
       select: { id: true },
     });
 
@@ -28,7 +28,7 @@ export async function GET(
     }
 
     const products = await prisma.product.findMany({
-      where: { categoryId: catId },
+      where: { categoryId: categoryId },
       select: {
         id: true,
         name: true,

@@ -26,3 +26,10 @@ export interface CategoryNode {
   parentId: number | null;
   children: CategoryNode[];
 }
+
+export interface CategoryBreadcrumbItem {
+  id: number;
+  name: string;
+}
+
+export type CategoryBreadcrumb = CategoryBreadcrumbItem[];

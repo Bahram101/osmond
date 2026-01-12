@@ -5,8 +5,9 @@ import {
   CategoryCreateDTO,
   CategoryUpdateDTO,
   CategoryNode,
+  CategoryBreadcrumb,
 } from "@/types/category.interface";
-import { ProductInCategoryDTO } from "@/types/product.interface";
+import { ProductInCategoryDTO } from "@/types/product.interface"; 
 
 export const CategoryService = {
   async createCategory(data: CategoryCreateDTO){
@@ -63,5 +64,13 @@ export const CategoryService = {
       url: `/categories/${id}/products`,
       method: "GET"
     })
+  },
+
+  async getCategoryBreadcrumb(id: number | undefined){
+    return await request<CategoryBreadcrumb>({
+      url: `/categories/${id}/breadcrumb`,
+      method: 'GET'
+    })
   }
+
 };

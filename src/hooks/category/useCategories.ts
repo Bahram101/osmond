@@ -4,6 +4,7 @@ import {
   CategoryCreateDTO,
   CategoryUpdateDTO,
 } from "@/types/category.interface";
+import { ProductInCategoryDTO } from "@/types/product.interface";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -111,9 +112,22 @@ export const useGetCategoryProducts = (id?: number) => {
     queryKey: ["get-category-products", id],
     queryFn: () => CategoryService.getCategoryProducts(id as number),
     enabled: !!id,
+    retry: (failureCount, error: any) => {
+      if (error?.status === 404) return false;
+      return failureCount < 2;
+    },
   });
   return {
     categoryProducts: data ?? [],
     isFetchingCategoryProducts: isPending,
   };
+};
+
+export const useGetCategoryBreadcrumb = (id?: number) => {
+  const { data, isPending } = useQuery({
+    queryKey: ["get-category-breadcrumb", id],
+    queryFn: () => CategoryService.getCategoryBreadcrumb(id),
+    enabled: !!id,
+  });
+  return { categoryBreadcrumb: data ?? [], isFetchingCatBreadcrumb: isPending };
 };
