@@ -46,7 +46,7 @@ export function CategoryTreeItem({ category }: Props) {
           className="text-sm"
           onClick={handleClickCategory}
         >
-          {category.name}
+          {category.title}
         </span>
       </div>
 

@@ -22,7 +22,7 @@ export interface IParams {
 
 export interface CategoryNode {
   id: number;
-  name: string;
+  title: string;
   parentId: number | null;
   children: CategoryNode[];
 }

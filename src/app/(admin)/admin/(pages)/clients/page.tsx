@@ -8,7 +8,6 @@ import {
 import { IClient, IClientForm } from "@/types/client.interface";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { Eye, Pencil, Plus, Trash2 } from "lucide-react";
-import Link from "next/link";
 import BreadCrumb from "../../components/common/BreadCrumb";
 import { DataTable } from "@/components/common/DataTable";
 import Button from "../../components/ui/button/Button";

@@ -1,96 +1,94 @@
 "use client";
-import React, { useState } from "react";
-import { Pencil, Plus, Trash2 } from "lucide-react";
-import { SortableTreeWithoutDndContext as SortableTree } from '@peteranderss0n/react-sortable-tree'
-import '@peteranderss0n/react-sortable-tree/dist/style.css' 
-import Link from "next/link";
-import BreadCrumb from "../../components/common/BreadCrumb";
-import Button from "../../components/ui/button/Button";
+import React, { useEffect, useMemo, useState } from "react";
+import { SortableTree, TreeItem } from "@nosferatu500/react-sortable-tree";
 import {
   useDeleteCategory,
   useGetCategories,
+  useGetCategoriesTree,
 } from "@/hooks/category/useCategories";
 import Loader from "@/components/shared/Loader";
-import { DataTable } from "@/components/common/DataTable";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { ICategory } from "@/types/category.interface";
+import BreadCrumb from "../../components/common/BreadCrumb";
+import Link from "next/link";
+import Button from "../../components/ui/button/Button";
+import { Plus } from "lucide-react";
+import { useModal } from "../../hooks/useModal";
+import { Modal } from "../../components/ui/modal";
+import CategoryForm from "./components/CategoryForm";
+import CategoryFormModal from "./components/CategoryFormModal";
+
+type CategoryNode = {
+  title: string;
+  expanded?: boolean;
+  children?: CategoryNode[];
+};
 
 const Categories = () => {
-  const { categories, isFetchingCategories } = useGetCategories();
-  const { deleteCategory, isDeleting } = useDeleteCategory();
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const { isOpen, openModal, closeModal } = useModal();
+  const { categoriesTree, isFetchingCategoriesTree } = useGetCategoriesTree();
+  const [treeData, setTreeData] = useState<CategoryNode[]>([]);
 
-  const handleDelete = async (id: number) => {
-    if (confirm("Точно удалить категорию?")) {
-      deleteCategory(id);
-      setDeletingId(id);
+  useEffect(() => {
+    if (!categoriesTree) return;
+
+    function withExpanded(nodes: CategoryNode[]): CategoryNode[] {
+      return nodes.map((node) => ({
+        ...node,
+        expanded: !!node.children?.length,
+        children: withExpanded(node.children || []),
+      }));
     }
+
+    setTreeData(withExpanded(categoriesTree));
+  }, [categoriesTree]);
+
+  const handleOpenModal = (currentProduct: any) => {
+    // setArrivalProduct(currentProduct.original);
+    openModal();
   };
 
-  // const columnHelper = createColumnHelper<ICategory>();
-
-  // const columns: ColumnDef<ICategory, any>[] = [
-  //   columnHelper.accessor("name", {
-  //     header: "Название",
-  //   }),
-  //   columnHelper.accessor((row) => row.parent?.name ?? "—", {
-  //     id: "parent.name",
-  //     header: "Род. категория",
-  //   }),
-  //   columnHelper.display({
-  //     id: "actions",
-  //     header: "",
-  //     size: 260,
-  //     cell: ({ row }) => {
-  //       return (
-  //         <div className="flex justify-center gap-3">
-  //           {isDeleting && deletingId === row.original.id ? (
-  //             <Loader />
-  //           ) : (
-  //             <Trash2 className="size-4 cursor-pointer" color='red' 
-  //               onClick={() => handleDelete(row.original.id!)} />
-  //           )}
-  //           <Link href={`/admin/categories/edit/${row.original.id}`}>
-  //             <Pencil className="size-4" color='blue' />
-  //           </Link>
-  //         </div>
-  //       );
-  //     },
-  //   }),
-  // ];
+  if (isFetchingCategoriesTree) {
+    return <Loader />;
+  }
 
   return (
-    <div className="col-span-12 xl:col-span-7">
-      <BreadCrumb
-        items={[{ label: "Home", href: "/admin" }, { label: "Категория" }]}
-      />
-      <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
-        <div className="flex justify-between items-center pb-5">
-          <h3 className="text-lg">Список категории</h3>
-          <Link href="/admin/categories/create">
-            <Button size="xs" variant="primary" startIcon={<Plus />}>
+    <>
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        className="max-w-146 p-4 lg:p-6"
+        title="Создать категорию"
+      >
+        {/* <CategoryForm /> */}
+        ыва
+      </Modal>
+      <div className="col-span-12 xl:col-span-7">
+        <BreadCrumb
+          items={[{ label: "Home", href: "/admin" }, { label: "Категории" }]}
+        />
+
+        <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
+          <div className="flex justify-between items-center pb-5">
+            <h3 className="text-lg">Список категории</h3>
+
+            <Button
+              size="xs"
+              variant="primary"
+              startIcon={<Plus />}
+              onClick={() => handleOpenModal(null)}
+            >
               Создать
             </Button>
-          </Link>
-        </div>
-
-        {/* {isFetchingCategories ? (
-          <Loader />
-        ) : (
-          <DataTable columns={columns} data={categories} />
-        )} */}
-
-        <div className="h-[400px]">
-
-          <SortableTree
-            treeData={[
-              { title: 'Chicken', children: [{ title: 'Egg' }] },
-              { title: 'Fish', children: [{ title: 'fingerline' }] },
-            ]}
-            onChange={() => { }} />
+          </div>
+          <div style={{ height: 500 }}>
+            <SortableTree
+              treeData={treeData}
+              onChange={setTreeData}
+              // onMoveNode={({ node, nextParentNode }) => {}}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

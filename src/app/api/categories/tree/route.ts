@@ -3,7 +3,6 @@ import { CategoryNode } from "@/types/category.interface";
 import { NextResponse } from "next/server";
 
 //GET /api/categories/tree
-
 export async function GET() {
   try {
     const categories = await prisma.category.findMany({
@@ -27,7 +26,12 @@ export async function GET() {
     const tree: CategoryNode[] = [];
 
     categories.forEach((cat) => {
-      byId[cat.id] = { ...cat, children: [] };
+      byId[cat.id] = {
+        id: cat.id,
+        title: cat.name,
+        parentId: cat.parentId,
+        children: [],
+      };
     });
 
     Object.values(byId).forEach((node) => {
