@@ -33,11 +33,11 @@ const CategoryPage = () => {
           >
             <div className="font-medium mr-4">{p.name}</div>
 
-            <div className="flex items-center gap-6">
-              <div className="font-semibold w-15">{p.price} ₸</div>
+            <div className="flex items-center">
+              <div className="w-20">{p.price} ₸</div>
 
               <div
-                className={`text-sm w-20 ${
+                className={`text-sm w-18 ${
                   p.quantity > 0 ? "text-green-600" : "text-red-500"
                 }`}
               >

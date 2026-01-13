@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
+import { SortableTreeWithoutDndContext as SortableTree } from '@peteranderss0n/react-sortable-tree'
+import '@peteranderss0n/react-sortable-tree/dist/style.css' 
 import Link from "next/link";
 import BreadCrumb from "../../components/common/BreadCrumb";
 import Button from "../../components/ui/button/Button";
@@ -25,37 +27,37 @@ const Categories = () => {
     }
   };
 
-  const columnHelper = createColumnHelper<ICategory>();
+  // const columnHelper = createColumnHelper<ICategory>();
 
-  const columns: ColumnDef<ICategory, any>[] = [
-    columnHelper.accessor("name", {
-      header: "Название",
-    }),
-    columnHelper.accessor((row) => row.parent?.name ?? "—", {
-      id: "parent.name",
-      header: "Род. категория",
-    }),
-    columnHelper.display({
-      id: "actions",
-      header: "",
-      size: 260,
-      cell: ({ row }) => {
-        return (
-          <div className="flex justify-center gap-3">
-            {isDeleting && deletingId === row.original.id ? (
-              <Loader />
-            ) : (
-              <Trash2 className="size-4 cursor-pointer" color='red' 
-                onClick={() => handleDelete(row.original.id!)} />
-            )}
-            <Link href={`/admin/categories/edit/${row.original.id}`}>
-              <Pencil className="size-4" color='blue' />
-            </Link>
-          </div>
-        );
-      },
-    }),
-  ];
+  // const columns: ColumnDef<ICategory, any>[] = [
+  //   columnHelper.accessor("name", {
+  //     header: "Название",
+  //   }),
+  //   columnHelper.accessor((row) => row.parent?.name ?? "—", {
+  //     id: "parent.name",
+  //     header: "Род. категория",
+  //   }),
+  //   columnHelper.display({
+  //     id: "actions",
+  //     header: "",
+  //     size: 260,
+  //     cell: ({ row }) => {
+  //       return (
+  //         <div className="flex justify-center gap-3">
+  //           {isDeleting && deletingId === row.original.id ? (
+  //             <Loader />
+  //           ) : (
+  //             <Trash2 className="size-4 cursor-pointer" color='red' 
+  //               onClick={() => handleDelete(row.original.id!)} />
+  //           )}
+  //           <Link href={`/admin/categories/edit/${row.original.id}`}>
+  //             <Pencil className="size-4" color='blue' />
+  //           </Link>
+  //         </div>
+  //       );
+  //     },
+  //   }),
+  // ];
 
   return (
     <div className="col-span-12 xl:col-span-7">
@@ -72,11 +74,21 @@ const Categories = () => {
           </Link>
         </div>
 
-        {isFetchingCategories ? (
+        {/* {isFetchingCategories ? (
           <Loader />
         ) : (
           <DataTable columns={columns} data={categories} />
-        )}
+        )} */}
+
+        <div className="h-[400px]">
+
+          <SortableTree
+            treeData={[
+              { title: 'Chicken', children: [{ title: 'Egg' }] },
+              { title: 'Fish', children: [{ title: 'fingerline' }] },
+            ]}
+            onChange={() => { }} />
+        </div>
       </div>
     </div>
   );
