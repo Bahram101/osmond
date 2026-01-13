@@ -100,6 +100,10 @@ export const useGetCategoriesTree = () => {
   const { data, isPending: isFetchingCategoriesTree } = useQuery({
     queryKey: ["get-categories-tree"],
     queryFn: () => CategoryService.getTree(),
+    retry: (failureCount, error: any) => {
+      if (error?.status === 404) return false;
+      return failureCount < 1;
+    },
   });
 
   return { categoriesTree: data ?? [], isFetchingCategoriesTree };

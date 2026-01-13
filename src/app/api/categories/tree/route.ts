@@ -10,12 +10,12 @@ export async function GET() {
         id: true,
         title: true,
         parentId: true,
-        parent: {
-          select: {
-            id: true,
-            title: true,
-          },
-        },
+        // parent: {
+        //   select: {
+        //     id: true,
+        //     title: true,
+        //   },
+        // },
       },
       orderBy: {
         id: "asc",
@@ -30,7 +30,7 @@ export async function GET() {
     });
 
     Object.values(byId).forEach((node) => {
-      if (node.parentId !== null) {
+      if (node.parentId !== null && byId[node.parentId]) {
         byId[node.parentId]?.children.push(node);
       } else {
         tree.push(node);
@@ -39,6 +39,8 @@ export async function GET() {
 
     return NextResponse.json(tree);
   } catch (error) {
+    console.error("GET /api/categories/tree error:", error);
+
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 }
