@@ -2,7 +2,7 @@
 import { useParams } from "next/navigation";
 import BreadCrumb from "@/app/(admin)/admin/components/common/BreadCrumb";
 import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard";
-import CategoryForm from "../../components/CategoryForm";
+import CategoryForm from "../../components/CategoryForm(old)";
 import {
   useGetCategories,
   useGetCategoryById,

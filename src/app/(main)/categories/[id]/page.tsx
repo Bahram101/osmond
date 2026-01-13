@@ -16,13 +16,11 @@ const CategoryPage = () => {
   const { categoryBreadcrumb, isFetchingCatBreadcrumb } =
     useGetCategoryBreadcrumb(catId);
 
-  console.log("breadcrumb", categoryBreadcrumb);
-
   return (
     <>
       <BreadCrumb
         items={categoryBreadcrumb.map((b) => ({
-          label: b.name,
+          label: b.title,
         }))}
       />
       <div className="divide-y border rounded-lg">

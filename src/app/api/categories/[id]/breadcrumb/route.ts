@@ -14,13 +14,13 @@ export async function GET(
       );
     }
 
-    const breadcrumb: { id: number; name: string }[] = [];
+    const breadcrumb: { id: number; title: string }[] = [];
 
     let currentCategory = await prisma.category.findUnique({
       where: { id: categoryId },
       select: {
         id: true,
-        name: true,
+        title: true,
         parentId: true,
       },
     });
@@ -34,7 +34,7 @@ export async function GET(
     while (currentCategory) {
       breadcrumb.unshift({
         id: currentCategory.id,
-        name: currentCategory.name,
+        title: currentCategory.title,
       });
       if (!currentCategory.parentId) break;
 
@@ -44,7 +44,7 @@ export async function GET(
         },
         select: {
           id: true,
-          name: true,
+          title: true,
           parentId: true,
         },
       });

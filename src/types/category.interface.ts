@@ -1,16 +1,16 @@
 export interface ICategory {
   id?: number;
-  name: string;
+  title: string;
   parentId?: string;
   createdAt?: string;
   updatedAt?: string;
   parent?: {
     id: number;
-    name: string;
+    title: string;
   } | null;
 }
 
-export type CategoryCreateDTO = Pick<ICategory, "name" | "parentId">;
+export type CategoryCreateDTO = Pick<ICategory, "title" | "parentId">;
 
 export type CategoryUpdateDTO = Partial<CategoryCreateDTO>;
 
@@ -29,7 +29,7 @@ export interface CategoryNode {
 
 export interface CategoryBreadcrumbItem {
   id: number;
-  name: string;
+  title: string;
 }
 
 export type CategoryBreadcrumb = CategoryBreadcrumbItem[];

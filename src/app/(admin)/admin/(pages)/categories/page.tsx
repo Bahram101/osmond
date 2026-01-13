@@ -12,9 +12,8 @@ import Link from "next/link";
 import Button from "../../components/ui/button/Button";
 import { Plus } from "lucide-react";
 import { useModal } from "../../hooks/useModal";
-import { Modal } from "../../components/ui/modal";
+import { Modal } from "../../components/ui/modal"; 
 import CategoryForm from "./components/CategoryForm";
-import CategoryFormModal from "./components/CategoryFormModal";
 
 type CategoryNode = {
   title: string;

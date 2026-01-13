@@ -49,7 +49,7 @@ const ProductForm: FC<ProductFormProps> = ({
 
   const categoryOptions = categories.map((cat) => ({
     value: cat.id ?? null,
-    label: cat.name,
+    label: cat.title,
   }));
 
   const handleFormSubmit: SubmitHandler<ProductCreateDTO> = (data) => {

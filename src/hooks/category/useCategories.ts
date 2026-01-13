@@ -3,12 +3,10 @@ import {
   ICategory,
   CategoryCreateDTO,
   CategoryUpdateDTO,
-} from "@/types/category.interface";
-import { ProductInCategoryDTO } from "@/types/product.interface";
+} from "@/types/category.interface"; 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import { use } from "react";
+import { useRouter } from "next/navigation"; 
 import { toast } from "sonner";
 
 export interface DeleteResponse {

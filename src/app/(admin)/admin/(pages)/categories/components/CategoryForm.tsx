@@ -1,90 +1,52 @@
-import React, { FC, useEffect } from "react";
+import { FC } from "react";
+import Button from "../../../components/ui/button/Button";
 import Label from "../../../components/form/Label";
 import Field from "@/components/shared/field/Field";
-import {
-  ICategory,
-  CategoryCreateDTO, 
-} from "@/types/category.interface";
-import { SubmitHandler, useForm } from "react-hook-form";
-import ControlledSelect from "@/components/shared/select/Select";
-import Button from "../../../components/ui/button/Button";
-import Loader from "@/components/shared/Loader"; 
+import { Control, FieldValues, UseFormHandleSubmit } from "react-hook-form";
+import { IArrivalForm } from "@/types/arrival.interface";
 
-interface CategoryFormProps {
-  defaultValues?: ICategory | undefined;
-  categories: ICategory[];
-  submitText?: string;
-  isFetchingCategories?: boolean; 
-  isSubmitting?: boolean;
-  onSubmit: SubmitHandler<CategoryCreateDTO>;
-}
+type ArrivalFormProps = {
+  closeModal: () => void;
+  control: Control<IArrivalForm>;
+  handleSubmit:UseFormHandleSubmit<FieldValues>
+  handleArrivalFormSubmit:(param:any) => void
+  arrivalProduct: any;
+};
 
-const CategoryForm: FC<CategoryFormProps> = ({
-  defaultValues,
-  categories,
-  isFetchingCategories,
-  onSubmit,
-  isSubmitting, 
-  submitText = "Сохранить",
+const CategoryForm: FC<ArrivalFormProps> = ({
+  closeModal,
+  control,
+  handleSubmit,
+  handleArrivalFormSubmit,
+  arrivalProduct,
 }) => {
-  const { control, handleSubmit, reset } = useForm<CategoryCreateDTO>({
-    mode: "all",
-    defaultValues,
-  });
-
-  useEffect(() => {
-    if (defaultValues) reset(defaultValues);
-  }, [defaultValues, reset]);
-
-  const categoryOptions = categories.map((cat) => ({
-    value: cat.id ?? null,
-    label: cat.name,
-  }));
-
-  const handleFormSubmit: SubmitHandler<CategoryCreateDTO> = (data) => {
-    onSubmit(data); 
-    reset(); 
-  };
 
   return (
-    <form
-      onSubmit={handleSubmit(handleFormSubmit)}
-      className="flex flex-col gap-3"
-    >
+    <form onSubmit={handleSubmit(handleArrivalFormSubmit)}>
+      <h4 className="mb-6 text-lg font-medium text-gray-800 dark:text-white/90">
+        {arrivalProduct.name}
+      </h4>
+
       <div>
-        <Label htmlFor="name">Название</Label>
-        <Field<CategoryCreateDTO>
-          name="name"
+        <Label htmlFor="quantity">Количество</Label>
+        <Field
+          name="qty"
+          type="number"
           control={control}
           rules={{
             required: "Заполните поле",
-            minLength: {
-              value: 3,
-              message: "Минимум 3 символа",
-            },
+            min: {
+              value: 1, message: 'Минимум 1'
+            }
           }}
         />
       </div>
 
-      <div>
-        <Label htmlFor="categoryId">Родительская категория</Label>
-        {isFetchingCategories ? (
-          <Loader />
-        ) : (
-          <ControlledSelect<CategoryCreateDTO, number | null>
-            name="parentId"
-            control={control}
-            options={categoryOptions}
-            placeholder="Выберите категорию"
-          />
-        )}
-      </div>
-
-      <div className="flex justify-end">
-        <Button size="xs" variant="primary" disabled={isSubmitting}>
-          {isSubmitting ? <Loader /> : ""}
-          {submitText}
+      <div className="flex items-center justify-end w-full gap-3 mt-6">
+        <Button size="xs" variant="outline" onClick={closeModal}>
+          Закрыть
         </Button>
+        <Button size="xs">Создать</Button>
       </div>
     </form>
   );

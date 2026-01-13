@@ -7,12 +7,12 @@ export async function GET(_req: NextRequest) {
     const categories = await prisma.category.findMany({
       select: {
         id: true,
-        name: true,
+        title: true,
         parentId: true,
         parent: {
           select: {
             id: true,
-            name: true,
+            title: true,
           },
         },
       },

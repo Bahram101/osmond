@@ -6,7 +6,7 @@ import {
   useCreateCategory,
   useGetCategories,
 } from "@/hooks/category/useCategories";
-import CategoryForm from "../components/CategoryForm"; 
+import CategoryForm from "../components/CategoryForm(old)"; 
 
 const CategoryCreatePage = () => {
   const { categories, isFetchingCategories } = useGetCategories();

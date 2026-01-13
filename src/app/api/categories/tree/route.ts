@@ -8,12 +8,12 @@ export async function GET() {
     const categories = await prisma.category.findMany({
       select: {
         id: true,
-        name: true,
+        title: true,
         parentId: true,
         parent: {
           select: {
             id: true,
-            name: true,
+            title: true,
           },
         },
       },
@@ -26,12 +26,7 @@ export async function GET() {
     const tree: CategoryNode[] = [];
 
     categories.forEach((cat) => {
-      byId[cat.id] = {
-        id: cat.id,
-        title: cat.name,
-        parentId: cat.parentId,
-        children: [],
-      };
+      byId[cat.id] = { ...cat, children: [] };
     });
 
     Object.values(byId).forEach((node) => {
