@@ -25,7 +25,7 @@ const CategoryForm: FC<CategoryFormProps> = ({
       </h4>
 
       <div>
-        <Label htmlFor="quantity">Название категории</Label>
+        <Label htmlFor="title">Название категории</Label>
         <Field
           name="title"
           control={control}
@@ -39,7 +39,7 @@ const CategoryForm: FC<CategoryFormProps> = ({
         <Button size="xs" variant="outline" onClick={closeModal}>
           Закрыть
         </Button>
-        <Button size="xs">Создать</Button>
+        <Button size="xs" type="submit">Создать</Button>
       </div>
     </form>
   );

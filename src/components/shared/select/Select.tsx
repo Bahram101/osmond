@@ -50,7 +50,10 @@ export function ControlledSelect<T extends FieldValues, TValue>({
               onChange(isNaN(num) ? null : num);
             }}
           >
-            <SelectTrigger className={cn("w-full", error && "border-red-400")}>
+            <SelectTrigger
+              id={name}
+              aria-label={name}
+              className={cn("w-full", error && "border-red-400")}>
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>

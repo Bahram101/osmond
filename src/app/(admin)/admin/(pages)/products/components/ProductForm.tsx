@@ -119,7 +119,7 @@ const ProductForm: FC<ProductFormProps> = ({
         />
       </div> */}
       <div>
-        <Label>Категория</Label>
+        <Label htmlFor="categoryId"> Категория</Label>
         {isFetchingCategories ? (
           <Loader />
         ) : (
@@ -143,7 +143,7 @@ const ProductForm: FC<ProductFormProps> = ({
       </div>
 
       <div className="flex justify-end">
-        <Button size="xs" variant="primary">
+        <Button size="xs" variant="primary" type="submit">
           {isSubmitting ? <Loader /> : ""}
           {submitText}
         </Button>

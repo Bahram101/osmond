@@ -26,6 +26,8 @@ const Field = <T extends FieldValues>({
           <div className={cn(className)}>
             <Input
               className={cn(error && "border-red-400")}
+              id={name}
+              name={name}
               value={(value || "").toString()}
               onChange={onChange}
               onBlur={onBlur}
