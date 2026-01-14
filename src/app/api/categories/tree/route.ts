@@ -10,12 +10,6 @@ export async function GET() {
         id: true,
         title: true,
         parentId: true,
-        parent: {
-          select: {
-            id: true,
-            title: true,
-          },
-        },
       },
       orderBy: {
         id: "asc",

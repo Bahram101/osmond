@@ -4,31 +4,53 @@ import { SortableTree, TreeItem } from "@nosferatu500/react-sortable-tree";
 import {
   useDeleteCategory,
   useGetCategories,
+  useCreateCategory,
   useGetCategoriesTree,
+  useUpdateCategory,
 } from "@/hooks/category/useCategories";
 import Loader from "@/components/shared/Loader";
-import BreadCrumb from "../../components/common/BreadCrumb"; 
+import BreadCrumb from "../../components/common/BreadCrumb";
 import Button from "../../components/ui/button/Button";
-import { Plus } from "lucide-react";
+import { Pencil, PencilIcon, Plus, Trash2 } from "lucide-react";
 import { useModal } from "../../hooks/useModal";
-import { Modal } from "../../components/ui/modal"; 
+import { Modal } from "../../components/ui/modal";
 import CategoryForm from "./components/CategoryForm";
+import { set, useForm } from "react-hook-form";
+import { CategoryCreateDTO, CategoryNode } from "@/types/category.interface";
 
-type CategoryNode = {
-  title: string;
+type CategoryTreeNode = CategoryNode & {
   expanded?: boolean;
-  children?: CategoryNode[];
 };
+
+type ModalMode = "create-root" | "create-child" | "edit";
 
 const Categories = () => {
   const { isOpen, openModal, closeModal } = useModal();
+  const { control, handleSubmit, reset, watch } = useForm<CategoryCreateDTO>();
+  const values = watch();
+
   const { categoriesTree, isFetchingCategoriesTree } = useGetCategoriesTree();
-  const [treeData, setTreeData] = useState<CategoryNode[]>([]);
+  const { createCategory, isCreatingCategory } = useCreateCategory();
+  const { updateCategory, isUpdatingCategory } = useUpdateCategory();
+  const { deleteCategory, isDeleting } = useDeleteCategory();
+
+  const [treeData, setTreeData] = useState<CategoryTreeNode[]>([]);
+  const [modalMode, setModalMode] = useState<ModalMode>("create-root");
+  const [editingCategoryId, setEditingCategoryId] = useState<number | null>(
+    null
+  );
+
+  const modalTitle =
+    modalMode === "edit"
+      ? "Редактировать категорию"
+      : modalMode === "create-child"
+      ? "Создать подкатегорию"
+      : "Создать категорию";
 
   useEffect(() => {
     if (!categoriesTree) return;
 
-    function withExpanded(nodes: CategoryNode[]): CategoryNode[] {
+    function withExpanded(nodes: CategoryTreeNode[]): CategoryTreeNode[] {
       return nodes.map((node) => ({
         ...node,
         expanded: !!node.children?.length,
@@ -39,14 +61,47 @@ const Categories = () => {
     setTreeData(withExpanded(categoriesTree));
   }, [categoriesTree]);
 
-  const handleOpenModal = (currentProduct: any) => {
-    // setArrivalProduct(currentProduct.original);
-    openModal();
-  };
-
   if (isFetchingCategoriesTree) {
     return <Loader />;
   }
+
+  const openCreateRoot = () => {
+    setModalMode("create-root");
+    setEditingCategoryId(null);
+    reset({ title: "", parentId: null });
+    openModal();
+  };
+
+  const openCreateChild = (parentId: number) => {
+    setModalMode("create-child");
+    setEditingCategoryId(null);
+    reset({ title: "", parentId });
+    openModal();
+  };
+
+  const openEdit = (node: CategoryTreeNode) => {
+    setModalMode("edit");
+    setEditingCategoryId(node.id);
+    reset({ title: node.title, parentId: node.parentId });
+    openModal();
+  };
+
+  const handleSubmitCategory = (data: CategoryCreateDTO) => {
+    if (modalMode === "edit" && editingCategoryId) {
+      updateCategory({ id: editingCategoryId, data }); 
+    } else {
+      createCategory(data);
+    }
+    closeModal();
+  };
+
+  const handleDelete = async (id: number) => {
+    if (confirm("Точно удалить категорию?")) {
+      deleteCategory(id);
+    }
+  };
+
+  console.log("vvv", values);
 
   return (
     <>
@@ -54,10 +109,14 @@ const Categories = () => {
         isOpen={isOpen}
         onClose={closeModal}
         className="max-w-146 p-4 lg:p-6"
-        title="Создать категорию"
+        title={modalTitle}
       >
-        {/* <CategoryForm /> */}
-        ыва
+        <CategoryForm
+          closeModal={closeModal}
+          control={control} 
+          handleSubmit={handleSubmit}
+          handleSaveCategory={handleSubmitCategory}
+        />
       </Modal>
       <div className="col-span-12 xl:col-span-7">
         <BreadCrumb
@@ -67,21 +126,40 @@ const Categories = () => {
         <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
           <div className="flex justify-between items-center pb-5">
             <h3 className="text-lg">Список категории</h3>
-
             <Button
               size="xs"
               variant="primary"
               startIcon={<Plus />}
-              onClick={() => handleOpenModal(null)}
+              onClick={openCreateRoot}
             >
               Создать
             </Button>
           </div>
-          <div style={{ height: 500 }}>
+
+          <div className=" h-[65vh] ">
             <SortableTree
               treeData={treeData}
-              onChange={setTreeData}
-              // onMoveNode={({ node, nextParentNode }) => {}}
+              onChange={(nextTree) => setTreeData([...nextTree])}
+              generateNodeProps={({ node }: { node: CategoryTreeNode }) => ({
+                buttons: [
+                  <Plus
+                    key="add"
+                    className="treeButton"
+                    onClick={() => openCreateChild(node.id)}
+                  />,
+                  <Pencil
+                    key="edit"
+                    className="treeButton"
+                    onClick={() => openEdit(node)}
+                  />,
+                  <Trash2
+                    key="delete"
+                    color="red"
+                    className="treeButton"
+                    onClick={() => handleDelete(node.id)}
+                  />,
+                ],
+              })}
             />
           </div>
         </div>

@@ -190,6 +190,9 @@
   body {
     @apply relative font-normal font-outfit z-1 bg-gray-50;
   }
+  .treeButton{
+    @apply size-6 cursor-pointer border rounded hover:bg-gray-200 p-1
+  }
 }
 
 @utility menu-item {

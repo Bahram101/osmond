@@ -3,10 +3,10 @@ import {
   ICategory,
   CategoryCreateDTO,
   CategoryUpdateDTO,
-} from "@/types/category.interface"; 
+} from "@/types/category.interface";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export interface DeleteResponse {
@@ -22,8 +22,8 @@ export const useCreateCategory = () => {
   >({
     mutationKey: ["createCategory"],
     mutationFn: (formData) => CategoryService.createCategory(formData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["get-categories"] });
+    onSuccess: (newCategory) => {
+      queryClient.invalidateQueries({ queryKey: ["get-categories-tree"] });
       toast.success("Категория успешно создана");
     },
     onError(error) {
@@ -62,7 +62,7 @@ export const useDeleteCategory = () => {
     mutationKey: ["delete-category"],
     mutationFn: (id) => CategoryService.deleteCategory(id),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["get-categories"] });
+      queryClient.invalidateQueries({ queryKey: ["get-categories-tree"] }); 
       toast.success(data.message);
     },
     onError: (error) => {
@@ -85,7 +85,7 @@ export const useUpdateCategory = () => {
     mutationFn: ({ id, data }) => CategoryService.updateCategory(id, data),
     onSuccess: (updatedCategory, { id }) => {
       queryClient.setQueryData(["get-category", id], updatedCategory);
-      queryClient.invalidateQueries({ queryKey: ["get-categories"] });
+      queryClient.invalidateQueries({ queryKey: ["get-categories-tree"] });
       toast.success("Категория успешно обновлена");
       router.push("/admin/categories");
     },

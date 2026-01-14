@@ -3,41 +3,34 @@ import Button from "../../../components/ui/button/Button";
 import Label from "../../../components/form/Label";
 import Field from "@/components/shared/field/Field";
 import { Control, FieldValues, UseFormHandleSubmit } from "react-hook-form";
-import { IArrivalForm } from "@/types/arrival.interface";
+import { CategoryCreateDTO } from "@/types/category.interface";
 
-type ArrivalFormProps = {
+type CategoryFormProps = {
   closeModal: () => void;
-  control: Control<IArrivalForm>;
-  handleSubmit:UseFormHandleSubmit<FieldValues>
-  handleArrivalFormSubmit:(param:any) => void
-  arrivalProduct: any;
+  control: Control<CategoryCreateDTO>;
+  handleSubmit: UseFormHandleSubmit<FieldValues>;
+  handleSaveCategory: (param: any) => void;
 };
 
-const CategoryForm: FC<ArrivalFormProps> = ({
+const CategoryForm: FC<CategoryFormProps> = ({
   closeModal,
   control,
   handleSubmit,
-  handleArrivalFormSubmit,
-  arrivalProduct,
+  handleSaveCategory,
 }) => {
-
   return (
-    <form onSubmit={handleSubmit(handleArrivalFormSubmit)}>
+    <form onSubmit={handleSubmit(handleSaveCategory)}>
       <h4 className="mb-6 text-lg font-medium text-gray-800 dark:text-white/90">
-        {arrivalProduct.name}
+        {/* {arrivalProduct.name} */}
       </h4>
 
       <div>
-        <Label htmlFor="quantity">Количество</Label>
+        <Label htmlFor="quantity">Название категории</Label>
         <Field
-          name="qty"
-          type="number"
+          name="title"
           control={control}
           rules={{
             required: "Заполните поле",
-            min: {
-              value: 1, message: 'Минимум 1'
-            }
           }}
         />
       </div>

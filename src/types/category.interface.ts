@@ -10,7 +10,10 @@ export interface ICategory {
   } | null;
 }
 
-export type CategoryCreateDTO = Pick<ICategory, "title" | "parentId">;
+export type CategoryCreateDTO = {
+  title: string;
+  parentId?: number | null;
+};
 
 export type CategoryUpdateDTO = Partial<CategoryCreateDTO>;
 
@@ -27,9 +30,18 @@ export interface CategoryNode {
   children: CategoryNode[];
 }
 
+// export interface CategoryTreeNode extends CategoryNode {
+//   expanded?: boolean;
+// }
+
 export interface CategoryBreadcrumbItem {
   id: number;
   title: string;
 }
 
 export type CategoryBreadcrumb = CategoryBreadcrumbItem[];
+
+export interface IArrivalForm {
+  title: string;
+  parentId?: string;
+}

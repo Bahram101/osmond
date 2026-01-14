@@ -66,8 +66,8 @@ const ProductsPage = () => {
     columnHelper.accessor("name", {
       header: "Название",
     }),
-    columnHelper.accessor((row) => row.category?.name ?? "-", {
-      id: "category.name",
+    columnHelper.accessor((row) => row.category?.title ?? "-", {
+      id: "category.title",
       header: "Категория",
     }),
     columnHelper.accessor("price", {
