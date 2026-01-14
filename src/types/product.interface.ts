@@ -10,7 +10,7 @@ export interface ProductResponse {
   createdAt: string;
   category: {
     id: number;
-    name: string;
+    title: string;
   };
 }
 
@@ -38,6 +38,6 @@ export type ProductInCategoryDTO = {
   quantity: number;
   category:{
     id: number;
-    name: string;
+    title: string;
   }
 }

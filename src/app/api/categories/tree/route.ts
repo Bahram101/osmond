@@ -10,12 +10,12 @@ export async function GET() {
         id: true,
         title: true,
         parentId: true,
-        // parent: {
-        //   select: {
-        //     id: true,
-        //     title: true,
-        //   },
-        // },
+        parent: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
       },
       orderBy: {
         id: "asc",
@@ -30,7 +30,7 @@ export async function GET() {
     });
 
     Object.values(byId).forEach((node) => {
-      if (node.parentId !== null && byId[node.parentId]) {
+      if (node.parentId !== null) {
         byId[node.parentId]?.children.push(node);
       } else {
         tree.push(node);

@@ -7,11 +7,11 @@ import {
   useGetCategoriesTree,
 } from "@/hooks/category/useCategories";
 import Loader from "@/components/shared/Loader";
-import BreadCrumb from "../../components/common/BreadCrumb";
+import BreadCrumb from "../../components/common/BreadCrumb"; 
 import Button from "../../components/ui/button/Button";
 import { Plus } from "lucide-react";
 import { useModal } from "../../hooks/useModal";
-import { Modal } from "../../components/ui/modal";
+import { Modal } from "../../components/ui/modal"; 
 import CategoryForm from "./components/CategoryForm";
 
 type CategoryNode = {
@@ -23,9 +23,10 @@ type CategoryNode = {
 const Categories = () => {
   const { isOpen, openModal, closeModal } = useModal();
   const { categoriesTree, isFetchingCategoriesTree } = useGetCategoriesTree();
+  const [treeData, setTreeData] = useState<CategoryNode[]>([]);
 
-  const [treeData, setTreeData] = useState<CategoryNode[]>(() => {
-    if (!categoriesTree) return [];
+  useEffect(() => {
+    if (!categoriesTree) return;
 
     function withExpanded(nodes: CategoryNode[]): CategoryNode[] {
       return nodes.map((node) => ({
@@ -35,8 +36,8 @@ const Categories = () => {
       }));
     }
 
-    return withExpanded(categoriesTree);
-  });
+    setTreeData(withExpanded(categoriesTree));
+  }, [categoriesTree]);
 
   const handleOpenModal = (currentProduct: any) => {
     // setArrivalProduct(currentProduct.original);
@@ -80,7 +81,7 @@ const Categories = () => {
             <SortableTree
               treeData={treeData}
               onChange={setTreeData}
-            // onMoveNode={({ node, nextParentNode }) => {}}
+              // onMoveNode={({ node, nextParentNode }) => {}}
             />
           </div>
         </div>
