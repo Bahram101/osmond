@@ -1,5 +1,6 @@
 "use client";
 import BreadCrumb from "@/components/layout/BreadCrumb";
+import Loader from "@/components/shared/Loader";
 import {
   useGetCategoryBreadcrumb,
   useGetCategoryProducts,
@@ -23,28 +24,38 @@ const CategoryPage = () => {
           label: b.title,
         }))}
       />
-      <div className="divide-y border rounded-lg">
-        {categoryProducts.map((p) => (
-          <div
-            key={p.id}
-            className="flex items-center justify-between px-3 py-2 hover:bg-gray-50"
-          >
-            <div className="font-medium mr-4">{p.name}</div>
+      {isFetchingCategoryProducts || isFetchingCatBreadcrumb ? (
+        <Loader />
+      ) : null}
+      
+      {categoryProducts.length > 0 ? (
+        <div className="divide-y border rounded-lg">
+          {categoryProducts.map((p) => (
+            <div
+              key={p.id}
+              className="flex items-center justify-between px-3 py-2 hover:bg-gray-50"
+            >
+              <div className="font-medium mr-4">{p.name}</div>
 
-            <div className="flex items-center">
-              <div className="w-20">{p.price} ₸</div>
+              <div className="flex items-center">
+                <div className="w-20">{p.price} ₸</div>
 
-              <div
-                className={`text-sm w-18 ${
-                  p.quantity > 0 ? "text-green-600" : "text-red-500"
-                }`}
-              >
-                {p.quantity > 0 ? "В наличии" : "Нет"}
+                <div
+                  className={`text-sm w-18 ${
+                    p.quantity > 0 ? "text-green-600" : "text-red-500"
+                  }`}
+                >
+                  {p.quantity > 0 ? "В наличии" : "Нет"}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-8 text-gray-500">
+          В этой категории нет товаров
+        </div>
+      )}
     </>
   );
 };

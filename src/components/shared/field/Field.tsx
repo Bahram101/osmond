@@ -21,9 +21,8 @@ const Field = <T extends FieldValues>({
         field: { value, onChange, onBlur },
         fieldState: { error },
       }) => {
-
         return (
-          <div className={cn(className)}>
+          <div className={cn(className)} suppressHydrationWarning>
             <Input
               className={cn(error && "border-red-400")}
               id={name}

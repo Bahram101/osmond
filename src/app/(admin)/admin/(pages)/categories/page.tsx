@@ -3,7 +3,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { SortableTree, TreeItem } from "@nosferatu500/react-sortable-tree";
 import {
   useDeleteCategory,
-  useGetCategories,
   useCreateCategory,
   useGetCategoriesTree,
   useUpdateCategory,
@@ -11,11 +10,11 @@ import {
 import Loader from "@/components/shared/Loader";
 import BreadCrumb from "../../components/common/BreadCrumb";
 import Button from "../../components/ui/button/Button";
-import { Pencil, PencilIcon, Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../../components/ui/modal";
 import CategoryForm from "./components/CategoryForm";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { CategoryCreateDTO, CategoryNode } from "@/types/category.interface";
 
 type CategoryTreeNode = CategoryNode & {
@@ -23,6 +22,14 @@ type CategoryTreeNode = CategoryNode & {
 };
 
 type ModalMode = "create-root" | "create-child" | "edit";
+
+function buildExpandedTree(nodes: CategoryNode[]): CategoryTreeNode[] {
+  return nodes.map((node) => ({
+    ...node,
+    expanded: !!node.children?.length,
+    children: node.children ? buildExpandedTree(node.children) : [],
+  }));
+}
 
 const Categories = () => {
   const { isOpen, openModal, closeModal } = useModal();
@@ -49,16 +56,7 @@ const Categories = () => {
 
   useEffect(() => {
     if (!categoriesTree) return;
-
-    function withExpanded(nodes: CategoryTreeNode[]): CategoryTreeNode[] {
-      return nodes.map((node) => ({
-        ...node,
-        expanded: !!node.children?.length,
-        children: withExpanded(node.children || []),
-      }));
-    }
-
-    setTreeData(withExpanded(categoriesTree));
+    setTreeData(buildExpandedTree(categoriesTree));
   }, [categoriesTree]);
 
   if (isFetchingCategoriesTree) {
@@ -88,7 +86,7 @@ const Categories = () => {
 
   const handleSubmitCategory = (data: CategoryCreateDTO) => {
     if (modalMode === "edit" && editingCategoryId) {
-      updateCategory({ id: editingCategoryId, data }); 
+      updateCategory({ id: editingCategoryId, data });
     } else {
       createCategory(data);
     }
@@ -101,8 +99,6 @@ const Categories = () => {
     }
   };
 
-  console.log("vvv", values);
-
   return (
     <>
       <Modal
@@ -113,7 +109,7 @@ const Categories = () => {
       >
         <CategoryForm
           closeModal={closeModal}
-          control={control} 
+          control={control}
           handleSubmit={handleSubmit}
           handleSaveCategory={handleSubmitCategory}
         />
@@ -136,7 +132,7 @@ const Categories = () => {
             </Button>
           </div>
 
-          <div className=" h-[65vh] ">
+          <div className=" h-[68vh] ">
             <SortableTree
               treeData={treeData}
               onChange={(nextTree) => setTreeData([...nextTree])}

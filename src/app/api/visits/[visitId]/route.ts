@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 //api/visits/[visitId]
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { visitId: string } }
+  { params }: { params: Promise<{ visitId: string }> }
 ) {
   try {
     const visitId = Number((await params).visitId);

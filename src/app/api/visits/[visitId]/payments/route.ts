@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 //api/visits/[visitId]/payments
 export async function POST(
   req: NextRequest,
-  { params }: { params: { visitId: string } }
+  { params }: { params: Promise<{ visitId: string }> }
 ) {
   try {
     const visitId = Number((await params).visitId);
@@ -66,7 +66,7 @@ export async function POST(
     });
 
     return NextResponse.json({ success: true });
-  } catch (e) { 
+  } catch (e) {
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }

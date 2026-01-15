@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 //GET /api/clients/[id]/visits
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const clientId = Number((await params).id);
