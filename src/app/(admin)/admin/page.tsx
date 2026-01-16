@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import { EcommerceMetrics } from "./components/ecommerce/EcommerceMetrics"; 
 
 export const metadata: Metadata = {
-  title: "Next.js E-commerce Dashboard ",
-  description: "This is Next.js Home ",
+  title: "Osmond",
+  description: "Osmond Admin Dashboard",
 };
 
 export default function Ecommerce() {

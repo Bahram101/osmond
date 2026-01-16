@@ -16,7 +16,7 @@ const LoginPage = () => {
   const { handleSubmit, control } = useForm<IAuthFormData>({
     mode: "onChange",
     defaultValues: {
-      email: "bahram101@mail.ru",
+      email: "joha85@mail.ru",
       password: "123456",
     },
   });

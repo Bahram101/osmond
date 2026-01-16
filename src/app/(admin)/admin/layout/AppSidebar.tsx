@@ -64,13 +64,11 @@ const navItems: NavItem[] = [
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
-  const { toggleSidebar, toggleMobileSidebar } = useSidebar();
+  const { toggleMobileSidebar } = useSidebar();
   const pathname = usePathname();
 
   const handleToggle = () => {
-    if (window.innerWidth >= 1024) {
-      toggleSidebar();
-    } else {
+    if (window.innerWidth < 1024) {
       toggleMobileSidebar();
     }
   };
@@ -103,7 +101,9 @@ const AppSidebar: React.FC = () => {
                     {nav.icon}
                   </span>
                   {(isExpanded || isHovered || isMobileOpen) && (
-                    <span className={`menu-item-text`} onClick={handleToggle}>{nav.name}</span>
+                    <span className={`menu-item-text`} onClick={handleToggle}>
+                      {nav.name}
+                    </span>
                   )}
                 </Link>
               )}
