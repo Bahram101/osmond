@@ -52,7 +52,7 @@ const navItems: NavItem[] = [
   },
   {
     icon: <SquareUser />,
-    name: "Мастеры",
+    name: "Клиенты",
     path: "/admin/clients",
   },
   {
@@ -131,7 +131,7 @@ const AppSidebar: React.FC = () => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className={`py-8 flex  ${
+        className={`py-4 flex  ${
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >

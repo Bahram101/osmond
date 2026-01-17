@@ -126,9 +126,9 @@ const ClientVisitPage = () => {
       <BreadCrumb
         items={[
           { label: "Home", href: "/admin" },
-          { label: "Мастеры", href: "/admin/clients" },
+          { label: "Клиенты", href: "/admin/clients" },
           {
-            label: visit.client.fullName ?? "Мастер",
+            label: visit.client.fullName ?? "Клиенты",
             href: `/admin/clients/${id}`,
           },
           { label: `Визит №${visId}` },

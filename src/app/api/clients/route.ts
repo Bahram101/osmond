@@ -14,7 +14,7 @@ export async function GET() {
   } catch (e) {
 
     return NextResponse.json(
-      { message: "Ошибка при получении мастеров" },
+      { message: "Ошибка при получении клиентов" },
       { status: 500 }
     );
   }

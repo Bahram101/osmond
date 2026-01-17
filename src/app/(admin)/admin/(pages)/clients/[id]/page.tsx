@@ -29,7 +29,7 @@ const ClientViewPage = () => {
       <BreadCrumb
         items={[
           { label: "Home", href: "/admin" },
-          { label: "Мастеры", href: "/admin/clients" },
+          { label: "Клиенты", href: "/admin/clients" },
           { label: client?.fullName ?? "Мастер" },
         ]}
       />
