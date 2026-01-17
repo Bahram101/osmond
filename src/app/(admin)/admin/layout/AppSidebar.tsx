@@ -138,23 +138,19 @@ const AppSidebar: React.FC = () => {
         <Link href="/">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
-              <div className="relative w-37.5 h-10">
-                <Image
-                  src="/images/logo/logo.svg"
-                  alt="Логотип"
-                  fill
-                  unoptimized
-                  priority
-                />
+              <div className="flex items-center gap-2 relative w-37.5 h-10">
+                <div className="relative w-10 h-10">
+                  <Image
+                    src="/logo.png"
+                    alt="Логотип"
+                    fill
+                    unoptimized
+                    priority
+                  />
+                </div>
+
+                <span className="font-semibold text-lg opacity-80">Osmond</span>
               </div>
-              <Image
-                className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
-                alt="Logo"
-                width={150}
-                height={40}
-                unoptimized
-              />
             </>
           ) : (
             <Image
