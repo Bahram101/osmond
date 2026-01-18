@@ -47,7 +47,7 @@ const PaymentForm: FC<ArrivalFormProps> = ({
         <Button size="xs" variant="outline" onClick={closeModal}>
           Закрыть
         </Button>
-        <Button size="xs">Принять</Button>
+        <Button size="xs" type="submit">Принять</Button>
       </div>
     </form>
   );

@@ -46,7 +46,7 @@ const ArrivalForm: FC<ArrivalFormProps> = ({
         <Button size="xs" variant="outline" onClick={closeModal}>
           Закрыть
         </Button>
-        <Button size="xs">Оприходовать</Button>
+        <Button size="xs" type='submit'>Оприходовать</Button>
       </div>
     </form>
   );
