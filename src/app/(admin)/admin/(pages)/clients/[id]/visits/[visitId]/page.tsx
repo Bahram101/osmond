@@ -15,10 +15,7 @@ import { Modal } from "@/app/(admin)/admin/components/ui/modal";
 import { useModal } from "@/app/(admin)/admin/hooks/useModal";
 import PaymentForm from "./components/PaymentForm";
 import { useForm } from "react-hook-form";
-import {
-  PaymentFormValues,
-  PaymentCreateDTO,  
-} from "@/types/payment.interface";
+import { PaymentFormValues, PaymentCreateDTO } from "@/types/payment.interface";
 import { useCreatePayment } from "@/hooks/payment/usePayments";
 
 const ClientVisitPage = () => {
@@ -174,9 +171,12 @@ const ClientVisitPage = () => {
         <hr />
         <DataTable columns={columns} data={visit?.items} />
 
-        <div className="text-lg font-semibold">История оплат</div>
-
-        <DataTable columns={paymentColumns} data={visit?.payments} />
+        {visit?.payments.length > 0 && (
+          <>
+            <div className="text-lg font-semibold">История оплат</div>
+            <DataTable columns={paymentColumns} data={visit?.payments} />
+          </>
+        )}
       </ComponentCard>
     </>
   );

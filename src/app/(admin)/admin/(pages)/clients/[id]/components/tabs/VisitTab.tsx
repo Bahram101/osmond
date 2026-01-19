@@ -86,7 +86,7 @@ const VisitTab = () => {
               )
             }
           >
-            Открыть
+            Просмотр
           </Button>
         </div>
       ),

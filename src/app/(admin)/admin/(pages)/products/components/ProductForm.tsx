@@ -32,14 +32,17 @@ const ProductForm: FC<ProductFormProps> = ({
   clearOnSubmit,
   onSubmit,
 }) => {
-  const { control, handleSubmit, reset } = useForm<ProductCreateDTO>({
+  const { control, handleSubmit, reset, watch } = useForm<ProductCreateDTO>({
     mode: "all",
     defaultValues: {
       ...defaultValues,
       published: defaultValues?.published ?? true,
-      quantity: 0
+      quantity: 0,
     },
   });
+
+  const asdf = watch("published");
+  console.log("asdf", asdf);
 
   useEffect(() => {
     if (defaultValues) {
@@ -106,18 +109,6 @@ const ProductForm: FC<ProductFormProps> = ({
           }}
         />
       </div>
-      {/* <div>
-        <Label htmlFor="quantity">Количество</Label>
-        <Field<ProductCreateDTO>
-          name="quantity"
-          type="number"
-          control={control}
-          disabled
-          // rules={{
-          //   required: "Заполните поле",
-          // }}
-        />
-      </div> */}
       <div>
         <Label htmlFor="categoryId"> Категория</Label>
         {isFetchingCategories ? (
@@ -125,6 +116,7 @@ const ProductForm: FC<ProductFormProps> = ({
         ) : (
           <ControlledSelect<ProductCreateDTO, number | null>
             name="categoryId"
+            valueType="number"
             control={control}
             rules={{ required: "Заполните поле" }}
             options={categoryOptions}
@@ -136,6 +128,7 @@ const ProductForm: FC<ProductFormProps> = ({
         <Label htmlFor="published">Опубликовать</Label>
         <ControlledSelect<ProductCreateDTO, boolean>
           name="published"
+          valueType="boolean"
           control={control}
           options={availableOptions || []}
           placeholder="Выберите доступность"

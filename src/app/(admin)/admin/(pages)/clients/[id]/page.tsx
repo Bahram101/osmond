@@ -2,7 +2,7 @@
 import BreadCrumb from "../../../components/common/BreadCrumb";
 import Link from "next/link";
 import Button from "../../../components/ui/button/Button";
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Info, Plus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VisitTab from "./components/tabs/VisitTab";
 import HistoryTab from "./components/tabs/HistoryTab";
@@ -11,9 +11,21 @@ import { useParams, useRouter } from "next/navigation";
 import { useGetClient } from "@/hooks/client/useClient";
 import { useGetClientVisits } from "@/hooks/visit/useVisit";
 import { formatCurrency } from "@/lib/utils/helpers";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Modal } from "../../../components/ui/modal";
+import { useModal } from "../../../hooks/useModal";
+import PaymentForm from "./visits/[visitId]/components/PaymentForm";
+import { useForm } from "react-hook-form";
+import { PaymentFormValues } from "@/types/payment.interface";
 
 const ClientViewPage = () => {
-  const router = useRouter()
+  const router = useRouter();
+  const { control, handleSubmit, reset } = useForm<PaymentFormValues>();
+  const { isOpen, openModal, closeModal } = useModal();
   const { id } = useParams<{ id: string }>();
   const clientId = Number(id);
   if (Number.isNaN(clientId)) return null;
@@ -22,7 +34,10 @@ const ClientViewPage = () => {
 
   const { client } = useGetClient(clientId);
 
-  const totalDebt = clientVisits.reduce((acc, visit) => acc + visit.debtAmount, 0)
+  const totalDebt = clientVisits.reduce(
+    (acc, visit) => acc + visit.debtAmount,
+    0
+  );
 
   return (
     <>
@@ -33,6 +48,20 @@ const ClientViewPage = () => {
           { label: client?.fullName ?? "Мастер" },
         ]}
       />
+
+      {/* <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        className="max-w-146 p-4 lg:p-6"
+        title="Принят оплату"
+      >
+        <PaymentForm
+          closeModal={closeModal}
+          control={control}
+          handleSubmit={handleSubmit}
+          handlePaymentFormSubmit={handlePaymentFormSubmit}
+        />
+      </Modal> */}
 
       <div className="col-span-12 xl:col-span-7">
         <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
@@ -66,8 +95,27 @@ const ClientViewPage = () => {
                 <TabsTrigger value="history">История оплат</TabsTrigger>
                 <TabsTrigger value="info">Информация</TabsTrigger>
               </TabsList>
-
-              <div>Общ долг: <span className="font-bold">{formatCurrency(totalDebt)}</span></div>
+              <div className="flex items-center gap-4">
+                <div>
+                  Общ долг:{" "}
+                  <span className="font-bold">{formatCurrency(totalDebt)}</span>
+                </div>
+                <Button
+                  size="xs"
+                  variant="success"
+                  className="flex items-center gap-2"
+                >
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info size="18" className="cursor-pointer" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Оплатить часть или весь общий долг
+                    </TooltipContent>
+                  </Tooltip>
+                  Оплатить
+                </Button>
+              </div>
             </div>
 
             <TabsContent value="visit">

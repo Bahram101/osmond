@@ -16,14 +16,22 @@ export const generateEAN13 = () => {
 };
 
 export const formatDateTime = (iso: string) => {
-  return new Date(iso).toLocaleString("ru-RU", {
+  const date = new Date(iso);
+
+  const datePart = date.toLocaleDateString("ru-RU", {
     timeZone: "Asia/Almaty",
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
+  });
+
+  const timePart = date.toLocaleTimeString("ru-RU", {
+    timeZone: "Asia/Almaty",
     hour: "2-digit",
     minute: "2-digit",
   });
+
+  return `${datePart} ${timePart}`;
 };
 
 export const formatCurrency = (value: number, symbol: string = "₸"): string => {
@@ -32,7 +40,7 @@ export const formatCurrency = (value: number, symbol: string = "₸"): string =>
   return value.toLocaleString("ru-RU") + ` ${symbol}`;
 };
 
-export const playSound = (src: string) =>{
-  const audio = new Audio(src)
-  audio.play().catch(()=> {})
-}
+export const playSound = (src: string) => {
+  const audio = new Audio(src);
+  audio.play().catch(() => {});
+};

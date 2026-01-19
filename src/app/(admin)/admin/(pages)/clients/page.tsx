@@ -20,7 +20,7 @@ import Loader from "@/components/shared/Loader";
 import { useRouter } from "next/navigation";
 
 const ClientPage = () => {
-  const router = useRouter()
+  const router = useRouter();
   const { isOpen, openModal, closeModal } = useModal();
   const { control, handleSubmit, reset } = useForm<IClientForm>();
   const { clients, isFetchingClients } = useGetClients();
@@ -83,13 +83,20 @@ const ClientPage = () => {
   const columns: ColumnDef<IClient, any>[] = [
     columnHelper.accessor("fullName", {
       header: "Имя",
-    }),    
+    }),
+    columnHelper.accessor("phone", {
+      header: "Телефон",
+    }),
     columnHelper.accessor("note", {
       header: "Заметки",
     }),
     columnHelper.accessor("createdAt", {
       header: "Дата создания",
-      cell: ({ getValue }) => <div className="text-center">{new Date(getValue()).toLocaleDateString("ru-RU")}</div>,
+      cell: ({ getValue }) => (
+        <div className="text-center">
+          {new Date(getValue()).toLocaleDateString("ru-RU")}
+        </div>
+      ),
     }),
     columnHelper.display({
       id: "actions",
@@ -103,18 +110,19 @@ const ClientPage = () => {
               size="tiny"
               onClick={() => router.push(`/admin/clients/${row.original.id}`)}
             >
-              <Eye className="size-4" />
+              Просмотр
             </Button>
 
             <Button
-              variant="primary"
+              variant="warning"
               size="tiny"
               onClick={() => handleOpenModal(row.original)}
             >
-              <Pencil className="size-4" />
+              {" "}
+              Изменить
             </Button>
 
-            <Button
+            {/* <Button
               variant="danger"
               size="tiny"
               onClick={() => handleDelete(row.original.id!)}
@@ -124,7 +132,7 @@ const ClientPage = () => {
               ) : (
                 <Trash2 className="size-4" />
               )}
-            </Button>
+            </Button> */}
           </div>
         );
       },
@@ -155,7 +163,7 @@ const ClientPage = () => {
 
           <Button
             size="xs"
-            variant="primary"
+            variant="success"
             startIcon={<Plus />}
             onClick={() => handleOpenModal(null)}
           >

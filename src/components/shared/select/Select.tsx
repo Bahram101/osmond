@@ -27,6 +27,7 @@ interface ControlledSelectProps<T extends FieldValues, TValue> {
   className?: string;
   options: ControlledSelectOption<TValue>[];
   placeholder?: string;
+  valueType?: "number" | "boolean" | "string";
 }
 
 export function ControlledSelect<T extends FieldValues, TValue>({
@@ -35,6 +36,7 @@ export function ControlledSelect<T extends FieldValues, TValue>({
   rules,
   options,
   placeholder,
+  valueType = "string",
 }: ControlledSelectProps<T, TValue>) {
   return (
     <Controller
@@ -46,14 +48,21 @@ export function ControlledSelect<T extends FieldValues, TValue>({
           <Select
             value={value !== undefined && value !== null ? String(value) : ""}
             onValueChange={(val) => {
-              const num = Number(val);
-              onChange(isNaN(num) ? null : num);
+              if (valueType === "boolean") {
+                onChange(val === "true");
+              } else if (valueType === "number") {
+                const num = Number(val);
+                onChange(isNaN(num) ? null : num);
+              } else {
+                onChange(val);
+              }
             }}
           >
             <SelectTrigger
               id={name}
               aria-label={name}
-              className={cn("w-full", error && "border-red-400")}>
+              className={cn("w-full", error && "border-red-400")}
+            >
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>
