@@ -74,16 +74,16 @@ const ProductsPage = () => {
       header: "Цена",
     }),
     columnHelper.accessor("quantity", {
-      header: "Количество",
+      header: "Кол-во",
     }),
     columnHelper.accessor("barcode", {
       header: "Штрих-код",
     }),
-    columnHelper.accessor("description", {
-      header: "Описание",
-    }),
+    // columnHelper.accessor("description", {
+    //   header: "Описание",
+    // }),
     columnHelper.accessor("published", {
-      header: "Опубликован",
+      header: "Опубл",
       cell: ({ getValue }) => {
         const value = getValue();
         const color = value ? "success" : "light";
