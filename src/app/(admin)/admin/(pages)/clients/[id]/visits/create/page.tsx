@@ -12,7 +12,7 @@ import {
 import { ProductShortDTO } from "@/types/product.interface";
 import { Check, Plus, Trash2, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ProductSelectTable } from "./components/ProductSelectTable";
 import { DataTable } from "@/components/common/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
@@ -41,7 +41,6 @@ const VisitCreatePage = () => {
   const successSound = useRef<HTMLAudioElement | null>(null);
   const errorSound = useRef<HTMLAudioElement | null>(null);
 
-
   useEffect(() => {
     successSound.current = new Audio("/sounds/beep.mp3");
     errorSound.current = new Audio("/sounds/error.wav");
@@ -62,7 +61,7 @@ const VisitCreatePage = () => {
         return prev.map((item) =>
           item.productId === product.id
             ? { ...item, quantity: item.quantity + 1 }
-            : item
+            : item,
         );
       }
 
@@ -85,7 +84,7 @@ const VisitCreatePage = () => {
         onSuccess: () => {
           router.push(`/admin/clients/${clientId}`);
         },
-      }
+      },
     );
   };
 
@@ -96,14 +95,12 @@ const VisitCreatePage = () => {
   };
 
   const handleScan = async (code: string) => {
-
     if (!code || isFetchingProdByBarcode) return;
 
     try {
       const product = await getProductByBarcode(code);
       onSelectProduct(product);
       successSound.current?.play();
-
     } catch (error: any) {
       errorSound.current?.play();
 
@@ -114,79 +111,85 @@ const VisitCreatePage = () => {
       } else {
         toast.error("Ошибка сканирования");
       }
-    }
-    finally {
+    } finally {
       setBarcode("");
       inputRef.current?.focus();
     }
-
   };
 
-  const columns: ColumnDef<VisitItemForm>[] = [
-    {
-      accessorKey: "name",
-      header: "Название товара",
-    },
-    {
-      accessorKey: "price",
-      header: "Цена",
-    },
-    {
-      accessorKey: "quantity",
-      header: "Кол-во",
-      cell: ({ row }) => {
-        return (
-          <div className="flex justify-center">
-            <Input
-              type="number"
-              min={1}
-              className="w-20 border text-center"
-              value={row.original.quantity}
-              onChange={(e) => {
-                const qty = Number(e.target.value);
+  const columns: ColumnDef<VisitItemForm>[] = useMemo(() => {
+    return [
+      {
+        accessorKey: "name",
+        header: "Название товара",
+      },
+      {
+        accessorKey: "price",
+        header: "Цена",
+      },
+      {
+        accessorKey: "quantity",
+        header: "Кол-во",
+        cell: ({ row }) => {
+          const product = products.find((p) => p.id === row.original.productId);
 
-                setItems((prev) =>
-                  prev.map((item, idx) =>
-                    idx === row.index ? { ...item, quantity: qty } : item
-                  )
-                );
-              }}
-            />
-          </div>
-        );
-      },
-    },
-    {
-      id: "total",
-      header: "Сумма",
-      cell: ({ row }) => {
-        const price = row.original.price;
-        const qty = row.original.quantity ?? 0;
-        return <span>{qty * price}</span>;
-      },
-    },
-    ...(isSelectedProducts
-      ? [
-        {
-          id: "actions",
-          header: () => null,
-          size: 260,
-          cell: ({ row }: { row: any }) => {
-            return (
-              <div className="flex justify-center gap-3">
-                <div
-                  className="cursor-pointer"
-                  onClick={() => handleDeleteItem(row.original.productId)}
-                >
-                  <Trash2 className="size-4.5" color="red" />
-                </div>
-              </div>
-            );
-          },
+          return (
+            <div className="flex justify-center items-center gap-4">
+              <Input
+                type="number"
+                min={1}
+                max={product?.quantity}
+                className="w-20 border text-center"
+                value={row.original.quantity}
+                onChange={(e) => {
+                  const raw = Number(e.target.value);
+                  const stock = product?.quantity;
+                  const qty = stock ? Math.max(1, Math.min(raw, stock)) : 1;
+
+                  setItems((prev) =>
+                    prev.map((item, idx) =>
+                      idx === row.index ? { ...item, quantity: qty } : item,
+                    ),
+                  );
+                }}
+              />
+              <span className="">Остаток: {product?.quantity}</span>
+            </div>
+          );
         },
-      ]
-      : []),
-  ];
+      },
+      {
+        id: "total",
+        header: "Сумма",
+        cell: ({ row }) => {
+          const price = row.original.price;
+          const qty = row.original.quantity ?? 0;
+          return <span>{qty * price}</span>;
+        },
+      },
+      ...(isSelectedProducts
+        ? [
+            {
+              id: "actions",
+              header: () => null,
+              size: 260,
+              cell: ({ row }: { row: any }) => {
+                return (
+                  <div className="flex justify-center gap-3">
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => handleDeleteItem(row.original.productId)}
+                    >
+                      <Trash2 className="size-4.5" color="red" />
+                    </div>
+                  </div>
+                );
+              },
+            },
+          ]
+        : []),
+    ];
+  }, [isSelectedProducts, products]);
 
   return (
     <>

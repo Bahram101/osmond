@@ -17,7 +17,6 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
 }) => {
 
   const router = useParams()
-  console.log('router', router);
 
   return (
     <div

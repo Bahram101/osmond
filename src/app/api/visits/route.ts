@@ -7,13 +7,15 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { clientId, items } = body;
 
+    console.log("ITEMS", items);
+
     if (!clientId || !items?.length) {
       return NextResponse.json({ message: "Invalid payload" }, { status: 400 });
     }
 
     const totalAmount = items.reduce(
       (sum: any, item: any) => sum + item.price * item.quantity,
-      0
+      0,
     );
 
     const visit = await prisma.$transaction(async (tx) => {
@@ -35,14 +37,29 @@ export async function POST(req: NextRequest) {
         })),
       });
 
+      await Promise.all(
+        items.map((item: any) => {
+          return tx.product.update({
+            where: {
+              id: item.productId,
+            },
+            data: {
+              quantity: {
+                decrement: item.quantity,
+              },
+            },
+          });
+        }),
+      );
+
       return visit;
     });
 
     return NextResponse.json({ visitId: visit.id });
-  } catch (error) { 
+  } catch (error) {
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
