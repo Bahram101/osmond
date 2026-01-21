@@ -41,9 +41,6 @@ const ProductForm: FC<ProductFormProps> = ({
     },
   });
 
-  const asdf = watch("published");
-  console.log("asdf", asdf);
-
   useEffect(() => {
     if (defaultValues) {
       reset(defaultValues);

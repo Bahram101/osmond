@@ -1,5 +1,5 @@
 import { PaymentService } from "@/services/payment.service";
-import { PaymentCreateDTO } from "@/types/payment.interface";
+import { PaymentCreateDTO, PaymentFormValues } from "@/types/payment.interface";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -20,4 +20,22 @@ export const useCreatePayment = () => {
   });
 
   return { createPayment, isCreatingPayment };
+};
+
+export const useCreatePaymentAll = () => {
+  const queryClient = useQueryClient();
+  const { mutate: createPaymentAll, isPending: isCreatingPaymentAll } =
+    useMutation<boolean, Error, { clientId: number; data: PaymentFormValues }>({
+      mutationKey: ["create-payment-all"],
+      mutationFn: ({ clientId, data }) =>
+        PaymentService.createAll(clientId, data),
+      onSuccess: (_data, { clientId }) => {
+        queryClient.invalidateQueries({ queryKey: ["getVisit", clientId] });
+        queryClient.invalidateQueries({
+          queryKey: ["client-visits", clientId],
+        });
+        toast.success("Оплата долга распределена");
+      },
+    });
+  return { createPaymentAll, isCreatingPaymentAll };
 };

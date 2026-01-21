@@ -5,14 +5,14 @@ import Label from "@/app/(admin)/admin/components/form/Label";
 import Button from "@/app/(admin)/admin/components/ui/button/Button";
 import { PaymentFormValues } from "@/types/payment.interface";
 
-type ArrivalFormProps = {
+type PaymentFormProps = {
   closeModal: () => void;
   control: Control<PaymentFormValues>;
   handleSubmit: UseFormHandleSubmit<FieldValues>;
   handlePaymentFormSubmit: (param: any) => void;
 };
 
-const PaymentForm: FC<ArrivalFormProps> = ({
+const PaymentForm: FC<PaymentFormProps> = ({
   closeModal,
   control,
   handleSubmit,

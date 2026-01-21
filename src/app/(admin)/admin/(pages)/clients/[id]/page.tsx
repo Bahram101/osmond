@@ -21,11 +21,13 @@ import { useModal } from "../../../hooks/useModal";
 import PaymentForm from "./visits/[visitId]/components/PaymentForm";
 import { useForm } from "react-hook-form";
 import { PaymentFormValues } from "@/types/payment.interface";
+import { useCreatePaymentAll } from "@/hooks/payment/usePayments";
 
 const ClientViewPage = () => {
   const router = useRouter();
   const { control, handleSubmit, reset } = useForm<PaymentFormValues>();
   const { isOpen, openModal, closeModal } = useModal();
+  const { createPaymentAll, isCreatingPaymentAll } = useCreatePaymentAll();
   const { id } = useParams<{ id: string }>();
   const clientId = Number(id);
   if (Number.isNaN(clientId)) return null;
@@ -36,8 +38,25 @@ const ClientViewPage = () => {
 
   const totalDebt = clientVisits.reduce(
     (acc, visit) => acc + visit.debtAmount,
-    0
+    0,
   );
+
+  const handlePaymentAllSubmit = (data: PaymentFormValues) => {
+    const body: PaymentFormValues = {
+      amount: Number(data.amount),
+      note: data.note,
+    };
+
+    createPaymentAll(
+      { clientId, data: body },
+      {
+        onSuccess: () => {
+          reset();
+          closeModal();
+        },
+      },
+    );
+  };
 
   return (
     <>
@@ -45,11 +64,11 @@ const ClientViewPage = () => {
         items={[
           { label: "Home", href: "/admin" },
           { label: "Клиенты", href: "/admin/clients" },
-          { label: client?.fullName ?? "Мастер" },
+          { label: client?.fullName ?? "Клиент" },
         ]}
       />
 
-      {/* <Modal
+      <Modal
         isOpen={isOpen}
         onClose={closeModal}
         className="max-w-146 p-4 lg:p-6"
@@ -59,9 +78,9 @@ const ClientViewPage = () => {
           closeModal={closeModal}
           control={control}
           handleSubmit={handleSubmit}
-          handlePaymentFormSubmit={handlePaymentFormSubmit}
+          handlePaymentFormSubmit={handlePaymentAllSubmit}
         />
-      </Modal> */}
+      </Modal>
 
       <div className="col-span-12 xl:col-span-7">
         <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
@@ -104,6 +123,7 @@ const ClientViewPage = () => {
                   size="xs"
                   variant="success"
                   className="flex items-center gap-2"
+                  onClick={openModal}
                 >
                   <Tooltip>
                     <TooltipTrigger asChild>
