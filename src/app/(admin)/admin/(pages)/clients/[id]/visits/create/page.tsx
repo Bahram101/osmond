@@ -128,10 +128,12 @@ const VisitCreatePage = () => {
       {
         accessorKey: "name",
         header: "Название товара",
+        meta: { className: "w-3/10" },
       },
       {
         accessorKey: "price",
         header: "Цена",
+        meta: { className: "w-1/10" },
         cell: ({ row }) => {
           return (
             <div className="text-center">
@@ -143,6 +145,7 @@ const VisitCreatePage = () => {
       {
         accessorKey: "quantity",
         header: "Кол-во",
+        meta: { className: "w-3/10" },
         cell: ({ row }) => {
           const product = products.find((p) => p.id === row.original.productId);
 
@@ -179,6 +182,7 @@ const VisitCreatePage = () => {
       {
         id: "total",
         header: "Сумма",
+        meta: { className: "w-1/10" },
         cell: ({ row }) => {
           const price = row.original.price;
           const qty = row.original.quantity ?? 0;
@@ -193,6 +197,7 @@ const VisitCreatePage = () => {
               id: "actions",
               header: () => null,
               size: 260,
+              meta: { className: "w-1/10" },
               cell: ({ row }: { row: any }) => {
                 return (
                   <div className="flex justify-center gap-3">
