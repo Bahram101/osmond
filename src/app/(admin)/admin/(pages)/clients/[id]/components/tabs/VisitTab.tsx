@@ -1,5 +1,6 @@
 import Badge from "@/app/(admin)/admin/components/ui/badge/Badge";
 import Button from "@/app/(admin)/admin/components/ui/button/Button";
+import EmptyState from "@/app/(admin)/admin/components/ui/EmptyState";
 import { DataTable } from "@/components/common/DataTable";
 import Loader from "@/components/shared/Loader";
 import { useGetClientVisits } from "@/hooks/visit/useVisit";
@@ -7,6 +8,7 @@ import { VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants/visit";
 import { formatCurrency, formatDateTime } from "@/lib/utils/helpers";
 import { ClientVisitItem } from "@/types/visit.interface";
 import { ColumnDef } from "@tanstack/react-table";
+import { FolderOpen } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 
 const VisitTab = () => {
@@ -17,6 +19,13 @@ const VisitTab = () => {
   const { clientVisits = [], isLoadingClientVisits } =
     useGetClientVisits(clientId);
 
+  if (isLoadingClientVisits) return <Loader />;
+
+  if (clientVisits.length === 0) {
+    return <EmptyState  icon={<FolderOpen/>} text="У клиента пока нет визитов" />;
+  }
+
+  console.log('clientVisits', clientVisits)
   const columns: ColumnDef<ClientVisitItem>[] = [
     {
       header: "Визит",
@@ -82,7 +91,7 @@ const VisitTab = () => {
             size="tiny"
             onClick={() =>
               router.push(
-                `/admin/clients/${clientId}/visits/${row.original.id}`
+                `/admin/clients/${clientId}/visits/${row.original.id}`,
               )
             }
           >
@@ -92,8 +101,6 @@ const VisitTab = () => {
       ),
     },
   ];
-
-  if (isLoadingClientVisits) return <Loader />;
 
   return <DataTable columns={columns} data={clientVisits} />;
 };

@@ -10,7 +10,7 @@ import {
   useGetProducts,
 } from "@/hooks/product/useProducts";
 import { ProductShortDTO } from "@/types/product.interface";
-import { Check, Plus, Trash2, X } from "lucide-react";
+import { Check, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ProductSelectTable } from "./components/ProductSelectTable";
@@ -20,6 +20,8 @@ import { VisitItemForm } from "@/types/visit.interface";
 import { useCreateVisit } from "@/hooks/visit/useVisit";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import EmptyState from "@/app/(admin)/admin/components/ui/EmptyState";
+import { formatCurrency } from "@/lib/utils/helpers";
 
 const VisitCreatePage = () => {
   const router = useRouter();
@@ -117,6 +119,10 @@ const VisitCreatePage = () => {
     }
   };
 
+  const handleClearCart = () => {
+    setItems([]);
+  };
+
   const columns: ColumnDef<VisitItemForm>[] = useMemo(() => {
     return [
       {
@@ -126,6 +132,13 @@ const VisitCreatePage = () => {
       {
         accessorKey: "price",
         header: "Цена",
+        cell: ({ row }) => {
+          return (
+            <div className="text-center">
+              {formatCurrency(row.original.price)}
+            </div>
+          );
+        },
       },
       {
         accessorKey: "quantity",
@@ -153,7 +166,12 @@ const VisitCreatePage = () => {
                   );
                 }}
               />
-              <span className="">Остаток: {product?.quantity}</span>
+              <div className="">
+                <span>Остаток: </span>
+                <span className="font-semibold">
+                  {Number(product?.quantity) - row.original.quantity} шт
+                </span>
+              </div>
             </div>
           );
         },
@@ -164,7 +182,9 @@ const VisitCreatePage = () => {
         cell: ({ row }) => {
           const price = row.original.price;
           const qty = row.original.quantity ?? 0;
-          return <span>{qty * price}</span>;
+          return (
+            <div className="text-center">{formatCurrency(qty * price)}</div>
+          );
         },
       },
       ...(isSelectedProducts
@@ -198,7 +218,7 @@ const VisitCreatePage = () => {
           { label: "Home", href: "/admin" },
           { label: "Клиенты", href: "/admin/clients" },
           {
-            label: client?.fullName ?? "Мастер",
+            label: client?.fullName ?? "Клиент",
             href: `/admin/clients/${client?.id}`,
           },
           { label: "Новый визит" },
@@ -227,13 +247,26 @@ const VisitCreatePage = () => {
         <ProductSelectTable
           products={productsForSelect}
           onSelect={onSelectProduct}
+          closeModal={closeModal}
         />
       </Modal>
 
       <div className="grid xl:grid-cols-3">
         <div className="xl:col-span-2">
           <ComponentCard title={client?.fullName}>
-            <DataTable columns={columns} data={items} />
+            {items.length > 0 ? (
+              <DataTable columns={columns} data={items} />
+            ) : (
+              <div className="flex flex-col">
+                <EmptyState
+                  icon={<ShoppingCart />}
+                  text="Выберите товар для визита"
+                />
+                <span className="text-sm text-gray-400 text-center">
+                  Нажмите "Выбрать товар"
+                </span>
+              </div>
+            )}
 
             <div className="border-t border-gray-100 pt-5 flex justify-between">
               <Button
@@ -245,8 +278,13 @@ const VisitCreatePage = () => {
                 Выбрать товар
               </Button>
               <div className="space-x-2">
-                <Button size="xs" variant="outline" startIcon={<X size="18" />}>
-                  Отмена
+                <Button
+                  size="xs"
+                  variant="outline"
+                  startIcon={<X size="18" />}
+                  onClick={handleClearCart}
+                >
+                  Очистить корзину
                 </Button>
                 <Button
                   size="xs"

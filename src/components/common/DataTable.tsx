@@ -1,15 +1,24 @@
+import Button from "@/app/(admin)/admin/components/ui/button/Button";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
   ColumnDef,
+  getPaginationRowModel,
+  getFilteredRowModel,
+  ColumnFiltersState,
 } from "@tanstack/react-table";
+import cn from "clsx";
+import { ReactNode, useState } from "react";
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData, unknown>[];
   data: TData[];
   onRowClick?: (row: TData) => void;
   rowClassName?: (row: TData) => string;
+  pagination?: boolean;
+  pageSize?: number;
+  footerRight?: ReactNode;
 }
 
 export function DataTable<TData>({
@@ -17,12 +26,26 @@ export function DataTable<TData>({
   data,
   onRowClick,
   rowClassName,
+  pagination,
+  pageSize,
+  footerRight,
 }: DataTableProps<TData>) {
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    state: { columnFilters },
     columnResizeMode: "onChange",
+    initialState: {
+      pagination: {
+        pageSize,
+      },
+    },
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: pagination ? getPaginationRowModel() : undefined,
   });
 
   const hasFooter = table.getAllColumns().some((col) => col.columnDef.footer);
@@ -33,17 +56,23 @@ export function DataTable<TData>({
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id} className="bg-gray-100">
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  className="px-2 py-1 border-r last:border-r-0"
-                >
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </th>
-              ))}
+              {headerGroup.headers.map((header) => {
+                const column = header.column;
+                return (
+                  <th
+                    key={header.id}
+                    className={cn(
+                      "px-2 py-1 border-r last:border-r-0",
+                      (column.columnDef.meta as any)?.className,
+                    )}
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </th>
+                );
+              })}
             </tr>
           ))}
         </thead>
@@ -72,7 +101,7 @@ export function DataTable<TData>({
                       ? null
                       : flexRender(
                           header.column.columnDef.footer,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </td>
                 ))}
@@ -81,6 +110,28 @@ export function DataTable<TData>({
           </tfoot>
         )}
       </table>
+      {pagination && (
+        <div className="flex items-center gap-2 mt-4">
+          <div className="flex gap-2">
+            <Button
+              size="xs"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Назад
+            </Button>
+
+            <Button
+              size="xs"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Вперёд
+            </Button>
+          </div>
+          {footerRight}
+        </div>
+      )}
     </div>
   );
 }

@@ -29,6 +29,7 @@ const ClientPage = () => {
   const { deleteClient, isDeletingClient } = useDeleteClient();
   const [currentClient, setCurrentClient] = useState<IClient | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [clientId, setClientId] = useState<number | null>(null);
 
   const handleDelete = async (id: number) => {
     if (confirm("Точно удалить категорию?")) {
@@ -40,12 +41,14 @@ const ClientPage = () => {
   const handleOpenModal = (client: IClient | null) => {
     setCurrentClient(client);
     if (client) {
+      setClientId(client.id);
       reset({
         fullName: client.fullName,
         phone: client.phone,
         note: client.note,
       });
     } else {
+      setClientId(null);
       reset({
         fullName: "",
         phone: "",
@@ -69,7 +72,7 @@ const ClientPage = () => {
         },
         {
           onSuccess: onSuccessHandler,
-        }
+        },
       );
     } else {
       createClient(data, {
@@ -116,9 +119,11 @@ const ClientPage = () => {
             <Button
               variant="warning"
               size="tiny"
-              onClick={() => handleOpenModal(row.original)}
+              onClick={() => { 
+                setClientId(row.original.id);
+                handleOpenModal(row.original);
+              }}
             >
-              {" "}
               Изменить
             </Button>
 
@@ -145,7 +150,7 @@ const ClientPage = () => {
         isOpen={isOpen}
         onClose={closeModal}
         className="max-w-146 p-4 lg:p-6"
-        title="Создать новый мастер"
+        title={clientId ? "Изменить клиента" : "Создать новый клиент"}
       >
         <ClientForm
           closeModal={closeModal}
@@ -164,10 +169,10 @@ const ClientPage = () => {
           <Button
             size="xs"
             variant="success"
-            startIcon={<Plus />}
+            startIcon={<Plus size="18" />}
             onClick={() => handleOpenModal(null)}
           >
-            Создать
+            Добавление нового клиента
           </Button>
         </div>
 

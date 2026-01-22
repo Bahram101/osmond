@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     if (!data.fullName) {
       return NextResponse.json(
         {
-          fullName: "Имя мастера объязательно для заполнения",
+          fullName: "Имя клиента объязательно для заполнения",
         },
         { status: 400 }
       );
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     );
   } catch (e) {
     return NextResponse.json({
-      message: "Ошибка при создании мастера",
+      message: "Ошибка при создании клиента",
     }, { status: 500 });
   }
 }

@@ -40,6 +40,7 @@ const ClientViewPage = () => {
     (acc, visit) => acc + visit.debtAmount,
     0,
   );
+  const canPay = totalDebt > 0
 
   const handlePaymentAllSubmit = (data: PaymentFormValues) => {
     const body: PaymentFormValues = {
@@ -85,7 +86,7 @@ const ClientViewPage = () => {
       <div className="col-span-12 xl:col-span-7">
         <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center pb-5  ">
-            <h3 className="text-lg">Данные о мастера</h3>
+            <h3 className="text-lg">Данные о клиента</h3>
             <div className="flex gap-2">
               <Button
                 size="xs"
@@ -123,6 +124,7 @@ const ClientViewPage = () => {
                   size="xs"
                   variant="success"
                   className="flex items-center gap-2"
+                  disabled={!canPay}
                   onClick={openModal}
                 >
                   <Tooltip>
