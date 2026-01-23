@@ -16,6 +16,7 @@ import Skeleton from "../shared/Skeleton";
 
 export const Header = () => {
   const { user, logout } = useAuth();
+  console.log("user", user);
 
   return (
     <header className="px-4 py-4 border-b border-zinc-200 items-center justify-between flex">
@@ -31,9 +32,11 @@ export const Header = () => {
           <li>
             <Link href="/">Home</Link>
           </li>
-          <li>
-            <Link href="/admin">Админ</Link>
-          </li>
+          {user?.role !== "ADMIN" && (
+            <li>
+              <Link href="/admin">Админ</Link>
+            </li>
+          )}
 
           {user ? (
             <Menubar className="border-none shadow-none p-0">
