@@ -32,7 +32,7 @@ export const Header = () => {
           <li>
             <Link href="/">Home</Link>
           </li>
-          {user?.role !== "ADMIN" && (
+          {user?.role === "ADMIN" && (
             <li>
               <Link href="/admin">Админ</Link>
             </li>

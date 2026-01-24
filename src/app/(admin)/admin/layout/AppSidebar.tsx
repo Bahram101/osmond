@@ -52,7 +52,7 @@ const navItems: NavItem[] = [
   },
   {
     icon: <SquareUser />,
-    name: "Клиенты",
+    name: "Мастеры",
     path: "/admin/clients",
   },
   {

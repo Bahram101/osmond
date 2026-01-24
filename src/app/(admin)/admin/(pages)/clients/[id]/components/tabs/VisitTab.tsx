@@ -22,7 +22,7 @@ const VisitTab = () => {
   if (isLoadingClientVisits) return <Loader />;
 
   if (clientVisits.length === 0) {
-    return <EmptyState  icon={<FolderOpen/>} text="У клиента пока нет визитов" />;
+    return <EmptyState  icon={<FolderOpen/>} text="У мастера пока нет визитов" />;
   }
 
   console.log('clientVisits', clientVisits)

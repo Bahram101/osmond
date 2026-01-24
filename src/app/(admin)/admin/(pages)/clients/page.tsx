@@ -150,7 +150,7 @@ const ClientPage = () => {
         isOpen={isOpen}
         onClose={closeModal}
         className="max-w-146 p-4 lg:p-6"
-        title={clientId ? "Изменить клиента" : "Создать новый клиент"}
+        title={clientId ? "Изменить мастера" : "Создать новый мастер"}
       >
         <ClientForm
           closeModal={closeModal}
@@ -160,11 +160,11 @@ const ClientPage = () => {
         />
       </Modal>
       <BreadCrumb
-        items={[{ label: "Home", href: "/admin" }, { label: "Клиенты" }]}
+        items={[{ label: "Home", href: "/admin" }, { label: "Мастеры" }]}
       />
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
         <div className="flex justify-between items-center pb-5">
-          <h3 className="text-lg">Список клиентов</h3>
+          <h3 className="text-lg">Список мастеров</h3>
 
           <Button
             size="xs"
@@ -172,7 +172,7 @@ const ClientPage = () => {
             startIcon={<Plus size="18" />}
             onClick={() => handleOpenModal(null)}
           >
-            Добавление нового клиента
+            Добавление нового мастера
           </Button>
         </div>
 

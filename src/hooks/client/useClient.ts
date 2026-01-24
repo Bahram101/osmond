@@ -27,7 +27,7 @@ export const useUpdateClient = () => {
     mutationFn: (data: ClientUpdateDTO) => ClientService.update(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["get-clients"] });
-      toast.success("Клиент успешно обновлен!");
+      toast.success("Мастер успешно обновлен!");
     },
   });
   return { updateClient, isUpdatingClient };
@@ -41,7 +41,7 @@ export const useCreateClient = () => {
     mutationFn: (data: ClientCreateDTO) => ClientService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["get-clients"] });
-      toast.success("Клиент успешно создан!");
+      toast.success("Мастер успешно создан!");
     },
   });
   return { createClient, isCreatingClient };
