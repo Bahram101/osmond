@@ -5,7 +5,7 @@ const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "supersecr
 
 interface JwtPayload {
   userId: number;
-  role: "USER" | "ADMIN";
+  role: "MASTER" | "ADMIN";
 }
 
 export async function getUserFromToken(req: NextRequest) {

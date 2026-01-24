@@ -84,6 +84,9 @@ const ClientPage = () => {
   const columnHelper = createColumnHelper<IClient>();
 
   const columns: ColumnDef<IClient, any>[] = [
+    columnHelper.accessor("id", {
+      header: "ID",
+    }),
     columnHelper.accessor("fullName", {
       header: "Имя",
     }),

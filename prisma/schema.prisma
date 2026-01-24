@@ -16,18 +16,38 @@ model User {
   password  String
   phone     String?
   avatarUrl String   @default("https://www.gravatar.com/avatar")
-  role      Role     @default(CUSTOMER)
+  role      Role     @default(MASTER)
+  clientId  Int?     @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  products Product[]
+  client Client? @relation(fields: [clientId], references: [id])
 
   @@map("user")
 }
 
 enum Role {
-  CUSTOMER
   ADMIN
+  MASTER
+}
+
+model Client {
+  id        Int        @id @default(autoincrement())
+  fullName  String
+  phone     String?
+  note      String?
+  type      ClientType @default(MASTER)
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  user   User?   @relation
+  visits Visit[]
+
+  @@map("client")
+}
+
+enum ClientType {
+  MASTER
+  WALK_IN
 }
 
 model Product {
@@ -40,12 +60,10 @@ model Product {
   price       Float    @default(0)
   quantity    Int      @default(0)
   barcode     String?  @unique
-  userId      Int      @map("user_id")
   categoryId  Int      @map("category_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  user     User     @relation(fields: [userId], references: [id])
   category Category @relation(fields: [categoryId], references: [id])
 
   arrivals   Arrival[]
@@ -82,24 +100,6 @@ model Arrival {
   @@map("arrival")
 }
 
-model Client {
-  id        Int      @id @default(autoincrement())
-  fullName  String
-  phone     String?
-  note      String?
-  createdAt DateTime @default(now()) @map("created_at")
-
-  visits Visit[]
-
-  @@map("client")
-}
-
-enum VisitStatus {
-  OPEN
-  PARTIAL
-  PAID
-}
-
 model Visit {
   id          Int         @id @default(autoincrement())
   clientId    Int
@@ -112,6 +112,12 @@ model Visit {
   payments Payment[]
 
   @@map("visit")
+}
+
+enum VisitStatus {
+  OPEN
+  PARTIAL
+  PAID
 }
 
 model VisitItem {

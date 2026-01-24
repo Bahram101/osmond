@@ -5,9 +5,13 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { clientId, items } = body;
+    let { clientId } = body;
+    const { items, payNow, walkInClient } = body;
 
-    if (!clientId || !items?.length) {
+    console.log('clientId',clientId)
+    console.log(items, payNow, walkInClient )
+
+    if (!items?.length) {
       return NextResponse.json({ message: "Invalid payload" }, { status: 400 });
     }
 
@@ -17,10 +21,25 @@ export async function POST(req: NextRequest) {
     );
 
     const visit = await prisma.$transaction(async (tx) => {
+      if (!clientId && !payNow) {
+        if (!walkInClient?.fullName) {
+          throw new Error("Client required for debt");
+        }
+
+        const client = await tx.client.create({
+          data: {
+            fullName: walkInClient.fullName,
+            note: walkInClient.note,
+            type: "WALK_IN",
+          },
+        });
+        clientId = client.id;
+      }
+
       const visit = await tx.visit.create({
         data: {
-          clientId,
-          status: "OPEN",
+          clientId: clientId ?? null,
+          status: payNow ? "PAID" : "OPEN",
           totalAmount,
         },
       });
@@ -49,6 +68,15 @@ export async function POST(req: NextRequest) {
           });
         }),
       );
+
+      if(payNow){
+        await tx.payment.create({
+          data:{
+            visitId: visit.id,
+            amount: totalAmount
+          }
+        })
+      }
 
       return visit;
     });

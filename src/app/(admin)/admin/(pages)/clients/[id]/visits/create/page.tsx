@@ -150,7 +150,7 @@ const VisitCreatePage = () => {
           const product = products.find((p) => p.id === row.original.productId);
 
           return (
-            <div className="flex justify-center items-center gap-4">
+            <div className="flex justify-between items-center gap-4">
               <Input
                 type="number"
                 min={1}
