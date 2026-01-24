@@ -8,8 +8,8 @@ export async function POST(req: NextRequest) {
     let { clientId } = body;
     const { items, payNow, walkInClient } = body;
 
-    console.log('clientId',clientId)
-    console.log(items, payNow, walkInClient )
+    console.log("clientId", clientId);
+    console.log(items, payNow, walkInClient);
 
     if (!items?.length) {
       return NextResponse.json({ message: "Invalid payload" }, { status: 400 });
@@ -69,13 +69,13 @@ export async function POST(req: NextRequest) {
         }),
       );
 
-      if(payNow){
+      if (payNow) {
         await tx.payment.create({
-          data:{
+          data: {
             visitId: visit.id,
-            amount: totalAmount
-          }
-        })
+            amount: totalAmount,
+          },
+        });
       }
 
       return visit;
