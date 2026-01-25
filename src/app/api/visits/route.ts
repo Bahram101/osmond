@@ -21,24 +21,39 @@ export async function POST(req: NextRequest) {
     );
 
     const visit = await prisma.$transaction(async (tx) => {
-      if (!clientId && !payNow) {
-        if (!walkInClient?.fullName) {
-          throw new Error("Client required for debt");
+      let finalClientId: number;
+
+      if (clientId) {
+        finalClientId = clientId;
+      } else if (payNow) {
+        const walkIn = await tx.client.findFirst({
+          where: { type: "WALK_IN" },
+        });
+
+        if (!walkIn) {
+          throw new Error("WALK_IN client not found");
         }
 
-        const client = await tx.client.create({
+        finalClientId = walkIn.id;
+      } else {
+        if (!walkInClient?.fullName) {
+          throw new Error("Client info required for debt");
+        }
+
+        const newClient = await tx.client.create({
           data: {
             fullName: walkInClient.fullName,
             note: walkInClient.note,
             type: "WALK_IN",
           },
         });
-        clientId = client.id;
+
+        finalClientId = newClient.id;
       }
 
       const visit = await tx.visit.create({
         data: {
-          clientId: clientId ?? null,
+          clientId: finalClientId,
           status: payNow ? "PAID" : "OPEN",
           totalAmount,
         },
@@ -59,6 +74,7 @@ export async function POST(req: NextRequest) {
           return tx.product.update({
             where: {
               id: item.productId,
+              quantity: { gte: item.quantity },
             },
             data: {
               quantity: {
@@ -83,6 +99,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ visitId: visit.id });
   } catch (error) {
+    console.log('ERR',error)
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
