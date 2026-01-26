@@ -9,34 +9,44 @@ import {
   useGetProductByBarcode,
   useGetProducts,
 } from "@/hooks/product/useProducts";
-import { ProductShortDTO } from "@/types/product.interface";
-import { Check, Plus, ShoppingCart, Trash2, X } from "lucide-react";
+import { ProductCreateDTO, ProductShortDTO } from "@/types/product.interface";
+import { ArrowLeft, Check, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ProductSelectTable } from "./components/ProductSelectTable";
 import { DataTable } from "@/components/common/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
-import { VisitItemForm } from "@/types/visit.interface";
+import { VisitFormValues, VisitItemForm } from "@/types/visit.interface";
 import { useCreateVisit } from "@/hooks/visit/useVisit";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import EmptyState from "@/app/(admin)/admin/components/ui/EmptyState";
 import { formatCurrency } from "@/lib/utils/helpers";
+import Radio from "../../../components/form/input/Radio";
+import Label from "../../../components/form/Label";
+import Loader from "@/components/shared/Loader";
+import ControlledSelect from "@/components/shared/select/Select";
+import { useForm } from "react-hook-form";
 
 const VisitCreatePage = () => {
   const router = useRouter();
-  // const { id } = useParams<{ id: string }>();
-  // const clientId = Number(id);
+  const { control, setValue, handleSubmit, reset, watch } =
+    useForm<VisitFormValues>({
+      defaultValues: {
+        clientId: null,
+        clientType: null,
+        paymentType: null,
+      },
+    });
+  const [clientType, paymentType] = watch(["clientType", "paymentType"]);
   const { isOpen, openModal, closeModal } = useModal();
-  const { products, isFetchingProducts } = useGetProducts();
   const { createVisit, isCreatingVisit } = useCreateVisit();
+  const { products, isFetchingProducts } = useGetProducts();
   const [items, setItems] = useState<VisitItemForm[]>([]);
   const [barcode, setBarcode] = useState("");
   const { getProductByBarcode, isFetchingProdByBarcode } =
     useGetProductByBarcode();
   const inputRef = useRef<HTMLInputElement>(null);
-  // if (Number.isNaN(clientId)) return null;
-  // const { client, isLoadingClient } = useGetClient(clientId);
 
   const isSelectedProducts = items.length > 0;
 
@@ -216,13 +226,14 @@ const VisitCreatePage = () => {
     ];
   }, [isSelectedProducts, products]);
 
+  console.log("clientType", clientType);
+
   return (
     <>
-   
       <BreadCrumb
         items={[
           { label: "Home", href: "/admin" },
-          { label: "Продажи", href: "/admin/sales" },   
+          { label: "Продажи", href: "/admin/sales" },
           { label: "Новая продажа" },
         ]}
       />
@@ -253,9 +264,68 @@ const VisitCreatePage = () => {
         />
       </Modal>
 
-      <div className="grid xl:grid-cols-3">
-        <div className="xl:col-span-2">
-          <ComponentCard>
+      <div className="grid 2xl:grid-cols-3">
+        <div className="2xl:col-span-2 rounded-2xl bg-white p-3 md:p-6">
+          <div className="flex gap-3 flex-row justify-between items-center pb-5">
+            <h3 className="text-lg">Новый визит</h3>
+            <Button
+              size="xs"
+              variant="outline"
+              startIcon={<ArrowLeft size="18" />}
+              onClick={() => router.push(`/admin/sales`)}
+            >
+              Назад
+            </Button>
+          </div>
+          <hr className="pb-3 sm:pb-5" />
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5 mb-5">
+            <div className="flex gap-5 items-center">
+              <Radio
+                id="master"
+                name="clientType"
+                value="master"
+                checked={clientType === "master"}
+                onChange={() => setValue("clientType", "master")}
+                label="Мастер"
+              />
+              <Radio
+                id="client"
+                name="clientType"
+                value="client"
+                checked={clientType === "client"}
+                onChange={() => setValue("clientType", "client")}
+                label="Клиент"
+              />
+              <Radio
+                id="wholesaler"
+                name="clientType"
+                value="wholesaler"
+                checked={clientType === "wholesaler"}
+                onChange={() => setValue("clientType", "wholesaler")}
+                label="Оптовик"
+              />
+            </div>
+            <div className="w-full md:w-2/3 sm:w-full">
+              {false ? (
+                <Loader />
+              ) : (
+                <div className="w-2/3">
+                  <ControlledSelect<VisitFormValues, number | null>
+                    name="clientId"
+                    valueType="number"
+                    control={control}
+                    rules={{ required: "Заполните поле" }}
+                    options={[]}
+                    placeholder="Выберите"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+
+          <div className="mb-8">
             {items.length > 0 ? (
               <DataTable columns={columns} data={items} />
             ) : (
@@ -269,8 +339,18 @@ const VisitCreatePage = () => {
                 </span>
               </div>
             )}
+          </div>
 
-            <div className="border-t border-gray-100 pt-5 flex justify-between">
+          <div className="border-t border-gray-100 pt-5 flex justify-between items-center">
+            <div className="flex gap-3">
+              <Button
+                size="xs"
+                variant="outline"
+                startIcon={<X size="18" />}
+                onClick={handleClearCart}
+              >
+                Очистить корзину
+              </Button>
               <Button
                 size="xs"
                 variant="primary"
@@ -279,27 +359,35 @@ const VisitCreatePage = () => {
               >
                 Выбрать товар
               </Button>
-              <div className="space-x-2">
-                <Button
-                  size="xs"
-                  variant="outline"
-                  startIcon={<X size="18" />}
-                  onClick={handleClearCart}
-                >
-                  Очистить корзину
-                </Button>
-                <Button
-                  size="xs"
-                  variant="success"
-                  startIcon={<Check size="18" />}
-                  // onClick={handleSaveVisit}
-                  disabled={!isSelectedProducts}
-                >
-                  Сохранить
-                </Button>
-              </div>
             </div>
-          </ComponentCard>
+            <div className="flex gap-3">
+              <Radio
+                id="debt"
+                name="paymentType"
+                value="debt"
+                checked={paymentType === "debt"}
+                onChange={() => setValue("paymentType", "debt")}
+                label="В долг"
+              />
+              <Radio
+                id="pay_now"
+                name="paymentType"
+                value="pay_now"
+                checked={paymentType === "pay_now"}
+                onChange={() => setValue("paymentType", "pay_now")}
+                label="Оплатить сейчас"
+              />
+              <Button
+                size="xs"
+                variant="success"
+                startIcon={<Check size="18" />}
+                // onClick={handleSaveVisit}
+                disabled={!isSelectedProducts}
+              >
+                Продать
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </>

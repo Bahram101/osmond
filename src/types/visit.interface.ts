@@ -57,3 +57,9 @@ export interface VisitDetail {
   payments: VisitPayment[];
   client: { fullName: string };
 }
+
+export type VisitFormValues = {
+  clientId: number | null,
+  clientType: "master" | "client" | "wholesaler" | null,
+  paymentType: "debt" | "pay_now" | null
+}

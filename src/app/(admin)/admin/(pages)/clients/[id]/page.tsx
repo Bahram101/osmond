@@ -40,7 +40,7 @@ const ClientViewPage = () => {
     (acc, visit) => acc + visit.debtAmount,
     0,
   );
-  const canPay = totalDebt > 0
+  const canPay = totalDebt > 0;
 
   const handlePaymentAllSubmit = (data: PaymentFormValues) => {
     const body: PaymentFormValues = {
@@ -83,76 +83,63 @@ const ClientViewPage = () => {
         />
       </Modal>
 
-      <div className="col-span-12 xl:col-span-7">
-        <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center pb-5  ">
-            <h3 className="text-lg">Данные о мастера</h3>
-            <div className="flex gap-2">
+      <div className="p-3 rounded-2xl md:p-6 bg-white">
+        <div className="flex gap-3 flex-row justify-between items-center pb-5">
+          <h3 className="text-lg">Данные о мастера</h3>
+          <Button
+            size="xs"
+            variant="outline"
+            startIcon={<ArrowLeft size="18" />}
+            onClick={() => router.push(`/admin/clients`)}
+          >
+            Назад
+          </Button>
+        </div>
+
+        <Tabs defaultValue="visit">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <TabsList className="mb-3">
+              <TabsTrigger value="visit">Визиты / Долги</TabsTrigger>
+              <TabsTrigger value="history">История оплат</TabsTrigger>
+              <TabsTrigger value="info">Информация</TabsTrigger>
+            </TabsList>
+            <div className="flex items-center gap-4">
+              <div>
+                Общ долг:{" "}
+                <span className="font-bold">{formatCurrency(totalDebt)}</span>
+              </div>
               <Button
                 size="xs"
-                variant="outline"
-                startIcon={<ArrowLeft size="18" />}
-                onClick={() => router.push(`/admin/clients`)}
+                variant="success"
+                className="flex items-center gap-2"
+                disabled={!canPay}
+                onClick={openModal}
               >
-                Назад
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Info size="18" className="cursor-pointer" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Оплатить часть или весь общий долг
+                  </TooltipContent>
+                </Tooltip>
+                Оплатить
               </Button>
-              {/* <Link href={`/admin/clients/${clientId}/visits/create`}>
-                <Button
-                  size="xs"
-                  variant="success"
-                  startIcon={<Plus size="18" />}
-                >
-                  Новый визит (долг)
-                </Button>
-              </Link> */}
             </div>
           </div>
 
-          <Tabs defaultValue="visit">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-              <TabsList className="mb-3">
-                <TabsTrigger value="visit">Визиты / Долги</TabsTrigger>
-                <TabsTrigger value="history">История оплат</TabsTrigger>
-                <TabsTrigger value="info">Информация</TabsTrigger>
-              </TabsList>
-              <div className="flex items-center gap-4">
-                <div>
-                  Общ долг:{" "}
-                  <span className="font-bold">{formatCurrency(totalDebt)}</span>
-                </div>
-                <Button
-                  size="xs"
-                  variant="success"
-                  className="flex items-center gap-2"
-                  disabled={!canPay}
-                  onClick={openModal}
-                >
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Info size="18" className="cursor-pointer" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      Оплатить часть или весь общий долг
-                    </TooltipContent>
-                  </Tooltip>
-                  Оплатить
-                </Button>
-              </div>
-            </div>
+          <TabsContent value="visit">
+            <VisitTab />
+          </TabsContent>
 
-            <TabsContent value="visit">
-              <VisitTab />
-            </TabsContent>
+          <TabsContent value="history">
+            <HistoryTab />
+          </TabsContent>
 
-            <TabsContent value="history">
-              <HistoryTab />
-            </TabsContent>
-
-            <TabsContent value="info">
-              <InfoTab />
-            </TabsContent>
-          </Tabs>
-        </div>
+          <TabsContent value="info">
+            <InfoTab />
+          </TabsContent>
+        </Tabs>
       </div>
     </>
   );

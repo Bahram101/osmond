@@ -42,9 +42,6 @@ const ClientForm: FC<ClientFormProps> = ({
           <Field
             name="phone"
             control={control}
-            // rules={{
-            //   required: "Заполните поле",
-            // }}
           />
         </div>
 
