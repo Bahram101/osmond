@@ -96,7 +96,7 @@ const ClientViewPage = () => {
               >
                 Назад
               </Button>
-              <Link href={`/admin/clients/${clientId}/visits/create`}>
+              {/* <Link href={`/admin/clients/${clientId}/visits/create`}>
                 <Button
                   size="xs"
                   variant="success"
@@ -104,7 +104,7 @@ const ClientViewPage = () => {
                 >
                   Новый визит (долг)
                 </Button>
-              </Link>
+              </Link> */}
             </div>
           </div>
 

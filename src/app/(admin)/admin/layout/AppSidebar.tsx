@@ -47,6 +47,11 @@ const navItems: NavItem[] = [
   },
   {
     icon: <ShoppingBag />,
+    name: "Продажи",
+    path: "/admin/sales",
+  },
+  {
+    icon: <ShoppingBag />,
     name: "Клиенты",
     path: "/admin/customers",
   },
@@ -54,6 +59,11 @@ const navItems: NavItem[] = [
     icon: <SquareUser />,
     name: "Мастеры",
     path: "/admin/clients",
+  },
+  {
+    icon: <SquareUser />,
+    name: "Оптовики",
+    path: "/admin/wholesalers",
   },
   {
     icon: <Users />,

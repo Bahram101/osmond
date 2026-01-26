@@ -31,11 +31,11 @@ export async function GET(
 
       return {
         id: visit.id,
-        date: visit.createdAt,
         totalAmount: Number(visit.totalAmount),
         paidAmount: paid,
         debtAmount: Number(visit.totalAmount) - paid,
         status: visit.status,
+        date: visit.createdAt,
       };
     });
 

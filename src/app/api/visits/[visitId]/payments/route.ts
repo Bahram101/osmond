@@ -24,7 +24,6 @@ export async function POST(
       );
     }
 
-    // 1️⃣ Получаем визит + оплаты
     const visit = await prisma.visit.findUnique({
       where: { id: visitId },
       include: { payments: true },
@@ -34,7 +33,6 @@ export async function POST(
       return NextResponse.json({ message: "Visit not found" }, { status: 404 });
     }
 
-    // 2️⃣ Считаем уже оплачено
     const paidAmount = visit.payments.reduce((sum, p) => sum + p.amount, 0);
 
     const totalAmount = Number(visit.totalAmount);
@@ -49,7 +47,6 @@ export async function POST(
 
     const status = debtAfterPayment === 0 ? "PAID" : "PARTIAL";
 
-    // 3️⃣ Транзакция
     await prisma.$transaction(async (tx) => {
       await tx.payment.create({
         data: {

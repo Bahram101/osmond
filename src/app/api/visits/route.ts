@@ -26,18 +26,11 @@ export async function POST(req: NextRequest) {
       if (clientId) {
         finalClientId = clientId;
       } else if (payNow) {
-        const walkIn = await tx.client.findFirst({
-          where: { type: "WALK_IN" },
-        });
-
-        if (!walkIn) {
-          throw new Error("WALK_IN client not found");
-        }
-
-        finalClientId = walkIn.id;
+        const GUEST_CLIENT_ID = 1
+        finalClientId = GUEST_CLIENT_ID;
       } else {
         if (!walkInClient?.fullName) {
-          throw new Error("Client info required for debt");
+          throw new Error("Укажите имя клиента для оформления долга");
         }
 
         const newClient = await tx.client.create({
@@ -98,10 +91,10 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ visitId: visit.id });
-  } catch (error) {
+  } catch (error:any) {
     console.log('ERR',error)
     return NextResponse.json(
-      { message: "Internal server error" },
+      { message: error.message },
       { status: 500 },
     );
   }
