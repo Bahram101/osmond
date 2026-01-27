@@ -4,7 +4,7 @@ import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard";
 import Button from "@/app/(admin)/admin/components/ui/button/Button";
 import { Modal } from "@/app/(admin)/admin/components/ui/modal";
 import { useModal } from "@/app/(admin)/admin/hooks/useModal";
-import { useGetClient } from "@/hooks/client/useClient";
+import { useGetClient, useGetClients } from "@/hooks/client/useClient";
 import {
   useGetProductByBarcode,
   useGetProducts,
@@ -36,12 +36,21 @@ const VisitCreatePage = () => {
         clientId: null,
         clientType: null,
         paymentType: null,
+        walkInClient: {
+          fullName: "",
+          note: "",
+        },
       },
     });
-  const [clientType, paymentType] = watch(["clientType", "paymentType"]);
+  const [clientId, clientType, paymentType] = watch([
+    "clientId",
+    "clientType",
+    "paymentType",
+  ]);
   const { isOpen, openModal, closeModal } = useModal();
   const { createVisit, isCreatingVisit } = useCreateVisit();
   const { products, isFetchingProducts } = useGetProducts();
+  const { clients, isFetchingClients } = useGetClients();
   const [items, setItems] = useState<VisitItemForm[]>([]);
   const [barcode, setBarcode] = useState("");
   const { getProductByBarcode, isFetchingProdByBarcode } =
@@ -57,6 +66,21 @@ const VisitCreatePage = () => {
     successSound.current = new Audio("/sounds/beep.mp3");
     errorSound.current = new Audio("/sounds/error.wav");
   }, []);
+
+  useEffect(() => {
+    if (paymentType === "pay_now") {
+      setValue("fullName", "");
+      setValue("note", "");
+    }
+  }, [paymentType]);
+
+  const clientOptions = clients
+    .map((client) => ({
+      value: client.id ?? null,
+      label: client.fullName,
+      type: client.type,
+    }))
+    .filter((item) => item.type === clientType);
 
   const productsForSelect: ProductShortDTO[] = products.map((p) => ({
     id: p.id,
@@ -89,16 +113,23 @@ const VisitCreatePage = () => {
     });
   };
 
-  // const handleSaveVisit = () => {
-  //   createVisit(
-  //     { clientId, items },
-  //     {
-  //       onSuccess: () => {
-  //         router.push(`/admin/clients/${clientId}`);
-  //       },
-  //     },
-  //   );
-  // };
+  const handleSaveVisit = () => {
+    const isWalkIn = clientType === "WALK_IN";
+    const isDebt = paymentType === "debt";
+    createVisit(
+      {
+        clientId,
+        items,
+        payNow: paymentType === "pay_now",
+        walkInClient: !clientId && isDebt ? { fullName, note } : null,
+      },
+      {
+        onSuccess: () => {
+          router.push(`/admin/clients/${clientId}`);
+        },
+      },
+    );
+  };
 
   const handleDeleteItem = (id: number) => {
     setItems((prev) => {
@@ -226,7 +257,9 @@ const VisitCreatePage = () => {
     ];
   }, [isSelectedProducts, products]);
 
-  console.log("clientType", clientType);
+  // console.log("clientOptions", clientOptions);
+  console.log("clientId", clientId);
+  console.log("paymentType", paymentType);
 
   return (
     <>
@@ -285,24 +318,33 @@ const VisitCreatePage = () => {
                 id="master"
                 name="clientType"
                 value="master"
-                checked={clientType === "master"}
-                onChange={() => setValue("clientType", "master")}
+                checked={clientType === "MASTER"}
+                onChange={() => {
+                  setValue("clientType", "MASTER");
+                  setValue("clientId", null);
+                }}
                 label="Мастер"
               />
               <Radio
                 id="client"
                 name="clientType"
                 value="client"
-                checked={clientType === "client"}
-                onChange={() => setValue("clientType", "client")}
+                checked={clientType === "WALK_IN"}
+                onChange={() => {
+                  setValue("clientType", "WALK_IN");
+                  setValue("clientId", null);
+                }}
                 label="Клиент"
               />
               <Radio
                 id="wholesaler"
                 name="clientType"
                 value="wholesaler"
-                checked={clientType === "wholesaler"}
-                onChange={() => setValue("clientType", "wholesaler")}
+                checked={clientType === "WHOLESALER"}
+                onChange={() => {
+                  setValue("clientType", "WHOLESALER");
+                  setValue("clientId", null);
+                }}
                 label="Оптовик"
               />
             </div>
@@ -316,14 +358,13 @@ const VisitCreatePage = () => {
                     valueType="number"
                     control={control}
                     rules={{ required: "Заполните поле" }}
-                    options={[]}
+                    options={clientOptions}
                     placeholder="Выберите"
                   />
                 </div>
               )}
             </div>
           </div>
-
 
           <div className="mb-8">
             {items.length > 0 ? (
@@ -343,14 +384,14 @@ const VisitCreatePage = () => {
 
           <div className="border-t border-gray-100 pt-5 flex justify-between items-center">
             <div className="flex gap-3">
-              <Button
+              {/* <Button
                 size="xs"
                 variant="outline"
                 startIcon={<X size="18" />}
                 onClick={handleClearCart}
               >
                 Очистить корзину
-              </Button>
+              </Button> */}
               <Button
                 size="xs"
                 variant="primary"

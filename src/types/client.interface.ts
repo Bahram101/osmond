@@ -3,6 +3,7 @@ export interface IClient {
   fullName: string;
   phone?: string;
   note?: string;
+  type: string,
   createdAt: string;
 }
 export type IClientForm = Pick<IClient, "fullName" | "phone" | "note">;

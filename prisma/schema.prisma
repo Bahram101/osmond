@@ -48,6 +48,7 @@ model Client {
 enum ClientType {
   MASTER
   WALK_IN
+  WHOLESALER
 }
 
 model Product {

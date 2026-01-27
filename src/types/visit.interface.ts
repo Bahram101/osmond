@@ -7,9 +7,16 @@ export interface VisitItemForm {
 }
 
 export interface VisitCreateDTO {
-  clientId: number;
+  clientId?: number | null;
   items: VisitItemCreateDTO[];
+  payNow: boolean;
+  walkInClient: WalkInClient | null;
 }
+
+type WalkInClient = {
+  fullName: string;
+  note: string;
+};
 
 export interface VisitItemCreateDTO {
   productId: number;
@@ -40,7 +47,7 @@ export interface VisitDetailItem {
 
 export interface VisitPayment {
   id: number;
-  visitId: number
+  visitId: number;
   amount: number;
   note?: string | null;
   createdAt: string;
@@ -59,7 +66,11 @@ export interface VisitDetail {
 }
 
 export type VisitFormValues = {
-  clientId: number | null,
-  clientType: "master" | "client" | "wholesaler" | null,
-  paymentType: "debt" | "pay_now" | null
-}
+  clientId: number | null;
+  clientType: "MASTER" | "WALK_IN" | "WHOLESALER" | null;
+  paymentType: "debt" | "pay_now" | null;
+  WalkInClient: {
+    fullName?: string;
+    note?: string;
+  };
+};
