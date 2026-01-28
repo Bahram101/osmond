@@ -11,8 +11,11 @@ export const useGetClients = () => {
   const { data: clients = [], isPending: isFetchingClients } = useQuery({
     queryKey: ["get-clients"],
     queryFn: () => ClientService.getAll(),
+    retry: (failureCount, error: any) => {
+      if (error?.status === 404) return false;
+      return failureCount < 0;
+    },
   });
-
   return { clients, isFetchingClients };
 };
 

@@ -26,26 +26,33 @@ import Radio from "../../../components/form/input/Radio";
 import Label from "../../../components/form/Label";
 import Loader from "@/components/shared/Loader";
 import ControlledSelect from "@/components/shared/select/Select";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import Field from "@/components/shared/field/Field";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import FormRadioGroup from "@/components/shared/radio/Radio";
+import { Select, SelectSeparator } from "@/components/ui/select";
+import { Selector } from "@/components/shared/select/Selector";
 
 const VisitCreatePage = () => {
+  const VISIT_FORM_DEFAULTS = {
+    clientId: null,
+    clientType: null,
+    paymentType: null,
+    fullName: "",
+    note: "",
+  };
   const router = useRouter();
   const { control, setValue, handleSubmit, reset, watch } =
     useForm<VisitFormValues>({
-      defaultValues: {
-        clientId: null,
-        clientType: null,
-        paymentType: null,
-        walkInClient: {
-          fullName: "",
-          note: "",
-        },
-      },
+      mode: "all",
+      defaultValues: VISIT_FORM_DEFAULTS,
     });
-  const [clientId, clientType, paymentType] = watch([
+  const [clientId, clientType, paymentType, fullName, note] = watch([
     "clientId",
     "clientType",
     "paymentType",
+    "fullName",
+    "note",
   ]);
   const { isOpen, openModal, closeModal } = useModal();
   const { createVisit, isCreatingVisit } = useCreateVisit();
@@ -53,6 +60,8 @@ const VisitCreatePage = () => {
   const { clients, isFetchingClients } = useGetClients();
   const [items, setItems] = useState<VisitItemForm[]>([]);
   const [barcode, setBarcode] = useState("");
+  const [isCreateClient, setIsCreateClient] = useState<boolean>(false);
+  const isWalkDebt = paymentType === "debt" && clientType === "WALK_IN";
   const { getProductByBarcode, isFetchingProdByBarcode } =
     useGetProductByBarcode();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -68,19 +77,20 @@ const VisitCreatePage = () => {
   }, []);
 
   useEffect(() => {
-    if (paymentType === "pay_now") {
-      setValue("fullName", "");
-      setValue("note", "");
-    }
-  }, [paymentType]);
+    setValue("clientId", null);
+    setValue("fullName", "");
+    setValue("note", "");
+    setIsCreateClient(false);
+  }, [clientType, paymentType]);
 
   const clientOptions = clients
     .map((client) => ({
       value: client.id ?? null,
       label: client.fullName,
       type: client.type,
+      id: client.id,
     }))
-    .filter((item) => item.type === clientType);
+    .filter((item) => item.type === clientType && item.id !== 1);
 
   const productsForSelect: ProductShortDTO[] = products.map((p) => ({
     id: p.id,
@@ -114,21 +124,41 @@ const VisitCreatePage = () => {
   };
 
   const handleSaveVisit = () => {
-    const isWalkIn = clientType === "WALK_IN";
     const isDebt = paymentType === "debt";
-    createVisit(
-      {
-        clientId,
-        items,
-        payNow: paymentType === "pay_now",
-        walkInClient: !clientId && isDebt ? { fullName, note } : null,
-      },
-      {
-        onSuccess: () => {
-          router.push(`/admin/clients/${clientId}`);
-        },
-      },
-    );
+    const body = {
+      clientId,
+      items,
+      payNow: paymentType === "pay_now",
+      walkInClient:
+        !clientId && isDebt
+          ? { fullName: fullName?.trim()!, note: note?.trim() ?? "" }
+          : null,
+    };
+    console.log("body", body);
+
+    // createVisit(
+    //   {
+    //     clientId,
+    //     items,
+    //     payNow: paymentType === "pay_now",
+    //     walkInClient:
+    //       !clientId && isDebt
+    //         ? { fullName: fullName?.trim()!, note: note?.trim() ?? "" }
+    //         : null,
+    //   },
+    //   {
+    //     onSuccess: () => {
+    //       router.push(`/admin/sales`);
+    //     },
+    //   },
+    // );
+  };
+
+  const handleClearCart = () => {
+    if (confirm("Хотите очистит корзину?")) {
+      setItems([]);
+      reset(VISIT_FORM_DEFAULTS);
+    }
   };
 
   const handleDeleteItem = (id: number) => {
@@ -158,10 +188,6 @@ const VisitCreatePage = () => {
       setBarcode("");
       inputRef.current?.focus();
     }
-  };
-
-  const handleClearCart = () => {
-    setItems([]);
   };
 
   const columns: ColumnDef<VisitItemForm>[] = useMemo(() => {
@@ -259,7 +285,9 @@ const VisitCreatePage = () => {
 
   // console.log("clientOptions", clientOptions);
   console.log("clientId", clientId);
-  console.log("paymentType", paymentType);
+  // console.log("paymentType", paymentType);
+  // console.log("clientType", clientType);
+  console.log("isCreateClient", isCreateClient);
 
   return (
     <>
@@ -310,42 +338,20 @@ const VisitCreatePage = () => {
               Назад
             </Button>
           </div>
-          <hr className="pb-3 sm:pb-5" />
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5 mb-5">
+          <hr className="pb-5 sm:pb-5" />
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5 mb-5 mt-3">
             <div className="flex gap-5 items-center">
-              <Radio
-                id="master"
+              <FormRadioGroup
                 name="clientType"
-                value="master"
-                checked={clientType === "MASTER"}
-                onChange={() => {
-                  setValue("clientType", "MASTER");
-                  setValue("clientId", null);
-                }}
-                label="Мастер"
-              />
-              <Radio
-                id="client"
-                name="clientType"
-                value="client"
-                checked={clientType === "WALK_IN"}
-                onChange={() => {
-                  setValue("clientType", "WALK_IN");
-                  setValue("clientId", null);
-                }}
-                label="Клиент"
-              />
-              <Radio
-                id="wholesaler"
-                name="clientType"
-                value="wholesaler"
-                checked={clientType === "WHOLESALER"}
-                onChange={() => {
-                  setValue("clientType", "WHOLESALER");
-                  setValue("clientId", null);
-                }}
-                label="Оптовик"
+                control={control}
+                rules={{ required: true }}
+                options={[
+                  { label: "Клиент", value: "WALK_IN" },
+                  { label: "Мастер", value: "MASTER" },
+                  { label: "Оптовик", value: "WHOLESALER" },
+                ]}
               />
             </div>
             <div className="w-full md:w-2/3 sm:w-full">
@@ -353,20 +359,30 @@ const VisitCreatePage = () => {
                 <Loader />
               ) : (
                 <div className="w-2/3">
-                  <ControlledSelect<VisitFormValues, number | null>
+                  <Selector
                     name="clientId"
-                    valueType="number"
                     control={control}
-                    rules={{ required: "Заполните поле" }}
+                    rules={{
+                      validate: (value: any) => {
+                        if (
+                          (clientType !== "WALK_IN" &&
+                            paymentType === "debt") &&
+                          !value
+                        ) {
+                          return "Выберите клиента";
+                        }
+                        return true;
+                      },
+                    }} 
                     options={clientOptions}
-                    placeholder="Выберите"
+                    disabled={isCreateClient}
                   />
                 </div>
               )}
             </div>
           </div>
 
-          <div className="mb-8">
+          <div className="mt-8 mb-8">
             {items.length > 0 ? (
               <DataTable columns={columns} data={items} />
             ) : (
@@ -382,51 +398,81 @@ const VisitCreatePage = () => {
             )}
           </div>
 
-          <div className="border-t border-gray-100 pt-5 flex justify-between items-center">
-            <div className="flex gap-3">
-              {/* <Button
-                size="xs"
-                variant="outline"
-                startIcon={<X size="18" />}
-                onClick={handleClearCart}
-              >
-                Очистить корзину
-              </Button> */}
-              <Button
-                size="xs"
-                variant="primary"
-                startIcon={<Plus size="18" />}
-                onClick={openModal}
-              >
-                Выбрать товар
-              </Button>
-            </div>
-            <div className="flex gap-3">
-              <Radio
-                id="debt"
-                name="paymentType"
-                value="debt"
-                checked={paymentType === "debt"}
-                onChange={() => setValue("paymentType", "debt")}
-                label="В долг"
-              />
-              <Radio
-                id="pay_now"
-                name="paymentType"
-                value="pay_now"
-                checked={paymentType === "pay_now"}
-                onChange={() => setValue("paymentType", "pay_now")}
-                label="Оплатить сейчас"
-              />
-              <Button
-                size="xs"
-                variant="success"
-                startIcon={<Check size="18" />}
-                // onClick={handleSaveVisit}
-                disabled={!isSelectedProducts}
-              >
-                Продать
-              </Button>
+          <div className="flex flex-col gap-5">
+            {isCreateClient && isWalkDebt && (
+              <div className="flex flex-col gap-5 w-full sm:w-1/3">
+                <div>
+                  <Label htmlFor="fullName">Имя клиента</Label>
+                  <Field
+                    name="fullName"
+                    control={control}
+                    rules={{
+                      required: "Заполните поле",
+                    }}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="note">Заметка</Label>
+                  <Field name="note" control={control} />
+                </div>
+              </div>
+            )}
+
+            <hr />
+
+            <div className="footer-top flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
+              <div className="flex gap-3">
+                <Button
+                  size="xs"
+                  variant="warning"
+                  startIcon={<X size="18" />}
+                  onClick={handleClearCart}
+                >
+                  Очистить корзину
+                </Button>
+                <Button
+                  size="xs"
+                  variant="primary"
+                  startIcon={<Plus size="18" />}
+                  onClick={openModal}
+                >
+                  Выбрать товар
+                </Button>
+                {!clientId && isWalkDebt && (
+                  <Button
+                    size="xs"
+                    variant="outline"
+                    startIcon={<Plus size="18" />}
+                    onClick={() => setIsCreateClient(true)}
+                  >
+                    Клиент
+                  </Button>
+                )}
+              </div>
+              <div className="flex flex-col gap-4 sm:flex sm:flex-row">
+                <div className="flex gap-2">
+                  <FormRadioGroup
+                    name="paymentType"
+                    control={control}
+                    rules={{ required: true }}
+                    options={[
+                      { label: "В долг", value: "debt" },
+                      { label: "Оплатить сейчас", value: "pay_now" },
+                    ]}
+                  />
+                </div>
+                <Button
+                  size="xs"
+                  variant="success"
+                  startIcon={<Check size="18" />}
+                  onClick={handleSubmit(handleSaveVisit, (errors) => {
+                    console.log("FORM ERRORS", errors);
+                  })}
+                  disabled={!isSelectedProducts}
+                >
+                  Продать
+                </Button>
+              </div>
             </div>
           </div>
         </div>

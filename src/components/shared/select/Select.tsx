@@ -28,6 +28,7 @@ interface ControlledSelectProps<T extends FieldValues, TValue> {
   options: ControlledSelectOption<TValue>[];
   placeholder?: string;
   valueType?: "number" | "boolean" | "string";
+  disabled?: boolean;
 }
 
 export function ControlledSelect<T extends FieldValues, TValue>({
@@ -37,6 +38,7 @@ export function ControlledSelect<T extends FieldValues, TValue>({
   options,
   placeholder,
   valueType = "string",
+  disabled,
 }: ControlledSelectProps<T, TValue>) {
   return (
     <Controller
@@ -46,6 +48,7 @@ export function ControlledSelect<T extends FieldValues, TValue>({
       render={({ field: { value, onChange }, fieldState: { error } }) => (
         <div>
           <Select
+            disabled={disabled}
             value={value !== undefined && value !== null ? String(value) : ""}
             onValueChange={(val) => {
               if (valueType === "boolean") {

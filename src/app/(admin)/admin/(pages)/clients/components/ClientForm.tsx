@@ -24,7 +24,7 @@ const ClientForm: FC<ClientFormProps> = ({
     <form onSubmit={handleSubmit(handleClientFormSubmit)}>
       <div className="flex flex-col gap-3 pt-5">
         <div>
-          <Label htmlFor="quantity">Имя</Label>
+          <Label htmlFor="fullName">Имя</Label>
           <Field
             name="fullName"
             control={control}
@@ -38,7 +38,7 @@ const ClientForm: FC<ClientFormProps> = ({
         </div>
 
         <div>
-          <Label htmlFor="quantity">Телефон</Label>
+          <Label htmlFor="phone">Телефон</Label>
           <Field
             name="phone"
             control={control}
@@ -46,7 +46,7 @@ const ClientForm: FC<ClientFormProps> = ({
         </div>
 
         <div>
-          <Label htmlFor="quantity">Заметка</Label>
+          <Label htmlFor="note">Заметка</Label>
           <Field
             name="note"
             control={control} 

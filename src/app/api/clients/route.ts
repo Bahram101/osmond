@@ -12,7 +12,7 @@ export async function GET() {
     return NextResponse.json(clients, { status: 200 });
 
   } catch (e) {
-
+    
     return NextResponse.json(
       { message: "Ошибка при получении мастеров" },
       { status: 500 }
