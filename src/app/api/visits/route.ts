@@ -26,11 +26,12 @@ export async function POST(req: NextRequest) {
       if (clientId) {
         finalClientId = clientId;
       } else if (payNow) {
-        const GUEST_CLIENT_ID = 1
+        const GUEST_CLIENT_ID = 1;
         finalClientId = GUEST_CLIENT_ID;
       } else {
         if (!walkInClient?.fullName) {
-          throw new Error("Укажите имя клиента для оформления долга");
+          console.log("Client name");
+          throw new Error("Нужно создать клиента для оформления долга");
         }
 
         const newClient = await tx.client.create({
@@ -91,10 +92,74 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ visitId: visit.id });
-  } catch (error:any) {
-    console.log('ERR',error)
+  } catch (error: any) {
+    console.log("ERR", error);
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+}
+
+// export async function GET() {
+//   try {
+//     const visits = await prisma.visit.findMany({
+//       orderBy: {
+//         createdAt: "desc",
+//       },
+//     });
+
+//     console.log('visits',visits)
+//     return NextResponse.json(visits, { status: 200 });
+
+//   } catch (e) {
+
+//     return NextResponse.json(
+//       { message: "Ошибка при получении визитов" },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+//GET /api/visits
+export async function GET(req: NextRequest) {
+  try {
+    // const body = await req.json();
+    // let { clientId } = body;
+    // const { items, payNow, walkInClient } = body;
+
+    // if (isNaN(clientId)) {
+    //   return NextResponse.json(
+    //     { message: "Invalid client id" },
+    //     { status: 400 },
+    //   );
+    // }
+
+    const visits = await prisma.visit.findMany({
+      include: {
+        payments: {
+          select: { amount: true },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    const result = visits.map((visit) => {
+      const paid = visit.payments.reduce((sum, p) => sum + Number(p.amount), 0);
+
+      return {
+        id: visit.id,
+        totalAmount: Number(visit.totalAmount),
+        paidAmount: paid,
+        debtAmount: Number(visit.totalAmount) - paid,
+        status: visit.status,
+        date: visit.createdAt,
+      };
+    });
+
+    return NextResponse.json(result);
+  } catch (error) {
     return NextResponse.json(
-      { message: error.message },
+      {
+        message: "Internal server error",
+      },
       { status: 500 },
     );
   }

@@ -136,22 +136,22 @@ const VisitCreatePage = () => {
     };
     console.log("body", body);
 
-    // createVisit(
-    //   {
-    //     clientId,
-    //     items,
-    //     payNow: paymentType === "pay_now",
-    //     walkInClient:
-    //       !clientId && isDebt
-    //         ? { fullName: fullName?.trim()!, note: note?.trim() ?? "" }
-    //         : null,
-    //   },
-    //   {
-    //     onSuccess: () => {
-    //       router.push(`/admin/sales`);
-    //     },
-    //   },
-    // );
+    createVisit(
+      {
+        clientId,
+        items,
+        payNow: paymentType === "pay_now",
+        walkInClient:
+          !clientId && isDebt
+            ? { fullName: fullName?.trim()!, note: note?.trim() ?? "" }
+            : null,
+      },
+      {
+        onSuccess: () => {
+          router.push(`/admin/sales`);
+        },
+      },
+    );
   };
 
   const handleClearCart = () => {

@@ -24,4 +24,11 @@ export const VisitService = {
   async getVisit(visitId: number) {
     return request<VisitDetail>({ url: `/visits/${visitId}`, method: "GET" });
   },
+
+  async getAll() {
+    return request<ClientVisitItem[]>({
+      url: `/visits`,
+      method: "GET",
+    });
+  },
 };

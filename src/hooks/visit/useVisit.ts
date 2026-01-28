@@ -9,7 +9,8 @@ export const useCreateVisit = () => {
     mutationKey: ["create-visit"],
     mutationFn: (data: VisitCreateDTO) => VisitService.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["client-visits",] });
+      queryClient.invalidateQueries({ queryKey: ["client-visits"] });
+      queryClient.invalidateQueries({ queryKey: ["all-visits"] });
       toast.success("Визит (долг) успешно создан!");
     },
   });
@@ -24,6 +25,15 @@ export const useGetClientVisits = (clientId: number) => {
     enabled: !!clientId,
   });
   return { clientVisits, isLoadingClientVisits };
+};
+
+export const useGetAllVisits = () => {
+  const { data: allVisits, isPending: isLoadingAllVisits } = useQuery({
+    queryKey: ["all-visits"],
+    queryFn: () => VisitService.getAll(),
+    staleTime: 1000 * 60 * 5,
+  });
+  return { allVisits, isLoadingAllVisits };
 };
 
 export const useGetVisit = (visitId: number) => {
