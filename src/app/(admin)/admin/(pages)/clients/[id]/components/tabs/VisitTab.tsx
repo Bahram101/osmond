@@ -25,7 +25,6 @@ const VisitTab = () => {
     return <EmptyState  icon={<FolderOpen/>} text="У мастера пока нет визитов" />;
   }
 
-  console.log('clientVisits', clientVisits)
   const columns: ColumnDef<ClientVisitItem>[] = [
     {
       header: "Визит",

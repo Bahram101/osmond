@@ -30,14 +30,13 @@ export async function GET() {
 //POST /api/products/create
 export async function POST(req: NextRequest) {
   try {
-    const decoded = await getUserFromToken(req);
+    // const decoded = await getUserFromToken(req);
     const data = await req.json();
     const barcode = generateEAN13();
     const dataParsed = {
       ...data,
       price: Number(data.price),
       categoryId: Number(data.categoryId),
-      userId: decoded?.userId,
       published: data.published === "true" || data.published === true,
       barcode,
     };
