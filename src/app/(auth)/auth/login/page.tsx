@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { validEmail } from "@/lib/utils/helpers";
 import { IAuthFormData } from "@/types/auth.interface";
 import { useRouter } from "next/navigation";
-import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAuthMutation } from "@/hooks/auth/useAuthMutation";
 import Loader from "@/components/shared/Loader";
@@ -16,7 +15,7 @@ const LoginPage = () => {
   const { handleSubmit, control } = useForm<IAuthFormData>({
     mode: "onChange",
     defaultValues: {
-      email: "joha85@mail.ru",
+      email: "joha",
       password: "123456",
     },
   });
@@ -35,23 +34,22 @@ const LoginPage = () => {
           <form>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Логин</Label>
                 <Field<IAuthFormData>
-                  className=""
                   control={control}
                   name="email"
                   rules={{
-                    required: "Email is required",
-                    pattern: {
-                      value: validEmail,
-                      message: "Please enter a valid email",
-                    },
+                    required: "Введите email или username",
+                    validate: (value) =>
+                      validEmail.test(value) ||
+                      value.length >= 3 ||
+                      "Введите корректный email или username",
                   }}
                 />
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">Пароль</Label>
                 </div>
                 <Field<IAuthFormData>
                   className=""

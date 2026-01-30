@@ -85,7 +85,7 @@ const AppSidebar: React.FC = () => {
   };
 
   const renderMenuItems = (
-    navItems: NavItem[]
+    navItems: NavItem[],
     // menuType: "main" | "others"
   ) => (
     <ul className="flex flex-col gap-4">
@@ -94,44 +94,54 @@ const AppSidebar: React.FC = () => {
           {nav.subItems
             ? null
             : nav.path && (
-              <Link
-                href={nav.path}
-                className={`menu-item group ${isActive(nav.path)
-                  ? "menu-item-active"
-                  : "menu-item-inactive"
+                <Link
+                  href={nav.path}
+                  className={`menu-item group ${
+                    isActive(nav.path)
+                      ? "menu-item-active"
+                      : "menu-item-inactive"
                   }`}
-              >
-                <span
-                  className={`${isActive(nav.path)
-                    ? "menu-item-icon-active"
-                    : "menu-item-icon-inactive"
-                    }`}
                 >
-                  {nav.icon}
-                </span>
-                {(isExpanded || isHovered || isMobileOpen) && (
-                  <span className={`menu-item-text`} onClick={handleToggle}>
-                    {nav.name}
+                  <span
+                    className={`${
+                      isActive(nav.path)
+                        ? "menu-item-icon-active"
+                        : "menu-item-icon-inactive"
+                    }`}
+                  >
+                    {nav.icon}
                   </span>
-                )}
-              </Link>
-            )}
+                  {(isExpanded || isHovered || isMobileOpen) && (
+                    <span className={`menu-item-text`} onClick={handleToggle}>
+                      {nav.name}
+                    </span>
+                  )}
+                </Link>
+              )}
           {nav.subItems && (isExpanded || isHovered || isMobileOpen) && null}
         </li>
       ))}
     </ul>
   );
 
-  const isActive = useCallback((path: string) => path === '/admin' ? pathname === '/admin' : pathname.startsWith(path), [pathname]);
+  const isActive = useCallback(
+    (path: string) => {
+      return path === "/admin"
+        ? pathname === "/admin"
+        : pathname.startsWith(path);
+    },
+    [pathname],
+  );
 
   return (
     <aside
       className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
-        ${isExpanded || isMobileOpen
-          ? "w-72.5"
-          : isHovered
+        ${
+          isExpanded || isMobileOpen
             ? "w-72.5"
-            : "w-22.5"
+            : isHovered
+              ? "w-72.5"
+              : "w-22.5"
         }
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0`}
@@ -139,8 +149,9 @@ const AppSidebar: React.FC = () => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className={`py-4 flex  ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
-          }`}
+        className={`py-4 flex  ${
+          !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
+        }`}
       >
         <Link href="/">
           {isExpanded || isHovered || isMobileOpen ? (
@@ -174,10 +185,11 @@ const AppSidebar: React.FC = () => {
           <div className="flex flex-col gap-4">
             <div>
               <h2
-                className={`mb-4 text-xs uppercase flex leading-5 text-gray-400 ${!isExpanded && !isHovered
-                  ? "lg:justify-center"
-                  : "justify-start"
-                  }`}
+                className={`mb-4 text-xs uppercase flex leading-5 text-gray-400 ${
+                  !isExpanded && !isHovered
+                    ? "lg:justify-center"
+                    : "justify-start"
+                }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
                   "Menu"
@@ -190,10 +202,11 @@ const AppSidebar: React.FC = () => {
 
             <div className="">
               <h2
-                className={`mb-4 text-xs uppercase flex leading-5 text-gray-400 ${!isExpanded && !isHovered
-                  ? "lg:justify-center"
-                  : "justify-start"
-                  }`}
+                className={`mb-4 text-xs uppercase flex leading-5 text-gray-400 ${
+                  !isExpanded && !isHovered
+                    ? "lg:justify-center"
+                    : "justify-start"
+                }`}
               >
                 {/* {isExpanded || isHovered || isMobileOpen ? (
                   "Others"

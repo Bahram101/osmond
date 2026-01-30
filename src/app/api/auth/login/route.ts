@@ -1,24 +1,26 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import { userSelect } from "@/lib/prisma/select"; 
+import { userSelect } from "@/lib/prisma/select";
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
 // api/auth/login
 export async function POST(req: NextRequest) {
   try {
-    const { email } = await req.json();
+    const { email: login, password } = await req.json();
 
-    const user = await prisma.user.findUnique({
-      where: { email },
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [{ email: login }, { username: login }],
+      },
       select: userSelect,
     });
 
     if (!user) {
       return NextResponse.json(
         { error: "Invalid Credentials" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
