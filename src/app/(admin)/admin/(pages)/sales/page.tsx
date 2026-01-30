@@ -97,7 +97,7 @@ const SalesPage = () => {
       ),
     },
   ];
-  console.log("allVisits", allVisits);
+
   return (
     <div className="col-span-12 xl:col-span-7">
       <BreadCrumb

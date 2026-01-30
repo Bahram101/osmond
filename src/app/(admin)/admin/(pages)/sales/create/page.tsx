@@ -1,6 +1,5 @@
 "use client";
 import BreadCrumb from "@/app/(admin)/admin/components/common/BreadCrumb";
-import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard";
 import Button from "@/app/(admin)/admin/components/ui/button/Button";
 import { Modal } from "@/app/(admin)/admin/components/ui/modal";
 import { useModal } from "@/app/(admin)/admin/hooks/useModal";
@@ -11,7 +10,7 @@ import {
 } from "@/hooks/product/useProducts";
 import { ProductCreateDTO, ProductShortDTO } from "@/types/product.interface";
 import { ArrowLeft, Check, Plus, ShoppingCart, Trash2, X } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ProductSelectTable } from "./components/ProductSelectTable";
 import { DataTable } from "@/components/common/DataTable";
@@ -22,15 +21,11 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import EmptyState from "@/app/(admin)/admin/components/ui/EmptyState";
 import { formatCurrency } from "@/lib/utils/helpers";
-import Radio from "../../../components/form/input/Radio";
 import Label from "../../../components/form/Label";
 import Loader from "@/components/shared/Loader";
-import ControlledSelect from "@/components/shared/select/Select";
 import { Controller, useForm } from "react-hook-form";
 import Field from "@/components/shared/field/Field";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import FormRadioGroup from "@/components/shared/radio/Radio";
-import { Select, SelectSeparator } from "@/components/ui/select";
 import { Selector } from "@/components/shared/select/Selector";
 
 const VisitCreatePage = () => {
@@ -77,7 +72,9 @@ const VisitCreatePage = () => {
   }, []);
 
   useEffect(() => {
-    setValue("clientId", null);
+    if (isWalkDebt && !clientId) {
+      setValue("clientId", null);
+    }
     setValue("fullName", "");
     setValue("note", "");
     setIsCreateClient(false);
@@ -145,7 +142,7 @@ const VisitCreatePage = () => {
   };
 
   const handleClearCart = () => {
-    if (confirm("Хотите очистит корзину?")) {
+    if (confirm("Хотите очистить корзину?")) {
       setItems([]);
       reset(VISIT_FORM_DEFAULTS);
     }
@@ -250,34 +247,28 @@ const VisitCreatePage = () => {
       },
       ...(isSelectedProducts
         ? [
-            {
-              id: "actions",
-              header: () => null,
-              size: 260,
-              meta: { className: "w-1/10" },
-              cell: ({ row }: { row: any }) => {
-                return (
-                  <div className="flex justify-center gap-3">
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => handleDeleteItem(row.original.productId)}
-                    >
-                      <Trash2 className="size-4.5" color="red" />
-                    </div>
+          {
+            id: "actions",
+            header: () => null,
+            size: 260,
+            meta: { className: "w-1/10" },
+            cell: ({ row }: { row: any }) => {
+              return (
+                <div className="flex justify-center gap-3">
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => handleDeleteItem(row.original.productId)}
+                  >
+                    <Trash2 className="size-4.5" color="red" />
                   </div>
-                );
-              },
+                </div>
+              );
             },
-          ]
+          },
+        ]
         : []),
     ];
   }, [isSelectedProducts, products]);
-
-  // console.log("clientOptions", clientOptions);
-  console.log("clientId", clientId);
-  // console.log("paymentType", paymentType);
-  // console.log("clientType", clientType);
-  console.log("isCreateClient", isCreateClient);
 
   return (
     <>
@@ -300,7 +291,7 @@ const VisitCreatePage = () => {
           }
         }}
         className="absolute opacity-0 pointer-events-none"
-        // className="border border-black"
+      // className="border border-black"
       />
       <Modal
         isOpen={isOpen}
