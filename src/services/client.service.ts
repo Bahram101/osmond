@@ -2,23 +2,23 @@ import { request } from "@/lib/api/request.api";
 import {
   ClientCreateDTO,
   ClientUpdateDTO,
-  IClient,
+  Client,
 } from "@/types/client.interface";
 
 export const ClientService = {
   async getAll() {
-    return request<IClient[]>({ url: "/clients", method: "GET" });
+    return request<Client[]>({ url: "/clients", method: "GET" });
   },
   async update(data: ClientUpdateDTO) {
     const { id, ...body } = data;
-    return request<IClient>({
+    return request<Client>({
       url: `/clients/${id}`,
       method: "PUT",
       data: body,
     });
   },
   async create(data: ClientCreateDTO) {
-    return request<IClient>({
+    return request<Client>({
       url: `/clients`,
       method: "POST",
       data,
@@ -31,6 +31,6 @@ export const ClientService = {
     });
   },
   async getOne(id: number)  {
-    return request<IClient>({ url: `/clients/${id}`, method: "GET" });
+    return request<Client>({ url: `/clients/${id}`, method: "GET" });
   },
 };

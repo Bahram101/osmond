@@ -4,7 +4,7 @@ import EmptyState from "@/app/(admin)/admin/components/ui/EmptyState";
 import { DataTable } from "@/components/common/DataTable";
 import Loader from "@/components/shared/Loader";
 import { useGetClientVisits } from "@/hooks/visit/useVisit";
-import { VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants/visit";
+import { VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants";
 import { formatCurrency, formatDateTime } from "@/lib/utils/helpers";
 import { ClientVisitItem } from "@/types/visit.interface";
 import { ColumnDef } from "@tanstack/react-table";

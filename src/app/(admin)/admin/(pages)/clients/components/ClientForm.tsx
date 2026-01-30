@@ -3,11 +3,11 @@ import Button from "../../../components/ui/button/Button";
 import Label from "../../../components/form/Label";
 import Field from "@/components/shared/field/Field";
 import { Control, FieldValues, UseFormHandleSubmit } from "react-hook-form"; 
-import { IClientForm } from "@/types/client.interface";
+import { ClientFormValues } from "@/types/client.interface";
 
 type ClientFormProps = {
   closeModal: () => void;
-  control: Control<IClientForm>;
+  control: Control<ClientFormValues>;
   handleSubmit: UseFormHandleSubmit<FieldValues>
   handleClientFormSubmit: (param: any) => void
 };

@@ -2,7 +2,7 @@ import { ClientService } from "@/services/client.service";
 import {
   ClientCreateDTO,
   ClientUpdateDTO,
-  IClient,
+  Client,
 } from "@/types/client.interface";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -22,7 +22,7 @@ export const useGetClients = () => {
 export const useUpdateClient = () => {
   const queryClient = useQueryClient();
   const { mutate: updateClient, isPending: isUpdatingClient } = useMutation<
-    IClient,
+    Client,
     Error,
     ClientUpdateDTO
   >({
@@ -63,7 +63,7 @@ export const useDeleteClient = () => {
 };
 
 export const useGetClient = (id: number) => {
-  const { data: client, isPending: isLoadingClient } = useQuery<IClient>({
+  const { data: client, isPending: isLoadingClient } = useQuery<Client>({
     queryKey: ["get-client", id],
     queryFn: () => ClientService.getOne(id),
     enabled: !!id,

@@ -10,7 +10,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ClientVisitItem } from "@/types/visit.interface";
 import { formatCurrency, formatDateTime } from "@/lib/utils/helpers";
 import Badge from "../../components/ui/badge/Badge";
-import { VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants/visit";
+import { VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants";
 import { useRouter } from "next/navigation";
 import { useGetAllVisits } from "@/hooks/visit/useVisit";
 

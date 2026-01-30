@@ -1,7 +1,7 @@
 import SummaryItem from "./SummaryItem";
 import { formatCurrency, formatDateTime } from "@/lib/utils/helpers";
 import Badge from "@/app/(admin)/admin/components/ui/badge/Badge";
-import { VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants/visit";
+import { VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants";
 import { VisitDetail } from "@/types/visit.interface"; 
 
 type VisitSummaryProps = {

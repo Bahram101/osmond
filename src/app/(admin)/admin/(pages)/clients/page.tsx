@@ -5,7 +5,7 @@ import {
   useGetClients,
   useUpdateClient,
 } from "@/hooks/client/useClient";
-import { IClient, IClientForm } from "@/types/client.interface";
+import { Client, ClientFormValues } from "@/types/client.interface";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { Eye, Pencil, Plus, Trash2 } from "lucide-react";
 import BreadCrumb from "../../components/common/BreadCrumb";
@@ -18,27 +18,28 @@ import ClientForm from "./components/ClientForm";
 import { useForm } from "react-hook-form";
 import Loader from "@/components/shared/Loader";
 import { useRouter } from "next/navigation";
+import { CLIENT_TYPE_LABEL } from "@/lib/constants";
 
 const ClientPage = () => {
   const router = useRouter();
   const { isOpen, openModal, closeModal } = useModal();
-  const { control, handleSubmit, reset } = useForm<IClientForm>();
+  const { control, handleSubmit, reset } = useForm<ClientFormValues>();
   const { clients, isFetchingClients } = useGetClients();
   const { updateClient, isUpdatingClient } = useUpdateClient();
   const { createClient, isCreatingClient } = useCreateClient();
   const { deleteClient, isDeletingClient } = useDeleteClient();
-  const [currentClient, setCurrentClient] = useState<IClient | null>(null);
+  const [currentClient, setCurrentClient] = useState<Client | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [clientId, setClientId] = useState<number | null>(null);
 
   const handleDelete = async (id: number) => {
-    if (confirm("Точно удалить категорию?")) {
+    if (confirm("Точно удалить клиента?")) {
       setDeletingId(id);
       deleteClient(id);
     }
   };
 
-  const handleOpenModal = (client: IClient | null) => {
+  const handleOpenModal = (client: Client | null) => {
     setCurrentClient(client);
     if (client) {
       setClientId(client.id);
@@ -63,7 +64,7 @@ const ClientPage = () => {
     closeModal();
   };
 
-  const handleClientFormSubmit = (data: IClientForm) => {
+  const handleClientFormSubmit = (data: ClientFormValues) => {
     if (currentClient) {
       updateClient(
         {
@@ -81,9 +82,9 @@ const ClientPage = () => {
     }
   };
 
-  const columnHelper = createColumnHelper<IClient>();
+  const columnHelper = createColumnHelper<Client>();
 
-  const columns: ColumnDef<IClient, any>[] = [
+  const columns: ColumnDef<Client, any>[] = [
     columnHelper.accessor("id", {
       header: "ID",
     }),
@@ -95,6 +96,10 @@ const ClientPage = () => {
     }),
     columnHelper.accessor("note", {
       header: "Заметки",
+    }),
+    columnHelper.accessor("type", {
+      header: "Тип",
+      cell: ({ row }) => <div className="flex justify-center">{CLIENT_TYPE_LABEL[row.original.type]}</div>,
     }),
     columnHelper.accessor("createdAt", {
       header: "Дата создания",
@@ -122,7 +127,7 @@ const ClientPage = () => {
             <Button
               variant="warning"
               size="tiny"
-              onClick={() => { 
+              onClick={() => {
                 setClientId(row.original.id);
                 handleOpenModal(row.original);
               }}
@@ -153,7 +158,7 @@ const ClientPage = () => {
         isOpen={isOpen}
         onClose={closeModal}
         className="max-w-146 p-4 lg:p-6"
-        title={clientId ? "Изменить мастера" : "Создать новый мастер"}
+        title={clientId ? "Изменить клиента" : "Создать новый клиент"}
       >
         <ClientForm
           closeModal={closeModal}
@@ -163,11 +168,11 @@ const ClientPage = () => {
         />
       </Modal>
       <BreadCrumb
-        items={[{ label: "Home", href: "/admin" }, { label: "Мастеры" }]}
+        items={[{ label: "Home", href: "/admin" }, { label: "Клиенты" }]}
       />
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
         <div className="flex justify-between items-center pb-5">
-          <h3 className="text-lg">Список мастеров</h3>
+          <h3 className="text-lg">Список клиентов</h3>
 
           <Button
             size="xs"
@@ -175,7 +180,7 @@ const ClientPage = () => {
             startIcon={<Plus size="18" />}
             onClick={() => handleOpenModal(null)}
           >
-            Добавление нового мастера
+            Добавление нового клиента
           </Button>
         </div>
 

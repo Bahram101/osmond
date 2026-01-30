@@ -1,15 +1,22 @@
-export interface IClient {
+export interface Client {
   id: number;
   fullName: string;
   phone?: string;
   note?: string;
-  type: string,
+  type: ClientTypes,
   createdAt: string;
 }
-export type IClientForm = Pick<IClient, "fullName" | "phone" | "note">;
 
-export type ClientCreateDTO = IClientForm;
+export type ClientFormValues = {
+  fullName: string
+  phone: string
+  note: string
+}
 
-export type ClientUpdateDTO = IClientForm & {
+export type ClientCreateDTO = ClientFormValues;
+
+export type ClientUpdateDTO = ClientFormValues & {
   id: number;
 };
+
+export type ClientTypes = "MASTER" | "WHOLESALER" | "WALK_IN"

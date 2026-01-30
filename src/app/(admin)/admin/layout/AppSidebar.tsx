@@ -39,18 +39,18 @@ const navItems: NavItem[] = [
   {
     icon: <Users />,
     name: "Клиенты",
-    path: "/admin/customers",
-  },
-  {
-    icon: <Wrench />,
-    name: "Мастеры",
     path: "/admin/clients",
   },
-  {
-    icon: <ShoppingBag />,
-    name: "Оптовики",
-    path: "/admin/wholesalers",
-  },
+  // {
+  //   icon: <Wrench />,
+  //   name: "Мастеры",
+  //   path: "/admin/clients",
+  // },
+  // {
+  //   icon: <ShoppingBag />,
+  //   name: "Оптовики",
+  //   path: "/admin/wholesalers",
+  // },
   {
     icon: <PanelsTopLeft />,
     name: "Категория",
