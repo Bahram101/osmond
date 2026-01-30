@@ -79,16 +79,16 @@ const VisitCreatePage = () => {
     });
   };
 
-  const handleSaveVisit = () => {
-    createVisit(
-      { clientId, items },
-      {
-        onSuccess: () => {
-          router.push(`/admin/clients/${clientId}`);
-        },
-      },
-    );
-  };
+  // const handleSaveVisit = () => {
+  //   createVisit(
+  //     { clientId, items },
+  //     {
+  //       onSuccess: () => {
+  //         router.push(`/admin/clients/${clientId}`);
+  //       },
+  //     },
+  //   );
+  // };
 
   const handleDeleteItem = (id: number) => {
     setItems((prev) => {
@@ -295,7 +295,7 @@ const VisitCreatePage = () => {
                   size="xs"
                   variant="success"
                   startIcon={<Check size="18" />}
-                  onClick={handleSaveVisit}
+                  // onClick={handleSaveVisit}
                   disabled={!isSelectedProducts}
                 >
                   Сохранить

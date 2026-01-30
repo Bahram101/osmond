@@ -125,16 +125,6 @@ const VisitCreatePage = () => {
 
   const handleSaveVisit = () => {
     const isDebt = paymentType === "debt";
-    const body = {
-      clientId,
-      items,
-      payNow: paymentType === "pay_now",
-      walkInClient:
-        !clientId && isDebt
-          ? { fullName: fullName?.trim()!, note: note?.trim() ?? "" }
-          : null,
-    };
-    console.log("body", body);
 
     createVisit(
       {
@@ -365,15 +355,15 @@ const VisitCreatePage = () => {
                     rules={{
                       validate: (value: any) => {
                         if (
-                          (clientType !== "WALK_IN" &&
-                            paymentType === "debt") &&
+                          clientType !== "WALK_IN" &&
+                          paymentType === "debt" &&
                           !value
                         ) {
                           return "Выберите клиента";
                         }
                         return true;
                       },
-                    }} 
+                    }}
                     options={clientOptions}
                     disabled={isCreateClient}
                   />
