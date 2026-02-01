@@ -1,21 +1,24 @@
+import { $Enums, Prisma } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+// api/clients
+export async function GET(req: NextRequest) {
   try {
+
+    const { searchParams } = req.nextUrl
+    const clientType = searchParams.get('type')
     const clients = await prisma.client.findMany({
       orderBy: {
         createdAt: "desc",
       },
-      where:{
-        type: "MASTER"
-      }
+      where: clientType ? { type: clientType as $Enums.ClientType } : undefined
     });
 
     return NextResponse.json(clients, { status: 200 });
   } catch (e) {
     return NextResponse.json(
-      { message: "Ошибка при получении мастеров" },
+      { message: "Ошибка при получении клиентов" },
       { status: 500 },
     );
   }
