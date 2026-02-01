@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import Loader from "@/components/shared/Loader";
 import { useRouter } from "next/navigation";
 import { CLIENT_TYPE_LABEL } from "@/lib/constants";
+import { Selector } from "@/components/shared/select/Selector";
 
 const ClientPage = () => {
   const router = useRouter();
@@ -173,15 +174,24 @@ const ClientPage = () => {
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
         <div className="flex justify-between items-center pb-5">
           <h3 className="text-lg">Список клиентов</h3>
+          <div>
 
-          <Button
-            size="xs"
-            variant="success"
-            startIcon={<Plus size="18" />}
-            onClick={() => handleOpenModal(null)}
-          >
-            Добавление нового клиента
-          </Button>
+            <div className="w-2/3">
+              {/* <Selector
+                name="type"
+                control={control}
+                options={[]} 
+              /> */}
+            </div>
+            <Button
+              size="xs"
+              variant="success"
+              startIcon={<Plus size="18" />}
+              onClick={() => handleOpenModal(null)}
+            >
+              Добавление нового клиента
+            </Button>
+          </div>
         </div>
 
         {isFetchingClients ? (

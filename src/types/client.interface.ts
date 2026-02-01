@@ -19,4 +19,4 @@ export type ClientUpdateDTO = ClientFormValues & {
   id: number;
 };
 
-export type ClientTypes = "MASTER" | "WHOLESALER" | "WALK_IN"
+export type ClientTypes = "WALK_IN" | "MASTER" | "WHOLESALER"

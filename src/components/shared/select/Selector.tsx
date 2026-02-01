@@ -17,8 +17,6 @@ import {
 } from "react-hook-form";
 import { cn } from "@/lib/utils/cn";
 
-// const options = ["Next.js", "SvelteKit", "Nuxt.js", "Remix", "Astro"];
-
 type Option<T = string> = {
   label: string;
   value: T;
