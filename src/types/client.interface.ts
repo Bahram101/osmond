@@ -20,3 +20,9 @@ export type ClientUpdateDTO = ClientFormValues & {
 };
 
 export type ClientTypes = "WALK_IN" | "MASTER" | "WHOLESALER"
+
+export type ClientFilterType = ClientTypes | "ALL"
+
+export type ClientFilterValues = {
+  type: ClientFilterType
+}

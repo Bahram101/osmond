@@ -270,6 +270,8 @@ const VisitCreatePage = () => {
     ];
   }, [isSelectedProducts, products]);
 
+  console.log('clientType', watch('clientId'))
+
   return (
     <>
       <BreadCrumb
@@ -340,7 +342,7 @@ const VisitCreatePage = () => {
                 <Loader />
               ) : (
                 <div className="w-2/3">
-                  <Selector
+                  <Selector<VisitFormValues, number>
                     name="clientId"
                     control={control}
                     rules={{

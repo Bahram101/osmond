@@ -5,7 +5,7 @@ import {
   useGetClients,
   useUpdateClient,
 } from "@/hooks/client/useClient";
-import { Client, ClientFormValues } from "@/types/client.interface";
+import { Client, ClientFilterType, ClientFilterValues, ClientFormValues } from "@/types/client.interface";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { Eye, Pencil, Plus, Trash2 } from "lucide-react";
 import BreadCrumb from "../../components/common/BreadCrumb";
@@ -25,6 +25,12 @@ const ClientPage = () => {
   const router = useRouter();
   const { isOpen, openModal, closeModal } = useModal();
   const { control, handleSubmit, reset } = useForm<ClientFormValues>();
+  const { control: filterControl, watch } = useForm<ClientFilterValues>({
+    mode: 'all',
+    defaultValues: {
+      type: "ALL"
+    }
+  });
   const { clients, isFetchingClients } = useGetClients();
   const { updateClient, isUpdatingClient } = useUpdateClient();
   const { createClient, isCreatingClient } = useCreateClient();
@@ -153,6 +159,8 @@ const ClientPage = () => {
     }),
   ];
 
+  console.log('type', watch('type'))
+
   return (
     <div className="col-span-12 xl:col-span-7">
       <Modal
@@ -174,16 +182,21 @@ const ClientPage = () => {
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
         <div className="flex justify-between items-center pb-5">
           <h3 className="text-lg">Список клиентов</h3>
-          <div>
-
+          <div className="flex items-center gap-3">
             <div className="w-2/3">
-              {/* <Selector
+              <Selector<ClientFilterValues, ClientFilterType>
                 name="type"
-                control={control}
-                options={[]} 
-              /> */}
+                control={filterControl}
+                options={[
+                  { label: "Все", value: "ALL" },
+                  { label: "Клиенты", value: "WALK_IN" },
+                  { label: "Мастеры", value: "MASTER" },
+                  { label: "Оптовики", value: "WHOLESALER" },
+                ]}
+              />
             </div>
             <Button
+            className="whitespace-nowrap"
               size="xs"
               variant="success"
               startIcon={<Plus size="18" />}
