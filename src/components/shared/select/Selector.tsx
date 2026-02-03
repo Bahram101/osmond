@@ -35,7 +35,6 @@ export function Selector<TField extends FieldValues, TValue>({
   disabled,
   rules,
 }: Props<TField, TValue>) {
-  console.log('optionss',options)
   return (
     <Controller
       name={name as any}
@@ -45,7 +44,6 @@ export function Selector<TField extends FieldValues, TValue>({
         const selected = options.find(
           (o) => o.value === field.value
         );
-        console.log('selected',selected)
         return (
           <Combobox
             value={field.value != null ? String(field.value) : ""}

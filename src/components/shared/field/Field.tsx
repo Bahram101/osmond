@@ -24,14 +24,15 @@ const Field = <T extends FieldValues>({
         return (
           <div className={cn(className)} suppressHydrationWarning>
             <Input
+              // {...field}
+              {...rest}
               className={cn(error && "border-red-400")}
-              id={name}
+              id={String(name)}
               name={name}
               value={(value || "").toString()}
               onChange={onChange}
               onBlur={onBlur}
               autoCapitalize="none"
-              {...rest}
             />
             {error && <small className=" text-red-400">{error.message}</small>}
           </div>

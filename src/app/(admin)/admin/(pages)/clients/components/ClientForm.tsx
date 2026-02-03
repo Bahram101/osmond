@@ -5,6 +5,8 @@ import Field from "@/components/shared/field/Field";
 import { Control, FieldValues, UseFormHandleSubmit } from "react-hook-form";
 import { ClientTypes, ClientFilterValues, ClientFormValues } from "@/types/client.interface";
 import { Selector } from "@/components/shared/select/Selector";
+import { SelectShadcn } from "@/components/shared/select/SelectShadcn";
+import ControlledSelect from "@/components/shared/select/Select";
 
 type ClientFormProps = {
   closeModal: () => void;
@@ -71,20 +73,25 @@ const ClientForm: FC<ClientFormProps> = ({
         </div>
         <div>
           <Label htmlFor="note">Заметка</Label>
-          <Field
+          <Field<ClientFormValues>
             name="note"
             control={control}
           />
-        </div>
+        </div> 
+       
         <div>
           <Label htmlFor="type">Тип клиента</Label>
-          <Selector<ClientFormValues, Exclude<ClientTypes, "WALK_IN">>
+          <SelectShadcn<
+            ClientFormValues,
+            ClientFormValues["type"]
+          >
             name="type"
             control={control}
             options={[
               { label: "Мастеры", value: "MASTER" },
               { label: "Оптовики", value: "WHOLESALER" },
             ]}
+            placeholder="Выберите тип клиента"
           />
         </div>
       </div>

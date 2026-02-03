@@ -32,7 +32,12 @@ const ClientPage = () => {
   const [clientId, setClientId] = useState<number | null>(null);
   const { control, handleSubmit, reset } = useForm<ClientFormValues>({
     defaultValues: {
-      type: "MASTER"
+      fullName: "sdf",
+      username: "",
+      password: "",
+      phone: "",
+      note: "", 
+      type: "MASTER",
     }
   });
   const { control: filterControl, watch } = useForm<ClientFilterValues>({

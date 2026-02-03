@@ -8,8 +8,6 @@ import {
 
 export const ClientService = {
   async getAll(type: ClientFilterTypes | undefined) {
-    console.log('typeee', type)
-
     return request<Client[]>({
       url: `/clients`,
       method: "GET",

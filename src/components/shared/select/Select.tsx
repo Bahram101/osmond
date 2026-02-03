@@ -49,15 +49,17 @@ export function ControlledSelect<T extends FieldValues, TValue>({
         <div>
           <Select
             disabled={disabled}
-            value={value !== undefined && value !== null ? String(value) : ""}
+            // value={value !== undefined && value !== null ? String(value) : ""}
+            value={value !== undefined && value !== null ? String(value) : undefined}
+
             onValueChange={(val) => {
               if (valueType === "boolean") {
                 onChange(val === "true");
               } else if (valueType === "number") {
                 const num = Number(val);
-                onChange(isNaN(num) ? null : num);
+                onChange(isNaN(num) ? undefined : num);
               } else {
-                onChange(val);
+                onChange(val as TValue);
               }
             }}
           >
