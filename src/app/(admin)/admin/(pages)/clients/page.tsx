@@ -24,14 +24,18 @@ import { Selector } from "@/components/shared/select/Selector";
 const ClientPage = () => {
   const router = useRouter();
   const { isOpen, openModal, closeModal } = useModal();
-  const { control, handleSubmit, reset } = useForm<ClientFormValues>();
   const { updateClient, isUpdatingClient } = useUpdateClient();
   const { createClient, isCreatingClient } = useCreateClient();
   const { deleteClient, isDeletingClient } = useDeleteClient();
   const [currentClient, setCurrentClient] = useState<Client | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [clientId, setClientId] = useState<number | null>(null);
-    const { control: filterControl, watch } = useForm<ClientFilterValues>({
+  const { control, handleSubmit, reset } = useForm<ClientFormValues>({
+    defaultValues: {
+      type: "MASTER"
+    }
+  });
+  const { control: filterControl, watch } = useForm<ClientFilterValues>({
     mode: 'all',
     defaultValues: {
       type: "ALL"
@@ -160,8 +164,6 @@ const ClientPage = () => {
     }),
   ];
 
-  console.log('type', watch('type'))
-
   return (
     <div className="col-span-12 xl:col-span-7">
       <Modal
@@ -197,7 +199,7 @@ const ClientPage = () => {
               />
             </div>
             <Button
-            className="whitespace-nowrap"
+              className="whitespace-nowrap"
               size="xs"
               variant="success"
               startIcon={<Plus size="18" />}

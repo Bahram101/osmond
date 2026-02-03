@@ -9,8 +9,11 @@ export interface Client {
 
 export type ClientFormValues = {
   fullName: string
+  username: string
+  password: string
   phone: string
   note: string
+  type: Exclude<ClientTypes, "WALK_IN">
 }
 
 export type ClientCreateDTO = ClientFormValues;

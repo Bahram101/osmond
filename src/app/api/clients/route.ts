@@ -1,6 +1,7 @@
 import { $Enums, Prisma } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { hash } from 'argon2'
 
 // api/clients
 export async function GET(req: NextRequest) {
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
         data: {
           email: data.email ?? null,
           username: data.username,
-          password: data.password,
+          password: await hash(data.password),
           clientId: client.id,
           role: data.type,
         },
