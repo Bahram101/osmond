@@ -3,14 +3,15 @@ import {
   ClientCreateDTO,
   ClientUpdateDTO,
   Client,
+  ClientFilterTypes
 } from "@/types/client.interface";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export const useGetClients = () => {
+export const useGetClients = (type?: ClientFilterTypes) => {
   const { data: clients = [], isPending: isFetchingClients } = useQuery({
-    queryKey: ["get-clients"],
-    queryFn: () => ClientService.getAll(),
+    queryKey: ["get-clients",type],
+    queryFn: () => ClientService.getAll(type),
     retry: (failureCount, error: any) => {
       if (error?.status === 404) return false;
       return failureCount < 0;

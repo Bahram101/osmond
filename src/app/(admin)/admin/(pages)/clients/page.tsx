@@ -5,7 +5,7 @@ import {
   useGetClients,
   useUpdateClient,
 } from "@/hooks/client/useClient";
-import { Client, ClientFilterType, ClientFilterValues, ClientFormValues } from "@/types/client.interface";
+import { Client, ClientFilterValues, ClientFilterTypes, ClientFormValues } from "@/types/client.interface";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { Eye, Pencil, Plus, Trash2 } from "lucide-react";
 import BreadCrumb from "../../components/common/BreadCrumb";
@@ -25,19 +25,20 @@ const ClientPage = () => {
   const router = useRouter();
   const { isOpen, openModal, closeModal } = useModal();
   const { control, handleSubmit, reset } = useForm<ClientFormValues>();
-  const { control: filterControl, watch } = useForm<ClientFilterValues>({
-    mode: 'all',
-    defaultValues: {
-      type: "ALL"
-    }
-  });
-  const { clients, isFetchingClients } = useGetClients();
   const { updateClient, isUpdatingClient } = useUpdateClient();
   const { createClient, isCreatingClient } = useCreateClient();
   const { deleteClient, isDeletingClient } = useDeleteClient();
   const [currentClient, setCurrentClient] = useState<Client | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [clientId, setClientId] = useState<number | null>(null);
+    const { control: filterControl, watch } = useForm<ClientFilterValues>({
+    mode: 'all',
+    defaultValues: {
+      type: "ALL"
+    }
+  });
+  const type = watch('type')
+  const { clients, isFetchingClients } = useGetClients(type);
 
   const handleDelete = async (id: number) => {
     if (confirm("Точно удалить клиента?")) {
@@ -184,7 +185,7 @@ const ClientPage = () => {
           <h3 className="text-lg">Список клиентов</h3>
           <div className="flex items-center gap-3">
             <div className="w-2/3">
-              <Selector<ClientFilterValues, ClientFilterType>
+              <Selector<ClientFilterValues, ClientFilterTypes>
                 name="type"
                 control={filterControl}
                 options={[

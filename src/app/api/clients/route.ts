@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 // api/clients
 export async function GET(req: NextRequest) {
   try {
-
     const { searchParams } = req.nextUrl
     const clientType = searchParams.get('type')
     const clients = await prisma.client.findMany({

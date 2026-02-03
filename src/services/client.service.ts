@@ -3,11 +3,18 @@ import {
   ClientCreateDTO,
   ClientUpdateDTO,
   Client,
+  ClientFilterTypes,
 } from "@/types/client.interface";
 
 export const ClientService = {
-  async getAll() {
-    return request<Client[]>({ url: "/clients", method: "GET" });
+  async getAll(type: ClientFilterTypes | undefined) {
+    console.log('typeee', type)
+
+    return request<Client[]>({
+      url: `/clients`,
+      method: "GET",
+      params: type && type !== "ALL" ? { type } : {}
+    });
   },
   async update(data: ClientUpdateDTO) {
     const { id, ...body } = data;
@@ -30,7 +37,7 @@ export const ClientService = {
       method: "DELETE",
     });
   },
-  async getOne(id: number)  {
+  async getOne(id: number) {
     return request<Client>({ url: `/clients/${id}`, method: "GET" });
   },
 };
