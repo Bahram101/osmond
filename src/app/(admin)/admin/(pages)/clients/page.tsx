@@ -5,7 +5,12 @@ import {
   useGetClients,
   useUpdateClient,
 } from "@/hooks/client/useClient";
-import { Client, ClientFilterValues, ClientFilterTypes, ClientFormValues } from "@/types/client.interface";
+import {
+  Client,
+  ClientFilterValues,
+  ClientFilterTypes,
+  ClientFormValues,
+} from "@/types/client.interface";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { Eye, Pencil, Plus, Trash2 } from "lucide-react";
 import BreadCrumb from "../../components/common/BreadCrumb";
@@ -19,7 +24,8 @@ import { useForm } from "react-hook-form";
 import Loader from "@/components/shared/Loader";
 import { useRouter } from "next/navigation";
 import { CLIENT_TYPE_LABEL } from "@/lib/constants";
-import { Selector } from "@/components/shared/select/Selector";
+import { Selector } from "@/components/shared/select/SelectSearch";
+import ControlledSelect from "@/components/shared/select/Select";
 
 const ClientPage = () => {
   const router = useRouter();
@@ -30,24 +36,31 @@ const ClientPage = () => {
   const [currentClient, setCurrentClient] = useState<Client | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [clientId, setClientId] = useState<number | null>(null);
-  const { control, handleSubmit, reset } = useForm<ClientFormValues>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    watch: watchForm,
+  } = useForm<ClientFormValues>({
     defaultValues: {
-      fullName: "sdf",
+      fullName: "",
       username: "",
       password: "",
       phone: "",
-      note: "", 
+      note: "",
       type: "MASTER",
-    }
+    },
   });
   const { control: filterControl, watch } = useForm<ClientFilterValues>({
-    mode: 'all',
+    mode: "all",
     defaultValues: {
-      type: "ALL"
-    }
+      type: "ALL",
+    },
   });
-  const type = watch('type')
+  const type = watch("type");
   const { clients, isFetchingClients } = useGetClients(type);
+
+  console.log("form", watchForm());
 
   const handleDelete = async (id: number) => {
     if (confirm("Точно удалить клиента?")) {
@@ -69,8 +82,11 @@ const ClientPage = () => {
       setClientId(null);
       reset({
         fullName: "",
+        username: "",
+        password: "",
         phone: "",
         note: "",
+        type: "MASTER",
       });
     }
     openModal();
@@ -116,7 +132,11 @@ const ClientPage = () => {
     }),
     columnHelper.accessor("type", {
       header: "Тип",
-      cell: ({ row }) => <div className="flex justify-center">{CLIENT_TYPE_LABEL[row.original.type]}</div>,
+      cell: ({ row }) => (
+        <div className="flex justify-center">
+          {CLIENT_TYPE_LABEL[row.original.type]}
+        </div>
+      ),
     }),
     columnHelper.accessor("createdAt", {
       header: "Дата создания",
@@ -190,19 +210,19 @@ const ClientPage = () => {
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
         <div className="flex justify-between items-center pb-5">
           <h3 className="text-lg">Список клиентов</h3>
-          <div className="flex items-center gap-3">
-            <div className="w-2/3">
-              <Selector<ClientFilterValues, ClientFilterTypes>
-                name="type"
-                control={filterControl}
-                options={[
-                  { label: "Все", value: "ALL" },
-                  { label: "Клиенты", value: "WALK_IN" },
-                  { label: "Мастеры", value: "MASTER" },
-                  { label: "Оптовики", value: "WHOLESALER" },
-                ]}
-              />
-            </div>
+          <div className="flex items-center gap-10">
+            <ControlledSelect<ClientFilterValues, ClientFilterTypes>
+              className="w-30"
+              name="type"
+              control={filterControl}
+              options={[
+                { label: "Все", value: "ALL" },
+                { label: "Клиенты", value: "WALK_IN" },
+                { label: "Мастеры", value: "MASTER" },
+                { label: "Оптовики", value: "WHOLESALER" },
+              ]}
+            />
+
             <Button
               className="whitespace-nowrap"
               size="xs"

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { userSelect } from "@/lib/prisma/select";
+import { hash, verify } from "argon2";
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
@@ -19,7 +20,16 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { error: "Invalid Credentials" },
+        { error: "Invalid email or password" },
+        { status: 401 },
+      );
+    }
+
+    const isValidPassword = await verify(user.password, password);
+    
+    if (!isValidPassword) {
+      return NextResponse.json(
+        { message: "Invalid email or password" },
         { status: 401 },
       );
     }

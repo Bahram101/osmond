@@ -1,27 +1,27 @@
+"use client";
 import { FC } from "react";
 import Button from "../../../components/ui/button/Button";
 import Label from "../../../components/form/Label";
 import Field from "@/components/shared/field/Field";
 import { Control, FieldValues, UseFormHandleSubmit } from "react-hook-form";
-import { ClientTypes, ClientFilterValues, ClientFormValues } from "@/types/client.interface";
-import { Selector } from "@/components/shared/select/Selector";
-import { SelectShadcn } from "@/components/shared/select/SelectShadcn";
-import ControlledSelect from "@/components/shared/select/Select";
+import {
+  ClientFormValues,
+} from "@/types/client.interface";
+import { TailSelect } from "@/components/shared/select/SelectTail/TailSelect";
 
 type ClientFormProps = {
   closeModal: () => void;
   control: Control<ClientFormValues>;
-  handleSubmit: UseFormHandleSubmit<FieldValues>
-  handleClientFormSubmit: (param: any) => void
+  handleSubmit: UseFormHandleSubmit<FieldValues>;
+  handleClientFormSubmit: (param: any) => void;
 };
 
 const ClientForm: FC<ClientFormProps> = ({
   closeModal,
   control,
   handleSubmit,
-  handleClientFormSubmit
+  handleClientFormSubmit,
 }) => {
-
   return (
     <form onSubmit={handleSubmit(handleClientFormSubmit)}>
       <div className="flex flex-col gap-3 pt-5">
@@ -33,8 +33,9 @@ const ClientForm: FC<ClientFormProps> = ({
             rules={{
               required: "Заполните поле",
               min: {
-                value: 1, message: 'Минимум 1'
-              }
+                value: 1,
+                message: "Минимум 1",
+              },
             }}
           />
         </div>
@@ -46,8 +47,9 @@ const ClientForm: FC<ClientFormProps> = ({
             rules={{
               required: "Заполните поле",
               min: {
-                value: 3, message: 'Минимум 3'
-              }
+                value: 3,
+                message: "Минимум 3",
+              },
             }}
           />
         </div>
@@ -59,39 +61,32 @@ const ClientForm: FC<ClientFormProps> = ({
             rules={{
               required: "Заполните поле",
               min: {
-                value: 3, message: 'Минимум 3'
-              }
+                value: 3,
+                message: "Минимум 3",
+              },
             }}
           />
         </div>
         <div>
           <Label htmlFor="phone">Телефон</Label>
-          <Field<ClientFormValues>
-            name="phone"
-            control={control}
-          />
+          <Field<ClientFormValues> name="phone" control={control} />
         </div>
         <div>
           <Label htmlFor="note">Заметка</Label>
-          <Field<ClientFormValues>
-            name="note"
-            control={control}
-          />
-        </div> 
-       
+          <Field<ClientFormValues> name="note" control={control} />
+        </div>
+
         <div>
           <Label htmlFor="type">Тип клиента</Label>
-          <SelectShadcn<
-            ClientFormValues,
-            ClientFormValues["type"]
-          >
+          <TailSelect<ClientFormValues>
             name="type"
             control={control}
+            rules={{ required: "Выберите тип клиента" }}
+            placeholder="Выберите тип клиента"
             options={[
               { label: "Мастеры", value: "MASTER" },
               { label: "Оптовики", value: "WHOLESALER" },
             ]}
-            placeholder="Выберите тип клиента"
           />
         </div>
       </div>
@@ -100,7 +95,9 @@ const ClientForm: FC<ClientFormProps> = ({
         <Button size="xs" variant="outline" onClick={closeModal}>
           Закрыть
         </Button>
-        <Button size="xs" type="submit">Сохранить</Button>
+        <Button size="xs" type="submit">
+          Сохранить
+        </Button>
       </div>
     </form>
   );

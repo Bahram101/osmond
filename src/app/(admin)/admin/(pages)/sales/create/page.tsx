@@ -26,7 +26,7 @@ import Loader from "@/components/shared/Loader";
 import { Controller, useForm } from "react-hook-form";
 import Field from "@/components/shared/field/Field";
 import FormRadioGroup from "@/components/shared/radio/Radio";
-import { Selector } from "@/components/shared/select/Selector";
+import { Selector } from "@/components/shared/select/SelectSearch";
 
 const VisitCreatePage = () => {
   const VISIT_FORM_DEFAULTS = {
@@ -342,7 +342,7 @@ const VisitCreatePage = () => {
                 <Loader />
               ) : (
                 <div className="w-2/3">
-                  <Selector<VisitFormValues, number>
+                  <Selector
                     name="clientId"
                     control={control}
                     rules={{

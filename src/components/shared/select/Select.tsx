@@ -38,6 +38,7 @@ export function ControlledSelect<T extends FieldValues, TValue>({
   options,
   placeholder,
   valueType = "string",
+  className,
   disabled,
 }: ControlledSelectProps<T, TValue>) {
   return (
@@ -49,7 +50,6 @@ export function ControlledSelect<T extends FieldValues, TValue>({
         <div>
           <Select
             disabled={disabled}
-            // value={value !== undefined && value !== null ? String(value) : ""}
             value={value !== undefined && value !== null ? String(value) : undefined}
 
             onValueChange={(val) => {
@@ -66,7 +66,7 @@ export function ControlledSelect<T extends FieldValues, TValue>({
             <SelectTrigger
               id={name}
               aria-label={name}
-              className={cn("w-full", error && "border-red-400")}
+              className={cn("w-full",className, error && "border-red-400")}
             >
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
