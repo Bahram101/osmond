@@ -8,12 +8,31 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = req.nextUrl
     const clientType = searchParams.get('type')
+
+    const STATUS_ORDER = {
+      OPEN: 1,
+      PARTIAL: 2,
+      PAID: 3,
+    } as const;
+    
     const clients = await prisma.client.findMany({
       orderBy: {
         createdAt: "desc",
       },
-      where: clientType ? { type: clientType as $Enums.ClientType } : undefined
+      where: clientType ? { type: clientType as $Enums.ClientType } : undefined,
+      include: {
+        visits: {
+          take: 1,
+          select: { status: true },
+        },
+      },
     });
+
+    clients.sort(
+      (a, b) =>
+        (STATUS_ORDER[a.visits[0]?.status ?? "PAID"] ?? 99) -
+        (STATUS_ORDER[b.visits[0]?.status ?? "PAID"] ?? 99)
+    );
 
     return NextResponse.json(clients, { status: 200 });
   } catch (e) {

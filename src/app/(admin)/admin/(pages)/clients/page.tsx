@@ -23,9 +23,11 @@ import ClientForm from "./components/ClientForm";
 import { useForm } from "react-hook-form";
 import Loader from "@/components/shared/Loader";
 import { useRouter } from "next/navigation";
-import { CLIENT_TYPE_LABEL } from "@/lib/constants";
+import { CLIENT_TYPE_LABEL, VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants";
 import { Selector } from "@/components/shared/select/SelectSearch";
 import ControlledSelect from "@/components/shared/select/Select";
+import { VisitStatus } from "@/generated/prisma";
+import Badge from "../../components/ui/badge/Badge";
 
 const ClientPage = () => {
   const router = useRouter();
@@ -60,7 +62,7 @@ const ClientPage = () => {
   const type = watch("type");
   const { clients, isFetchingClients } = useGetClients(type);
 
-  console.log("form", watchForm());
+  // console.log("form", watchForm());
 
   const handleDelete = async (id: number) => {
     if (confirm("Точно удалить клиента?")) {
@@ -146,9 +148,30 @@ const ClientPage = () => {
         </div>
       ),
     }),
+    columnHelper.accessor(
+      (row) => row.visits[0]?.status,
+      {
+        id: "visitStatus",
+        header: "Статус",
+        cell: ({ row }) => {
+          const status = row.original.visits[0].status as VisitStatus;
+          return (
+            <div className="text-center" >
+              <Badge
+                variant="light"
+                color={VISIT_STATUS_COLOR[status]}
+              >
+
+                {VISIT_STATUS_LABEL[status]}
+              </Badge>
+            </div>
+          );
+        },
+      }
+    ),
     columnHelper.display({
       id: "actions",
-      header: "",
+      // header: "",
       size: 260,
       cell: ({ row }) => {
         return (
@@ -210,7 +233,7 @@ const ClientPage = () => {
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
         <div className="flex justify-between items-center pb-5">
           <h3 className="text-lg">Список клиентов</h3>
-          <div className="flex items-center gap-10">
+          <div className="flex items-center gap-6">
             <ControlledSelect<ClientFilterValues, ClientFilterTypes>
               className="w-30"
               name="type"

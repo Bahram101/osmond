@@ -177,6 +177,8 @@ const VisitCreatePage = () => {
     }
   };
 
+  console.log('items', items)
+
   const columns: ColumnDef<VisitItemForm>[] = useMemo(() => {
     return [
       {
@@ -190,8 +192,20 @@ const VisitCreatePage = () => {
         meta: { className: "w-1/10" },
         cell: ({ row }) => {
           return (
-            <div className="text-center">
-              {formatCurrency(row.original.price)}
+            <div className="text-center"> 
+              <Input
+                className="w-20 border text-center"
+                value={row.original.price}
+                onChange={(e) => { 
+                  setItems(prev =>
+                    prev.map((item, idx) =>
+                      idx === row.index
+                        ? { ...item, price: Number(e.target.value) }
+                        : item
+                    )
+                  );
+                }}
+              />
             </div>
           );
         },

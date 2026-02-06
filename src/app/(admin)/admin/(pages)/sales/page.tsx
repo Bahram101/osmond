@@ -85,11 +85,11 @@ const SalesPage = () => {
         <div className="flex justify-center">
           <Button
             size="tiny"
-            // onClick={() =>
-            //   router.push(
-            //     `/admin/sales/${clientId}/visits/${row.original.id}`,
-            //   )
-            // }
+            onClick={() =>
+              router.push(
+                `/admin/sales/visits/${row.original.id}`,
+              )
+            }
           >
             Просмотр
           </Button>

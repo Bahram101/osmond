@@ -4,6 +4,9 @@ export interface Client {
   phone?: string;
   note?: string;
   type: ClientTypes,
+  visits:{
+    status: string
+  }[]
   createdAt: string;
 }
 
