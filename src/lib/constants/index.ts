@@ -18,4 +18,8 @@ export const CLIENT_TYPE_LABEL: Record<ClientTypes, string> = {
   MASTER: 'Мастер',
   WHOLESALER: 'Оптовик',
   WALK_IN: 'Клиент',
-} 
+}
+
+export const getClientStatusColor = (hasDebt: boolean): BadgeColor => hasDebt ? "error" : "success"
+
+export const getClientStatusLabel = (hasDebt: boolean): string => hasDebt ? "Есть долг" : "Нет долга"

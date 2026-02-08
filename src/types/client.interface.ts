@@ -7,6 +7,7 @@ export interface Client {
   visits:{
     status: string
   }[]
+  hasDebt: boolean
   createdAt: string;
 }
 

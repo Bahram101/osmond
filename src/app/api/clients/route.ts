@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
       PARTIAL: 2,
       PAID: 3,
     } as const;
-    
+
     const clients = await prisma.client.findMany({
       orderBy: {
         createdAt: "desc",
@@ -22,19 +22,28 @@ export async function GET(req: NextRequest) {
       where: clientType ? { type: clientType as $Enums.ClientType } : undefined,
       include: {
         visits: {
-          take: 1,
+          // take: 1,
           select: { status: true },
         },
       },
     });
 
-    clients.sort(
-      (a, b) =>
-        (STATUS_ORDER[a.visits[0]?.status ?? "PAID"] ?? 99) -
-        (STATUS_ORDER[b.visits[0]?.status ?? "PAID"] ?? 99)
-    );
+    console.log('clients', clients)
 
-    return NextResponse.json(clients, { status: 200 });
+    const res = clients.map(client => ({
+      ...client,
+      hasDebt: client.visits.some(v => v.status === "OPEN" || v.status === "PARTIAL")
+    }))
+
+    // clients.sort(
+    //   (a, b) =>
+    //     (STATUS_ORDER[a.visits[0]?.status ?? "PAID"] ?? 99) -
+    //     (STATUS_ORDER[b.visits[0]?.status ?? "PAID"] ?? 99)
+    // );
+
+    let result = res?.map(({ visits, ...client }) => client)
+
+    return NextResponse.json(result, { status: 200 });
   } catch (e) {
     return NextResponse.json(
       { message: "Ошибка при получении клиентов" },

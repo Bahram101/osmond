@@ -23,11 +23,12 @@ import ClientForm from "./components/ClientForm";
 import { useForm } from "react-hook-form";
 import Loader from "@/components/shared/Loader";
 import { useRouter } from "next/navigation";
-import { CLIENT_TYPE_LABEL, VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants";
+import { CLIENT_TYPE_LABEL, getClientStatusColor, getClientStatusLabel, VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants";
 import { Selector } from "@/components/shared/select/SelectSearch";
 import ControlledSelect from "@/components/shared/select/Select";
 import { VisitStatus } from "@/generated/prisma";
 import Badge from "../../components/ui/badge/Badge";
+import { get } from "http";
 
 const ClientPage = () => {
   const router = useRouter();
@@ -149,20 +150,20 @@ const ClientPage = () => {
       ),
     }),
     columnHelper.accessor(
-      (row) => row.visits[0]?.status,
+      "hasDebt",
       {
-        id: "visitStatus",
+        // id: "hasDebt",
         header: "Статус",
         cell: ({ row }) => {
-          const status = row.original.visits[0].status as VisitStatus;
+          const status: boolean = row.original.hasDebt
+          console.log('status', status)
           return (
             <div className="text-center" >
               <Badge
                 variant="light"
-                color={VISIT_STATUS_COLOR[status]}
+                color={getClientStatusColor(status)}
               >
-
-                {VISIT_STATUS_LABEL[status]}
+                {getClientStatusLabel(status)}
               </Badge>
             </div>
           );
