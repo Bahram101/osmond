@@ -84,8 +84,8 @@ const ClientForm: FC<ClientFormProps> = ({
             rules={{ required: "Выберите тип клиента" }}
             placeholder="Выберите тип клиента"
             options={[
-              { label: "Мастеры", value: "MASTER" },
-              { label: "Оптовики", value: "WHOLESALER" },
+              { label: "Мастер", value: "MASTER" },
+              { label: "Оптовик", value: "WHOLESALER" },
             ]}
           />
         </div>

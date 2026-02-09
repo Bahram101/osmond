@@ -8,15 +8,13 @@ export async function POST(req: NextRequest) {
     let { clientId } = body;
     const { items, payNow, walkInClient } = body;
 
-    console.log("clientId", clientId);
-    console.log(items, payNow, walkInClient);
-
     if (!items?.length) {
       return NextResponse.json({ message: "Invalid payload" }, { status: 400 });
     }
 
     const totalAmount = items.reduce(
-      (sum: any, item: any) => sum + item.price * item.quantity,
+      (sum: any, item: any) =>
+        sum + (item.price * item.quantity + (item.servicePrice || 0)),
       0,
     );
 
@@ -30,13 +28,13 @@ export async function POST(req: NextRequest) {
         finalClientId = GUEST_CLIENT_ID;
       } else {
         if (!walkInClient?.fullName) {
-          console.log("Client name");
           throw new Error("Нужно создать клиента для оформления долга");
         }
 
         const newClient = await tx.client.create({
           data: {
             fullName: walkInClient.fullName,
+            phone: walkInClient.phone,
             note: walkInClient.note,
             type: "WALK_IN",
           },
@@ -59,7 +57,8 @@ export async function POST(req: NextRequest) {
           productId: item.productId,
           price: item.price,
           quantity: item.quantity,
-          total: item.price * item.quantity,
+          servicePrice: Number(item.servicePrice) || 0,
+          total: item.price * item.quantity + (item.servicePrice || 0),
         })),
       });
 
@@ -93,45 +92,19 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ visitId: visit.id });
   } catch (error: any) {
-    console.log("ERR", error);
+    if (error.code === "P2002") {
+      return NextResponse.json(
+        { message: "Клиент с таким именем уже существует" },
+        { status: 409 },
+      );
+    }
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
 
-// export async function GET() {
-//   try {
-//     const visits = await prisma.visit.findMany({
-//       orderBy: {
-//         createdAt: "desc",
-//       },
-//     });
-
-//     console.log('visits',visits)
-//     return NextResponse.json(visits, { status: 200 });
-
-//   } catch (e) {
-
-//     return NextResponse.json(
-//       { message: "Ошибка при получении визитов" },
-//       { status: 500 }
-//     );
-//   }
-// }
-
 //GET /api/visits
 export async function GET(req: NextRequest) {
   try {
-    // const body = await req.json();
-    // let { clientId } = body;
-    // const { items, payNow, walkInClient } = body;
-
-    // if (isNaN(clientId)) {
-    //   return NextResponse.json(
-    //     { message: "Invalid client id" },
-    //     { status: 400 },
-    //   );
-    // }
-
     const visits = await prisma.visit.findMany({
       include: {
         payments: {

@@ -1,10 +1,11 @@
 import { prisma } from "@/lib/prisma";
+import { hash } from "argon2";
 import { NextRequest, NextResponse } from "next/server";
 
 //PUT /api/clients/id
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -13,7 +14,29 @@ export async function PUT(
 
     const updated = await prisma.client.update({
       where: { id: numericId },
-      data,
+      data: {
+        fullName: data.fullName,
+        phone: data.phone,
+        note: data.note,
+        type: data.type,
+        user:
+          data.username || data.password
+            ? {
+                upsert: {
+                  create: {
+                    username: data.username,
+                    password: await hash(data.password),
+                  },
+                  update: {
+                    username: data.username,
+                    ...(data.password && {
+                      password: await hash(data.password),
+                    }),
+                  },
+                },
+              }
+            : undefined,
+      },
     });
 
     return NextResponse.json(updated);
@@ -22,7 +45,7 @@ export async function PUT(
       {
         message: "Ошибка при обновлении мастера",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -30,7 +53,7 @@ export async function PUT(
 //DELETE /api/clients/id
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -40,7 +63,7 @@ export async function DELETE(
     if (!client) {
       return NextResponse.json(
         { message: "Мастера не найден" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -52,7 +75,7 @@ export async function DELETE(
       {
         message: "Ошибка при удалении мастера",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -60,7 +83,7 @@ export async function DELETE(
 //GET /api/clients/id
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const id = Number((await params).id);
@@ -72,7 +95,7 @@ export async function GET(
   } catch (error) {
     return NextResponse.json(
       { message: "Ошибка при получении мастера" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

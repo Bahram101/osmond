@@ -3,12 +3,9 @@ import BreadCrumb from "@/app/(admin)/admin/components/common/BreadCrumb";
 import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard";
 import { DataTable } from "@/components/common/DataTable";
 import Loader from "@/components/shared/Loader";
-import { useGetVisit } from "@/hooks/visit/useVisit";
-import { VisitDetailItem, VisitPayment } from "@/types/visit.interface";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { useGetVisit } from "@/hooks/visit/useVisit"; 
 import { useParams, useRouter } from "next/navigation";
-import VisitSummary from "./components/VisitSummary";
-import { formatCurrency, formatDateTime } from "@/lib/utils/helpers";
+import VisitSummary from "./components/VisitSummary"; 
 import Button from "@/app/(admin)/admin/components/ui/button/Button";
 import { ArrowLeft, Plus } from "lucide-react";
 import { Modal } from "@/app/(admin)/admin/components/ui/modal";
@@ -17,10 +14,11 @@ import PaymentForm from "./components/PaymentForm";
 import { useForm } from "react-hook-form";
 import { PaymentFormValues, PaymentCreateDTO } from "@/types/payment.interface";
 import { useCreatePayment } from "@/hooks/payment/usePayments";
+import { useEffect } from "react";
+import { columns, paymentColumns } from "./components/VisitColumns";
 
 const ClientVisitPage = () => {
   const router = useRouter();
-  const { control, handleSubmit, reset } = useForm<PaymentFormValues>();
   const { isOpen, openModal, closeModal } = useModal();
   const { createPayment, isCreatingPayment } = useCreatePayment();
   const { id, visitId } = useParams<{ id: string; visitId: string }>();
@@ -31,74 +29,25 @@ const ClientVisitPage = () => {
     return null;
   }
   const { visit, isLoadingVisit } = useGetVisit(visId);
+  const { control, handleSubmit, reset } = useForm<PaymentFormValues>({
+    defaultValues: {
+      amount: 0,
+    },
+  });
+
+  useEffect(() => {
+    if (visit) {
+      reset({
+        amount: visit.debtAmount,
+      });
+    }
+  }, [visit]);
 
   if (isLoadingVisit) {
     return <Loader />;
   }
 
   if (!visit) return null;
-
-  const columnHelper = createColumnHelper<VisitDetailItem>();
-
-  const columns: ColumnDef<VisitDetailItem, any>[] = [
-    {
-      header: "#",
-      cell: ({ row }) => <div className="text-center">{row.index + 1}</div>,
-    },
-    columnHelper.accessor((row) => row.product?.name ?? "-", {
-      id: "product.name",
-      header: "Товар",
-    }),
-    {
-      header: "Цена",
-      accessorKey: "price",
-      cell: ({ row }) => (
-        <div className="text-center">{formatCurrency(row.original.price)}</div>
-      ),
-    },
-    {
-      header: "Количество",
-      accessorKey: "quantity",
-      cell: ({ row }) => (
-        <div className="text-center">{row.original.quantity} шт</div>
-      ),
-    },
-    {
-      header: "Сумма",
-      accessorKey: "total",
-      cell: ({ row }) => (
-        <div className="text-center">{formatCurrency(row.original.total)}</div>
-      ),
-    },
-  ];
-
-  const paymentColumns: ColumnDef<VisitPayment>[] = [
-    {
-      id: "index",
-      header: "#",
-      cell: ({ row }) => <div className="text-center">{row.index + 1}</div>,
-    },
-    {
-      header: "Дата",
-      accessorKey: "createdAt",
-      cell: ({ row }) => (
-        <div className="text-center">
-          {formatDateTime(row.original.createdAt)}
-        </div>
-      ),
-    },
-    {
-      header: "Сумма",
-      accessorKey: "amount",
-      cell: ({ row }) => (
-        <div className="text-center">{formatCurrency(row.original.amount)}</div>
-      ),
-    },
-    {
-      header: "Комментария",
-      accessorKey: "note",
-    },
-  ];
 
   const handlePaymentFormSubmit = (data: PaymentFormValues) => {
     const body: PaymentCreateDTO = {
@@ -114,7 +63,7 @@ const ClientVisitPage = () => {
           reset();
           closeModal();
         },
-      }
+      },
     );
   };
 
@@ -148,6 +97,7 @@ const ClientVisitPage = () => {
       <ComponentCard>
         <div className="flex flex-col sm:flex-row sm:justify-between gap-6">
           <VisitSummary visit={visit} clientId={clientId} />
+
           <div className="flex flex-col lg:flex-row lg:items-start gap-3">
             <Button
               size="xs"
@@ -169,12 +119,13 @@ const ClientVisitPage = () => {
         </div>
 
         <hr />
-        <DataTable columns={columns} data={visit?.items} />
 
-        {visit?.payments.length > 0 && (
+        <DataTable columns={columns} data={visit.items} />
+
+        {visit.payments.length > 0 && (
           <>
             <div className="text-lg font-semibold">История оплат</div>
-            <DataTable columns={paymentColumns} data={visit?.payments} />
+            <DataTable columns={paymentColumns} data={visit.payments} />
           </>
         )}
       </ComponentCard>

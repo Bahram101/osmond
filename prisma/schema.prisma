@@ -34,7 +34,7 @@ enum Role {
 
 model Client {
   id        Int        @id @default(autoincrement())
-  fullName  String
+  fullName  String     @unique
   phone     String?
   note      String?
   type      ClientType @default(MASTER)
@@ -123,12 +123,13 @@ enum VisitStatus {
 }
 
 model VisitItem {
-  id        Int   @id @default(autoincrement())
-  visitId   Int
-  productId Int
-  quantity  Int
-  price     Float
-  total     Float
+  id           Int      @id @default(autoincrement())
+  visitId      Int
+  productId    Int
+  quantity     Int
+  price        Float
+  servicePrice Decimal? @db.Decimal(10, 2)
+  total        Float
 
   visit   Visit   @relation(fields: [visitId], references: [id])
   product Product @relation(fields: [productId], references: [id])

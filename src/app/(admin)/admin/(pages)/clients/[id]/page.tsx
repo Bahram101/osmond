@@ -1,8 +1,7 @@
 "use client";
 import BreadCrumb from "../../../components/common/BreadCrumb";
-import Link from "next/link";
 import Button from "../../../components/ui/button/Button";
-import { ArrowLeft, Info, Plus } from "lucide-react";
+import { ArrowLeft, Info } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VisitTab from "./components/tabs/VisitTab";
 import HistoryTab from "./components/tabs/HistoryTab";

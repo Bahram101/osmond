@@ -1,47 +1,40 @@
 import { $Enums, Prisma } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { hash } from 'argon2'
+import { hash } from "argon2";
 
 // api/clients
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = req.nextUrl
-    const clientType = searchParams.get('type')
-
-    const STATUS_ORDER = {
-      OPEN: 1,
-      PARTIAL: 2,
-      PAID: 3,
-    } as const;
+    const { searchParams } = req.nextUrl;
+    const clientType = searchParams.get("type");
 
     const clients = await prisma.client.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
       where: clientType ? { type: clientType as $Enums.ClientType } : undefined,
+      orderBy: { createdAt: "desc" },
       include: {
         visits: {
-          // take: 1,
           select: { status: true },
+        },
+        user: {
+          select: { username: true },
         },
       },
     });
 
-    console.log('clients', clients)
+    const result = clients
+      .map(({ visits, user, ...client }) => {
+        const hasDebt = visits.some(
+          (v) => v.status === "OPEN" || v.status === "PARTIAL",
+        );
 
-    const res = clients.map(client => ({
-      ...client,
-      hasDebt: client.visits.some(v => v.status === "OPEN" || v.status === "PARTIAL")
-    }))
-
-    // clients.sort(
-    //   (a, b) =>
-    //     (STATUS_ORDER[a.visits[0]?.status ?? "PAID"] ?? 99) -
-    //     (STATUS_ORDER[b.visits[0]?.status ?? "PAID"] ?? 99)
-    // );
-
-    let result = res?.map(({ visits, ...client }) => client)
+        return {
+          ...client,
+          hasDebt,
+          username: user?.username ?? null,
+        };
+      })
+      .sort((a, b) => Number(b.hasDebt) - Number(a.hasDebt));
 
     return NextResponse.json(result, { status: 200 });
   } catch (e) {
@@ -96,10 +89,9 @@ export async function POST(req: NextRequest) {
       { status: 200 },
     );
   } catch (e: any) {
-    console.log("eee", e.message);
     return NextResponse.json(
       {
-        message: "Ошибка при создании",
+        message: "Ошибка при создании клиента: " + e.message,
       },
       { status: 500 },
     );

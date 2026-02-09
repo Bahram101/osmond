@@ -34,6 +34,7 @@ const VisitCreatePage = () => {
     clientType: null,
     paymentType: null,
     fullName: "",
+    phone: "",
     note: "",
   };
   const router = useRouter();
@@ -42,11 +43,12 @@ const VisitCreatePage = () => {
       mode: "all",
       defaultValues: VISIT_FORM_DEFAULTS,
     });
-  const [clientId, clientType, paymentType, fullName, note] = watch([
+  const [clientId, clientType, paymentType, fullName, phone, note] = watch([
     "clientId",
     "clientType",
     "paymentType",
     "fullName",
+    "phone",
     "note",
   ]);
   const { isOpen, openModal, closeModal } = useModal();
@@ -76,6 +78,7 @@ const VisitCreatePage = () => {
       setValue("clientId", null);
     }
     setValue("fullName", "");
+    setValue("phone", "");
     setValue("note", "");
     setIsCreateClient(false);
   }, [clientType, paymentType]);
@@ -130,7 +133,11 @@ const VisitCreatePage = () => {
         payNow: paymentType === "pay_now",
         walkInClient:
           !clientId && isDebt
-            ? { fullName: fullName?.trim()!, note: note?.trim() ?? "" }
+            ? {
+                fullName: fullName?.trim()!,
+                note: note?.trim() ?? "",
+                phone: phone?.trim() ?? "",
+              }
             : null,
       },
       {
@@ -177,14 +184,12 @@ const VisitCreatePage = () => {
     }
   };
 
-  console.log('items', items)
-
   const columns: ColumnDef<VisitItemForm>[] = useMemo(() => {
     return [
       {
         accessorKey: "name",
         header: "Название товара",
-        meta: { className: "w-3/10" },
+        meta: { className: "w-2/10" },
       },
       {
         accessorKey: "price",
@@ -192,17 +197,17 @@ const VisitCreatePage = () => {
         meta: { className: "w-1/10" },
         cell: ({ row }) => {
           return (
-            <div className="text-center"> 
+            <div className="text-center">
               <Input
                 className="w-20 border text-center"
                 value={row.original.price}
-                onChange={(e) => { 
-                  setItems(prev =>
+                onChange={(e) => {
+                  setItems((prev) =>
                     prev.map((item, idx) =>
                       idx === row.index
                         ? { ...item, price: Number(e.target.value) }
-                        : item
-                    )
+                        : item,
+                    ),
                   );
                 }}
               />
@@ -248,43 +253,73 @@ const VisitCreatePage = () => {
         },
       },
       {
+        accessorKey: "servicePrice",
+        header: "За работу",
+        meta: { className: "w-2/10" },
+        cell: ({ row }) => {
+          return (
+            <div className="text-center">
+              <Input
+                className="w-20 border text-center"
+                value={row.original.servicePrice ?? ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setItems((prev) =>
+                    prev.map((item, idx) =>
+                      idx === row.index
+                        ? {
+                            ...item,
+                            servicePrice:
+                              value === "" ? null : Number(e.target.value),
+                          }
+                        : item,
+                    ),
+                  );
+                }}
+              />
+            </div>
+          );
+        },
+      },
+      {
         id: "total",
         header: "Сумма",
         meta: { className: "w-1/10" },
         cell: ({ row }) => {
           const price = row.original.price;
+          const servicePrice = row.original.servicePrice
           const qty = row.original.quantity ?? 0;
           return (
-            <div className="text-center">{formatCurrency(qty * price)}</div>
+            <div className="text-center">{formatCurrency(qty * price + (servicePrice || 0))}</div>
           );
         },
       },
       ...(isSelectedProducts
         ? [
-          {
-            id: "actions",
-            header: () => null,
-            size: 260,
-            meta: { className: "w-1/10" },
-            cell: ({ row }: { row: any }) => {
-              return (
-                <div className="flex justify-center gap-3">
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => handleDeleteItem(row.original.productId)}
-                  >
-                    <Trash2 className="size-4.5" color="red" />
+            {
+              id: "actions",
+              header: () => null,
+              size: 260,
+              meta: { className: "w-1/10" },
+              cell: ({ row }: { row: any }) => {
+                return (
+                  <div className="flex justify-center gap-3">
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => handleDeleteItem(row.original.productId)}
+                    >
+                      <Trash2 className="size-4.5" color="red" />
+                    </div>
                   </div>
-                </div>
-              );
+                );
+              },
             },
-          },
-        ]
+          ]
         : []),
     ];
   }, [isSelectedProducts, products]);
 
-  console.log('clientType', watch('clientId'))
+  console.log("items", items);
 
   return (
     <>
@@ -307,7 +342,7 @@ const VisitCreatePage = () => {
           }
         }}
         className="absolute opacity-0 pointer-events-none"
-      // className="border border-black"
+        // className="border border-black"
       />
       <Modal
         isOpen={isOpen}
@@ -407,6 +442,10 @@ const VisitCreatePage = () => {
                       required: "Заполните поле",
                     }}
                   />
+                </div>
+                <div>
+                  <Label htmlFor="phone">Телефон</Label>
+                  <Field name="phone" control={control} />
                 </div>
                 <div>
                   <Label htmlFor="note">Заметка</Label>

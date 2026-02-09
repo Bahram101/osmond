@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 //api/visits/[visitId]
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ visitId: string }> }
+  { params }: { params: Promise<{ visitId: string }> },
 ) {
   try {
     const visitId = Number((await params).visitId);
@@ -14,7 +14,7 @@ export async function GET(
         {
           message: "Invalid visit id",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -25,15 +25,15 @@ export async function GET(
           include: {
             product: {
               select: { name: true },
-            }, 
+            },
           },
         },
         payments: true,
-        client:{
+        client: {
           select: {
-            fullName: true
-          }
-        }
+            fullName: true,
+          },
+        },
       },
     });
 
@@ -42,26 +42,29 @@ export async function GET(
         {
           message: "Visit not found",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     const paidAmount = visit.payments.reduce(
       (sum, p) => sum + Number(p.amount),
-      0
+      0,
     );
 
     return NextResponse.json({
       ...visit,
+      items: visit.items.map((item) => ({
+        ...item,
+        servicePrice: Number(item.servicePrice) || null,
+      })),
       totalAmount: Number(visit.totalAmount),
       paidAmount,
       debtAmount: Number(visit.totalAmount) - paidAmount,
     });
-    
   } catch (error) {
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

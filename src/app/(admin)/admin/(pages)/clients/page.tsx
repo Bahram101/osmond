@@ -12,7 +12,7 @@ import {
   ClientFormValues,
 } from "@/types/client.interface";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { Eye, Pencil, Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import BreadCrumb from "../../components/common/BreadCrumb";
 import { DataTable } from "@/components/common/DataTable";
 import Button from "../../components/ui/button/Button";
@@ -23,12 +23,13 @@ import ClientForm from "./components/ClientForm";
 import { useForm } from "react-hook-form";
 import Loader from "@/components/shared/Loader";
 import { useRouter } from "next/navigation";
-import { CLIENT_TYPE_LABEL, getClientStatusColor, getClientStatusLabel, VISIT_STATUS_COLOR, VISIT_STATUS_LABEL } from "@/lib/constants";
-import { Selector } from "@/components/shared/select/SelectSearch";
-import ControlledSelect from "@/components/shared/select/Select";
-import { VisitStatus } from "@/generated/prisma";
-import Badge from "../../components/ui/badge/Badge";
-import { get } from "http";
+import {
+  CLIENT_TYPE_LABEL,
+  getClientStatusColor,
+  getClientStatusLabel,
+} from "@/lib/constants"; 
+import ControlledSelect from "@/components/shared/select/Select"; 
+import Badge from "../../components/ui/badge/Badge";  
 
 const ClientPage = () => {
   const router = useRouter();
@@ -73,6 +74,7 @@ const ClientPage = () => {
   };
 
   const handleOpenModal = (client: Client | null) => {
+    console.log("client", client);
     setCurrentClient(client);
     if (client) {
       setClientId(client.id);
@@ -80,6 +82,9 @@ const ClientPage = () => {
         fullName: client.fullName,
         phone: client.phone,
         note: client.note,
+        type: client.type,
+        username: client?.username ?? "",
+        password: "",
       });
     } else {
       setClientId(null);
@@ -149,34 +154,25 @@ const ClientPage = () => {
         </div>
       ),
     }),
-    columnHelper.accessor(
-      "hasDebt",
-      {
-        // id: "hasDebt",
-        header: "Статус",
-        cell: ({ row }) => {
-          const status: boolean = row.original.hasDebt
-          console.log('status', status)
-          return (
-            <div className="text-center" >
-              <Badge
-                variant="light"
-                color={getClientStatusColor(status)}
-              >
-                {getClientStatusLabel(status)}
-              </Badge>
-            </div>
-          );
-        },
-      }
-    ),
+    columnHelper.accessor("hasDebt", {
+      header: "Статус",
+      cell: ({ row }) => {
+        const status: boolean = row.original.hasDebt;
+        return (
+          <div className="text-center">
+            <Badge variant="light" color={getClientStatusColor(status)}>
+              {getClientStatusLabel(status)}
+            </Badge>
+          </div>
+        );
+      },
+    }),
     columnHelper.display({
       id: "actions",
-      // header: "",
-      size: 260,
+      size: 50,
       cell: ({ row }) => {
         return (
-          <div className="flex justify-center gap-3">
+          <div className="flex gap-3">
             <Button
               variant="primary"
               size="tiny"
@@ -184,17 +180,18 @@ const ClientPage = () => {
             >
               Просмотр
             </Button>
-
-            <Button
-              variant="warning"
-              size="tiny"
-              onClick={() => {
-                setClientId(row.original.id);
-                handleOpenModal(row.original);
-              }}
-            >
-              Изменить
-            </Button>
+            {row.original.type !== "WALK_IN" && (
+              <Button
+                variant="warning"
+                size="tiny"
+                onClick={() => {
+                  setClientId(row.original.id);
+                  handleOpenModal(row.original);
+                }}
+              >
+                Изменить
+              </Button>
+            )}
 
             {/* <Button
               variant="danger"

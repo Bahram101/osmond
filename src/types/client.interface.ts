@@ -3,21 +3,20 @@ export interface Client {
   fullName: string;
   phone?: string;
   note?: string;
-  type: ClientTypes,
-  visits:{
-    status: string
-  }[]
-  hasDebt: boolean
+  type: ClientTypes, 
   createdAt: string;
+  hasDebt: boolean
+  username?: string | null
 }
 
 export type ClientFormValues = {
   fullName: string
-  username: string
-  password: string
   phone: string
-  note: string
-  type: Exclude<ClientTypes, "WALK_IN">
+  note: string 
+  type: ClientTypes
+
+  username?: string
+  password?: string
 }
 
 export type ClientCreateDTO = ClientFormValues;
