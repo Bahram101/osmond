@@ -64,8 +64,6 @@ const ClientPage = () => {
   const type = watch("type");
   const { clients, isFetchingClients } = useGetClients(type);
 
-  // console.log("form", watchForm());
-
   const handleDelete = async (id: number) => {
     if (confirm("Точно удалить клиента?")) {
       setDeletingId(id);
@@ -74,7 +72,6 @@ const ClientPage = () => {
   };
 
   const handleOpenModal = (client: Client | null) => {
-    console.log("client", client);
     setCurrentClient(client);
     if (client) {
       setClientId(client.id);

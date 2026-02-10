@@ -1,9 +1,18 @@
+import Button from "@/app/(admin)/admin/components/ui/button/Button";
 import { formatCurrency, formatDateTime } from "@/lib/utils/helpers";
 import { VisitDetailItem, VisitPayment } from "@/types/visit.interface";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
 const columnHelper = createColumnHelper<VisitDetailItem>();
-export const columns: ColumnDef<VisitDetailItem, any>[] = [
+
+
+type VisitColumnsProps = {
+  onReturn: (item: VisitDetailItem) => void;
+};
+
+export const visitColumns = ({
+  onReturn,
+}: VisitColumnsProps): ColumnDef<VisitDetailItem, string>[] => [
   {
     header: "#",
     cell: ({ row }) => <div className="text-center">{row.index + 1}</div>,
@@ -39,12 +48,28 @@ export const columns: ColumnDef<VisitDetailItem, any>[] = [
     header: "Сумма",
     accessorKey: "total",
     cell: ({ row }) => {
-      // const 
       return (
         <div className="text-center">{formatCurrency(row.original.total)}</div>
       );
     },
   },
+  columnHelper.display({
+    id: "actions",
+    size: 50,
+    cell: ({ row }) => {
+      return (
+        <div className="flex gap-3 justify-center">
+          <Button
+            variant="outline"
+            size="tiny"
+            disabled={row.original.quantity === 0}
+          >
+            Возврат
+          </Button>
+        </div>
+      );
+    },
+  }),
 ];
 
 export const paymentColumns: ColumnDef<VisitPayment>[] = [

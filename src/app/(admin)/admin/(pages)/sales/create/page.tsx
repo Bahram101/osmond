@@ -319,8 +319,6 @@ const VisitCreatePage = () => {
     ];
   }, [isSelectedProducts, products]);
 
-  console.log("items", items);
-
   return (
     <>
       <BreadCrumb
