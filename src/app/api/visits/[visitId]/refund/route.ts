@@ -1,3 +1,4 @@
+import { VisitStatus } from "@/generated/prisma/edge";
 import { HttpError } from "@/lib/errors/HttpError";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -65,8 +66,9 @@ export async function POST(
       const payments = await tx.payment.findMany({
         where: { visitId },
       });
-
       const paidAmount = payments.reduce((sum, p) => sum + p.amount, 0);
+
+      console.log("paidAmount", paidAmount);
 
       const overpaid = paidAmount - totalAmount;
 
@@ -80,12 +82,17 @@ export async function POST(
         });
       }
 
-      const status =
-        paidAmount === 0
-          ? "OPEN"
-          : paidAmount < totalAmount
-            ? "PARTIAL"
-            : "PAID";
+      let status: VisitStatus;
+
+      if (totalAmount === 0) {
+        status = "PAID";
+      } else if (paidAmount === 0) {
+        status = "OPEN";
+      } else if (paidAmount < totalAmount) {
+        status = "PARTIAL";
+      } else {
+        status = "PAID";
+      }
 
       await tx.visit.update({
         where: { id: visitId },
