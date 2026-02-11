@@ -3,7 +3,7 @@ import BreadCrumb from "@/app/(admin)/admin/components/common/BreadCrumb";
 import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard";
 import { DataTable } from "@/components/common/DataTable";
 import Loader from "@/components/shared/Loader";
-import { useGetVisit } from "@/hooks/visit/useVisit";
+import { useGetVisit, useRefundVisitItem } from "@/hooks/visit/useVisit";
 import { useParams, useRouter } from "next/navigation";
 import VisitSummary from "./components/VisitSummary";
 import Button from "@/app/(admin)/admin/components/ui/button/Button";
@@ -11,12 +11,23 @@ import { ArrowLeft, Plus } from "lucide-react";
 import { Modal } from "@/app/(admin)/admin/components/ui/modal";
 import { useModal } from "@/app/(admin)/admin/hooks/useModal";
 import PaymentForm from "./components/PaymentForm";
+import RefundForm from "./components/RefundForm";
 import { useForm } from "react-hook-form";
-import { PaymentFormValues, PaymentCreateDTO } from "@/types/payment.interface";
+import {
+  PaymentFormValues,
+  PaymentCreateDTO,
+  RefundFormValues,
+} from "@/types/payment.interface";
 import { useCreatePayment } from "@/hooks/payment/usePayments";
 import { useEffect, useState } from "react";
-import { visitColumns, paymentColumns } from "./components/VisitColumns";
-import { VisitDetailItem } from "@/types/visit.interface";
+// import { visitColumns, paymentColumns } from "./components/VisitColumns";
+import {
+  VisitDetailItem,
+  VisitItemRefundDTO,
+  VisitPayment,
+} from "@/types/visit.interface";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { formatCurrency, formatDateTime } from "@/lib/utils/helpers";
 
 const ClientVisitPage = () => {
   const router = useRouter();
@@ -30,6 +41,7 @@ const ClientVisitPage = () => {
     null,
   );
   const { createPayment, isCreatingPayment } = useCreatePayment();
+  const { refundVisitItem, isRefundingVisitItem } = useRefundVisitItem();
   const { id, visitId } = useParams<{ id: string; visitId: string }>();
   const clientId = Number(id);
   const visId = Number(visitId);
@@ -41,6 +53,15 @@ const ClientVisitPage = () => {
   const { control, handleSubmit, reset } = useForm<PaymentFormValues>({
     defaultValues: {
       amount: 0,
+    },
+  });
+  const {
+    control: refundControl,
+    handleSubmit: handleRefundSubmit,
+    reset: resetRefund,
+  } = useForm<RefundFormValues>({
+    defaultValues: {
+      quantity: 0,
     },
   });
 
@@ -76,12 +97,130 @@ const ClientVisitPage = () => {
     );
   };
 
+  const handleRefundFormSubmit = (qtyToReturn: RefundFormValues) => {
+    if (!selectedItem) return;
+    const body: VisitItemRefundDTO = {
+      visitItemId: selectedItem.id,
+      quantityToReturn: Number(qtyToReturn.quantity),
+    };
+    refundVisitItem(
+      { visitId: visId, data: body },
+      {
+        onSuccess: () => {
+          resetRefund();
+          closeReturnModal();
+        },
+      },
+    );
+  };
+
+  const columnHelper = createColumnHelper<VisitDetailItem>();
+
+  type VisitColumnsProps = {
+    onReturn: (item: VisitDetailItem) => void;
+  };
+
+  const visitColumns = ({
+    onReturn,
+  }: VisitColumnsProps): ColumnDef<VisitDetailItem, any>[] => [
+    {
+      header: "#",
+      cell: ({ row }) => <div className="text-center">{row.index + 1}</div>,
+    },
+    {
+      header: "Товар",
+      accessorKey: "product.name",
+    },
+    {
+      header: "Цена",
+      accessorKey: "price",
+      cell: ({ row }) => (
+        <div className="text-center">{formatCurrency(row.original.price)}</div>
+      ),
+    },
+    {
+      header: "Количество",
+      accessorKey: "quantity",
+      cell: ({ row }) => (
+        <div className="text-center">{row.original.quantity} шт</div>
+      ),
+    },
+    {
+      header: "За работу",
+      accessorKey: "servicePrice",
+      cell: ({ row }) => (
+        <div className="text-center">
+          {formatCurrency(row.original.servicePrice || 0)}
+        </div>
+      ),
+    },
+    {
+      header: "Сумма",
+      accessorKey: "total",
+      cell: ({ row }) => {
+        return (
+          <div className="text-center">
+            {formatCurrency(row.original.total)}
+          </div>
+        );
+      },
+    },
+    columnHelper.display({
+      id: "actions",
+      size: 50,
+      cell: ({ row }) => {
+        return (
+          <div className="flex gap-3 justify-center">
+            <Button
+              variant="outline"
+              size="tiny"
+              disabled={row.original.quantity === 0}
+              onClick={() => onReturn(row.original)}
+            >
+              Возврат
+            </Button>
+          </div>
+        );
+      },
+    }),
+  ];
+
+  const paymentColumns: ColumnDef<VisitPayment>[] = [
+    {
+      id: "index",
+      header: "#",
+      cell: ({ row }) => <div className="text-center">{row.index + 1}</div>,
+    },
+    {
+      header: "Дата",
+      accessorKey: "createdAt",
+      cell: ({ row }) => (
+        <div className="text-center">
+          {formatDateTime(row.original.createdAt)}
+        </div>
+      ),
+    },
+    {
+      header: "Сумма",
+      accessorKey: "amount",
+      cell: ({ row }) => (
+        <div className="text-center">{formatCurrency(row.original.amount)}</div>
+      ),
+    },
+    {
+      header: "Комментария",
+      accessorKey: "note",
+    },
+  ];
+
   const columns = visitColumns({
     onReturn: (item) => {
       setSelectedItem(item);
       openReturnModal();
     },
   });
+
+  console.log("selectedItem", selectedItem);
 
   return (
     <>
@@ -111,16 +250,16 @@ const ClientVisitPage = () => {
       </Modal>
 
       <Modal
-        isOpen={isOpen}
-        onClose={closeModal}
+        isOpen={isReturnOpen}
+        onClose={closeReturnModal}
         className="max-w-146 p-4 lg:p-6"
-        title="Сделать возврат"
+        title="Оформить возврат"
       >
-        <PaymentForm
-          closeModal={closeModal}
-          control={control}
-          handleSubmit={handleSubmit}
-          handlePaymentFormSubmit={handlePaymentFormSubmit}
+        <RefundForm
+          closeModal={closeReturnModal}
+          control={refundControl}
+          handleRefundSubmit={handleRefundSubmit}
+          handleRefundFormSubmit={handleRefundFormSubmit}
         />
       </Modal>
 

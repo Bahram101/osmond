@@ -1,5 +1,5 @@
 import { VisitService } from "@/services/visit.service";
-import { VisitCreateDTO } from "@/types/visit.interface";
+import { VisitCreateDTO, VisitItemRefundDTO } from "@/types/visit.interface";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -44,4 +44,44 @@ export const useGetVisit = (visitId: number) => {
   });
 
   return { visit, isLoadingVisit };
+};
+
+// export const useRefundVisitItem = (visitId: number) =>{
+//   const queryClient = useQueryClient();
+//   const { mutate: refundVisitItem, isPending: isRefundingVisitItem } = useMutation({
+//     mutationKey: ["refund-visit-item", visitId],
+//     mutationFn: (data: VisitItemRefundDTO) =>
+//       VisitService.refundVisitItem(visitId, data),
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["getVisit", visitId] });
+//       toast.success("Возврат успешно выполнен!");
+//     },
+//   });
+
+//   return { refundVisitItem, isRefundingVisitItem };
+// }
+export const useRefundVisitItem = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: refundVisitItem, isPending: isRefundingVisitItem } =
+    useMutation({
+      mutationKey: ["refund-visit-item"],
+      mutationFn: ({
+        visitId,
+        data,
+      }: {
+        visitId: number;
+        data: VisitItemRefundDTO;
+      }) => VisitService.refundVisitItem(visitId, data),
+
+      onSuccess: (_data, variables) => {
+        queryClient.invalidateQueries({
+          queryKey: ["getVisit", variables.visitId],
+        });
+
+        toast.success("Возврат успешно выполнен!");
+      },
+    });
+
+  return { refundVisitItem, isRefundingVisitItem };
 };

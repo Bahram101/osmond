@@ -1,3 +1,4 @@
+import { HttpError } from "@/lib/errors/HttpError";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -24,11 +25,11 @@ export async function POST(
       });
 
       if (!visitItem || visitItem.visitId !== visitId) {
-        throw new Error("Visit item not found");
+        throw new HttpError("Visit item not found", 404);
       }
 
       if (quantityToReturn <= 0 || quantityToReturn > visitItem.quantity) {
-        throw new Error("Invalid return quantity");
+        throw new HttpError("Invalid return quantity", 400);
       }
 
       /** 2. Обновляем VisitItem */
@@ -99,7 +100,14 @@ export async function POST(
       { message: "Возврат успешно выполнен!" },
       { status: 200 },
     );
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof HttpError) {
+      return NextResponse.json(
+        { message: error.message },
+        { status: error.status },
+      );
+    }
+
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

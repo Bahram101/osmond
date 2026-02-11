@@ -3,6 +3,7 @@ import {
   ClientVisitItem,
   VisitCreateDTO,
   VisitDetail,
+  VisitItemRefundDTO,
 } from "@/types/visit.interface";
 
 export const VisitService = {
@@ -29,6 +30,17 @@ export const VisitService = {
     return request<ClientVisitItem[]>({
       url: `/visits`,
       method: "GET",
+    });
+  },
+
+  async refundVisitItem(
+    visitId: number,
+    data: VisitItemRefundDTO,
+  ) {
+    return request<{ message: string }>({
+      url: `/visits/${visitId}/refund`,
+      method: "POST",
+      data,
     });
   },
 };

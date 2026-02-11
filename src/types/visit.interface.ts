@@ -76,3 +76,8 @@ export type VisitFormValues = {
   phone?: string;
   note?: string;
 };
+
+export interface VisitItemRefundDTO {
+  visitItemId: number;
+  quantityToReturn: number;
+}
