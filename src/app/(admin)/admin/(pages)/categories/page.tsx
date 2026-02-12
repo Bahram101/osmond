@@ -44,15 +44,15 @@ const Categories = () => {
   const [treeData, setTreeData] = useState<CategoryTreeNode[]>([]);
   const [modalMode, setModalMode] = useState<ModalMode>("create-root");
   const [editingCategoryId, setEditingCategoryId] = useState<number | null>(
-    null
+    null,
   );
 
   const modalTitle =
     modalMode === "edit"
       ? "Редактировать категорию"
       : modalMode === "create-child"
-      ? "Создать подкатегорию"
-      : "Создать категорию";
+        ? "Создать подкатегорию"
+        : "Создать категорию";
 
   useEffect(() => {
     if (!categoriesTree) return;
@@ -135,27 +135,32 @@ const Categories = () => {
           <div className=" h-[68vh] ">
             <SortableTree
               treeData={treeData}
-              onChange={(nextTree) => setTreeData([...nextTree])}
-              generateNodeProps={({ node }: { node: CategoryTreeNode }) => ({
-                buttons: [
-                  <Plus
-                    key="add"
-                    className="treeButton"
-                    onClick={() => openCreateChild(node.id)}
-                  />,
-                  <Pencil
-                    key="edit"
-                    className="treeButton"
-                    onClick={() => openEdit(node)}
-                  />,
-                  <Trash2
-                    key="delete"
-                    color="red"
-                    className="treeButton"
-                    onClick={() => handleDelete(node.id)}
-                  />,
-                ],
-              })}
+              onChange={(nextTree) =>
+                setTreeData(nextTree as CategoryTreeNode[])
+              }
+              generateNodeProps={({ node }) => {
+                const categoryNode = node as CategoryTreeNode;
+                return {
+                  buttons: [
+                    <Plus
+                      key="add"
+                      className="treeButton"
+                      onClick={() => openCreateChild(categoryNode.id)}
+                    />,
+                    <Pencil
+                      key="edit"
+                      className="treeButton"
+                      onClick={() => openEdit(categoryNode)}
+                    />,
+                    <Trash2
+                      key="delete"
+                      color="red"
+                      className="treeButton"
+                      onClick={() => handleDelete(categoryNode.id)}
+                    />,
+                  ],
+                };
+              }}
             />
           </div>
         </div>

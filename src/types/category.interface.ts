@@ -28,6 +28,7 @@ export interface CategoryNode {
   title: string;
   parentId: number | null;
   children: CategoryNode[];
+  [key: string]: any;
 }
 
 // export interface CategoryTreeNode extends CategoryNode {
