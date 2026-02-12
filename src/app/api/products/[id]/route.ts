@@ -19,6 +19,7 @@ export async function GET(
         published: true,
         price: true,
         quantity: true,
+        barcode: true,
         categoryId: true,
         createdAt: true,
       },

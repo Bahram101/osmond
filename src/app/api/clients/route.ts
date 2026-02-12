@@ -10,7 +10,12 @@ export async function GET(req: NextRequest) {
     const clientType = searchParams.get("type");
 
     const clients = await prisma.client.findMany({
-      where: clientType ? { type: clientType as $Enums.ClientType } : undefined,
+      where: {
+        AND: [
+          { id: { not: 1 } },
+          ...(clientType ? [{ type: clientType as $Enums.ClientType }] : []),
+        ],
+      },
       orderBy: { createdAt: "desc" },
       include: {
         visits: {

@@ -46,20 +46,6 @@ export const useGetVisit = (visitId: number) => {
   return { visit, isLoadingVisit };
 };
 
-// export const useRefundVisitItem = (visitId: number) =>{
-//   const queryClient = useQueryClient();
-//   const { mutate: refundVisitItem, isPending: isRefundingVisitItem } = useMutation({
-//     mutationKey: ["refund-visit-item", visitId],
-//     mutationFn: (data: VisitItemRefundDTO) =>
-//       VisitService.refundVisitItem(visitId, data),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ["getVisit", visitId] });
-//       toast.success("Возврат успешно выполнен!");
-//     },
-//   });
-
-//   return { refundVisitItem, isRefundingVisitItem };
-// }
 export const useRefundVisitItem = () => {
   const queryClient = useQueryClient();
 
@@ -74,10 +60,11 @@ export const useRefundVisitItem = () => {
         data: VisitItemRefundDTO;
       }) => VisitService.refundVisitItem(visitId, data),
 
-      onSuccess: (_data, variables) => {
+      onSuccess: (_data, data) => {
         queryClient.invalidateQueries({
-          queryKey: ["getVisit", variables.visitId],
+          queryKey: ["client-visits", data.visitId],
         });
+        queryClient.invalidateQueries({ queryKey: ["getVisit", data.visitId] });
 
         toast.success("Возврат успешно выполнен!");
       },

@@ -26,19 +26,32 @@ import { useCreateArrival } from "@/hooks/arrival/useArrival";
 import { Dropdown } from "../../components/ui/dropdown/Dropdown";
 import { DropdownItem } from "../../components/ui/dropdown/DropdownItem";
 import { useRouter } from "next/navigation";
+import BarcodePreview from "./components/BarcodePreview";
+import BarcodePrintSheet from "./components/BarcodePrintSheet";
 
 const ProductsPage = () => {
   const router = useRouter();
 
   const { control, handleSubmit, reset } = useForm<IArrivalForm>();
   const { isOpen, openModal, closeModal } = useModal();
+  const {
+    isOpen: isBarcodeOpen,
+    openModal: openBarcodeModal,
+    closeModal: closeBarcodeModal,
+  } = useModal();
+
+  const [barcodeProduct, setBarcodeProduct] = useState<ProductResponse | null>(
+    null,
+  );
   const [openRowId, setOpenRowId] = useState<number | null>(null);
   const { products, isFetchingProducts } = useGetProducts();
   const { createArrival, isCreatingArrival } = useCreateArrival();
   const { deleteProduct, isDeletingProduct } = useDeleteProduct();
 
   const [deletingId, setDeletingId] = useState<number | null>(null);
-  const [arrivalProduct, setArrivalProduct] = useState<ProductResponse | null>(null);
+  const [arrivalProduct, setArrivalProduct] = useState<ProductResponse | null>(
+    null,
+  );
 
   const handleDelete = (id: number) => {
     if (confirm("Точно удалить товар?")) {
@@ -126,9 +139,13 @@ const ProductsPage = () => {
               </DropdownItem>
 
               <DropdownItem
-                onClick={() => handleOpenModal(row)}
                 onItemClick={closeDropdown}
                 className="action-button"
+                onClick={() => {
+                  console.log("Selected product for barcode:", row.original);
+                  setBarcodeProduct(row.original);
+                  openBarcodeModal();
+                }}
               >
                 <div className="flex justify-between items-center pl-0">
                   <ScanBarcode className="size-4" />
@@ -196,6 +213,30 @@ const ProductsPage = () => {
           handleSubmit={handleSubmit}
           handleArrivalFormSubmit={handleArrivalFormSubmit}
         />
+      </Modal>
+      <Modal
+        isOpen={isBarcodeOpen}
+        onClose={closeBarcodeModal}
+        className="max-w-146 p-4 lg:p-6"
+        title="Штрихкод товара"
+      >
+        {barcodeProduct?.barcode && (
+          <>
+            <div className="flex flex-col items-center gap-4">
+              <p className="font-semibold">{barcodeProduct.name}</p>
+              <BarcodePreview value={barcodeProduct.barcode} />
+              <Button
+                variant="primary"
+                size="xs"
+                onClick={() =>
+                  router.push(`/admin/products/print/${barcodeProduct.id}`)
+                }
+              >
+                Печать
+              </Button>
+            </div>
+          </>
+        )}
       </Modal>
       <BreadCrumb
         items={[{ label: "Home", href: "/admin" }, { label: "Товары" }]}
