@@ -68,8 +68,6 @@ export async function POST(
       });
       const paidAmount = payments.reduce((sum, p) => sum + p.amount, 0);
 
-      console.log("paidAmount", paidAmount);
-
       const overpaid = paidAmount - totalAmount;
 
       if (overpaid > 0) {

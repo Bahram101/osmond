@@ -3,11 +3,12 @@ import React from "react";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BreadCrumb from "../../../components/common/BreadCrumb";
 import ProductForm from "../components/ProductForm";
-import { useGetCategories } from "@/hooks/category/useCategories";
+import { useGetCategories, useGetCategoriesTree } from "@/hooks/category/useCategories";
 import { useCreateProduct } from "@/hooks/product/useProducts";
 
 const ProductCreatePage = () => {
-  const { categories, isFetchingCategories } = useGetCategories();
+  // const { categories, isFetchingCategories } = useGetCategories();
+  const { categoriesTree, isFetchingCategoriesTree } = useGetCategoriesTree();
   const { createProduct, isCreatingProduct } = useCreateProduct();
 
   return (
@@ -23,8 +24,8 @@ const ProductCreatePage = () => {
         <ComponentCard title="Создание товара">
           <ProductForm
             submitText="Создать"
-            isFetchingCategories={isFetchingCategories}
-            categories={categories || []}
+            isFetchingCategories={isFetchingCategoriesTree}
+            categories={categoriesTree || []}
             onSubmit={(data) => createProduct(data)}
             isSubmitting={isCreatingProduct}
             clearOnSubmit={true}

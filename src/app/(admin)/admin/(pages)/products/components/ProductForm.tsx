@@ -1,16 +1,17 @@
-import { ICategory } from "@/types/category.interface";
+import { CategoryNode, ICategory } from "@/types/category.interface";
 import React, { FC, useEffect } from "react";
 import Label from "../../../components/form/Label";
 import Field from "@/components/shared/field/Field";
 import { ProductCreateDTO } from "@/types/product.interface";
-import ControlledSelect from "@/components/shared/select/Select";
+import ControlledSelect, { ControlledSelectOption } from "@/components/shared/select/Select";
 import Button from "../../../components/ui/button/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Loader from "@/components/shared/Loader";
+import { flattenCategories } from "@/lib/utils/category.utils";
 
 interface ProductFormProps {
   defaultValues?: Partial<ProductCreateDTO>;
-  categories: ICategory[];
+  categories: CategoryNode[];
   submitText?: string;
   clearOnSubmit?: boolean;
   isFetchingCategories: boolean;
@@ -32,7 +33,7 @@ const ProductForm: FC<ProductFormProps> = ({
   clearOnSubmit,
   onSubmit,
 }) => {
-  const { control, handleSubmit, reset, watch } = useForm<ProductCreateDTO>({
+  const { control, handleSubmit, reset } = useForm<ProductCreateDTO>({
     mode: "all",
     defaultValues: {
       ...defaultValues,
@@ -47,11 +48,6 @@ const ProductForm: FC<ProductFormProps> = ({
     }
   }, [defaultValues, reset]);
 
-  const categoryOptions = categories.map((cat) => ({
-    value: cat.id ?? null,
-    label: cat.title,
-  }));
-
   const handleFormSubmit: SubmitHandler<ProductCreateDTO> = (data) => {
     onSubmit({
       ...data,
@@ -60,6 +56,8 @@ const ProductForm: FC<ProductFormProps> = ({
     });
     if (clearOnSubmit) reset();
   };
+
+  const categoryOptions = flattenCategories(categories);
 
   return (
     <form
@@ -96,7 +94,7 @@ const ProductForm: FC<ProductFormProps> = ({
         />
       </div>
       <div>
-        <Label htmlFor="price">Цена</Label>
+        <Label htmlFor="price">Цена продажи</Label>
         <Field<ProductCreateDTO>
           name="price"
           type="number"

@@ -1,7 +1,7 @@
 "use client";
 import { useGetArrivals } from "@/hooks/arrival/useArrival";
-import { IArrival } from "@/types/arrival.interface";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table"; 
+import { IArrival, Type } from "@/types/arrival.interface";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import BreadCrumb from "../../components/common/BreadCrumb";
 import Loader from "@/components/shared/Loader";
 import { DataTable } from "@/components/common/DataTable";
@@ -22,11 +22,22 @@ const ArrivalsPage = () => {
         return <div className="text-center">{row.getValue()}</div>;
       },
     }),
+    columnHelper.accessor("type", {
+      header: "Тип",
+      cell: ({ getValue }) => {
+        const value = getValue() as Type;
+        return (
+          <div className="text-center">
+            {value === "IN" ? "Приход" : "Списание"}
+          </div>
+        );
+      },
+    }),
     columnHelper.accessor("note", {
       header: "Заметки",
     }),
     columnHelper.accessor("createdAt", {
-      header: "Дата оприходования",
+      header: "Дата",
       cell: ({ getValue }) => {
         return (
           <div className="text-center">
@@ -40,11 +51,11 @@ const ArrivalsPage = () => {
   return (
     <div className="col-span-12 xl:col-span-7">
       <BreadCrumb
-        items={[{ label: "Home", href: "/admin" }, { label: "Оприходование" }]}
+        items={[{ label: "Home", href: "/admin" }, { label: "Движение товаров" }]}
       />
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
         <div className="flex justify-between items-center pb-5">
-          <h3 className="text-lg">Список оприходованных товаров</h3>
+          <h3 className="text-lg">Список движений товаров</h3>
         </div>
 
         {isFetchingArrivals ? (

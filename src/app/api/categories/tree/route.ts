@@ -33,8 +33,6 @@ export async function GET() {
 
     return NextResponse.json(tree);
   } catch (error) {
-    console.error("GET /api/categories/tree error:", error);
-
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 }

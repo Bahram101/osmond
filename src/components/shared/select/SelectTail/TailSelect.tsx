@@ -35,12 +35,11 @@ export function TailSelect<T extends FieldValues>({
       name={name as any}
       control={control}
       rules={rules}
-      render={({ field, fieldState }) => {
-        console.log('fieldState',fieldState)
+      render={({ field, fieldState }) => { 
         return (
           <div>
             <BaseSelect
-              value={field.value ?? ""}
+              value={field.value}
               onChange={field.onChange}
               options={options}
               placeholder={placeholder}

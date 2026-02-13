@@ -12,9 +12,12 @@ export const useCreateArrival = () => {
   >({
     mutationKey: ["createArrival"],
     mutationFn: (formData) => ArrivalService.create(formData),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("Created arrival:", data);
       queryClient.invalidateQueries({ queryKey: ["get-products"] });
-      toast.success("Товар успешно оприходаван!");
+      queryClient.invalidateQueries({ queryKey: ["get-arrivals"] });
+
+      toast.success("Движение товара успешно сохранено!");
     },
   });
 
@@ -26,6 +29,6 @@ export const useGetArrivals = () => {
     queryKey: ["get-arrivals"],
     queryFn: () => ArrivalService.getAll(),
   });
-  
+
   return { arrivals, isFetchingArrivals };
 };

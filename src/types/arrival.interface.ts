@@ -7,11 +7,15 @@ export interface IArrival {
   product:{
     id: number,
     name: string
-  }
+  },
+  type: Type
 }
 
+export type Type = "IN" | "OUT"
 export interface IArrivalForm {
   qty: number;
+  purchasePrice?: number;
+  type: Type;
   note?: string;
 }
 

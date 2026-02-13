@@ -41,16 +41,6 @@ const navItems: NavItem[] = [
     name: "Клиенты",
     path: "/admin/clients",
   },
-  // {
-  //   icon: <Wrench />,
-  //   name: "Мастеры",
-  //   path: "/admin/clients",
-  // },
-  // {
-  //   icon: <ShoppingBag />,
-  //   name: "Оптовики",
-  //   path: "/admin/wholesalers",
-  // },
   {
     icon: <PanelsTopLeft />,
     name: "Категория",
@@ -63,7 +53,7 @@ const navItems: NavItem[] = [
   },
   {
     icon: <Truck />,
-    name: "Оприходования",
+    name: "Движение товаров",
     path: "/admin/arrivals",
   },
   {

@@ -28,6 +28,7 @@ import { DropdownItem } from "../../components/ui/dropdown/DropdownItem";
 import { useRouter } from "next/navigation";
 import BarcodePreview from "./components/BarcodePreview";
 import BarcodePrintSheet from "./components/BarcodePrintSheet";
+import { formatCurrency } from "@/lib/utils/helpers";
 
 const ProductsPage = () => {
   const router = useRouter();
@@ -83,14 +84,24 @@ const ProductsPage = () => {
       id: "category.title",
       header: "Категория",
     }),
-    columnHelper.accessor("price", {
+    {
       header: "Цена",
-    }),
+      accessorKey: "price",
+      cell: ({ row }) => (
+        <div className="">{formatCurrency(row.original.price)}</div>
+      ),
+    },
     columnHelper.accessor("quantity", {
       header: "Кол-во",
+      cell: ({ getValue }) => {
+        return <div className="text-center">{getValue()} шт</div>;
+      },
     }),
     columnHelper.accessor("barcode", {
       header: "Штрих-код",
+      cell: ({ getValue }) => {
+        return <div className="text-center">{getValue()}</div>;
+      },
     }),
     columnHelper.accessor("published", {
       header: "Опубл",
@@ -99,15 +110,21 @@ const ProductsPage = () => {
         const color = value ? "success" : "light";
         const text = value ? "Да" : "Нет";
         return (
-          <Badge size="sm" color={color}>
-            {text}
-          </Badge>
+          <div className="flex justify-center">
+            <Badge size="sm" color={color}>
+              {text}
+            </Badge>
+          </div>
         );
       },
     }),
     columnHelper.accessor("createdAt", {
       header: "Дата создания",
-      cell: ({ getValue }) => new Date(getValue()).toLocaleDateString("ru-RU"),
+      cell: ({ getValue }) => (
+        <div className="text-center">
+          {new Date(getValue()).toLocaleDateString("ru-RU")}
+        </div>
+      ),
     }),
     columnHelper.display({
       id: "actions",
@@ -134,7 +151,7 @@ const ProductsPage = () => {
               >
                 <div className="flex justify-between items-center pl-0">
                   <Van className="size-4" color="green" />
-                  <p className="ml-2">Оприходовать</p>
+                  <p className="ml-2">Движение товара</p>
                 </div>
               </DropdownItem>
 
@@ -142,7 +159,6 @@ const ProductsPage = () => {
                 onItemClick={closeDropdown}
                 className="action-button"
                 onClick={() => {
-                  console.log("Selected product for barcode:", row.original);
                   setBarcodeProduct(row.original);
                   openBarcodeModal();
                 }}
@@ -188,6 +204,11 @@ const ProductsPage = () => {
     const body: ArrivalCreateDTO = {
       productId: arrivalProduct?.id,
       qty: Number(data.qty),
+      purchasePrice:
+        data.type === "IN" && data.purchasePrice
+          ? Number(data.purchasePrice)
+          : undefined,
+      type: data.type,
       note: data.note,
     };
     createArrival(body, {
@@ -204,7 +225,7 @@ const ProductsPage = () => {
         isOpen={isOpen}
         onClose={closeModal}
         className="max-w-146 p-4 lg:p-6"
-        title="Приход товара"
+        title="Движение товара"
       >
         <ArrivalForm
           closeModal={closeModal}
