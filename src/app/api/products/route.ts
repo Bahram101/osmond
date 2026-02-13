@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { productSelect } from "../../../../prisma/selects/product.select";
-import { getUserFromToken } from "@/lib/auth";
+import { productSelect } from "../../../../prisma/selects/product.select"; 
 import { generateEAN13 } from "@/lib/utils/helpers";
 
 //GET /api/products

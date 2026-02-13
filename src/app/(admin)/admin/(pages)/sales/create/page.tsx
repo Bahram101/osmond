@@ -3,14 +3,14 @@ import BreadCrumb from "@/app/(admin)/admin/components/common/BreadCrumb";
 import Button from "@/app/(admin)/admin/components/ui/button/Button";
 import { Modal } from "@/app/(admin)/admin/components/ui/modal";
 import { useModal } from "@/app/(admin)/admin/hooks/useModal";
-import { useGetClient, useGetClients } from "@/hooks/client/useClient";
+import { useGetClients } from "@/hooks/client/useClient";
 import {
   useGetProductByBarcode,
   useGetProducts,
 } from "@/hooks/product/useProducts";
-import { ProductCreateDTO, ProductShortDTO } from "@/types/product.interface";
+import { ProductShortDTO } from "@/types/product.interface";
 import { ArrowLeft, Check, Plus, ShoppingCart, Trash2, X } from "lucide-react";
-import { useParams, useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ProductSelectTable } from "./components/ProductSelectTable";
 import { DataTable } from "@/components/common/DataTable";
@@ -23,7 +23,7 @@ import EmptyState from "@/app/(admin)/admin/components/ui/EmptyState";
 import { formatCurrency } from "@/lib/utils/helpers";
 import Label from "../../../components/form/Label";
 import Loader from "@/components/shared/Loader";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Field from "@/components/shared/field/Field";
 import FormRadioGroup from "@/components/shared/radio/Radio";
 import { Selector } from "@/components/shared/select/SelectSearch";
@@ -159,11 +159,11 @@ const VisitCreatePage = () => {
     setItems((prev) => {
       return prev.filter((item) => item.productId !== id);
     });
+    inputRef.current?.focus();
   };
 
   const handleScan = async (code: string) => {
     if (!code || isFetchingProdByBarcode) return;
-
     try {
       const product = await getProductByBarcode(code);
       onSelectProduct(product);
@@ -287,10 +287,12 @@ const VisitCreatePage = () => {
         meta: { className: "w-1/10" },
         cell: ({ row }) => {
           const price = row.original.price;
-          const servicePrice = row.original.servicePrice
+          const servicePrice = row.original.servicePrice;
           const qty = row.original.quantity ?? 0;
           return (
-            <div className="text-center">{formatCurrency(qty * price + (servicePrice || 0))}</div>
+            <div className="text-center">
+              {formatCurrency(qty * price + (servicePrice || 0))}
+            </div>
           );
         },
       },
