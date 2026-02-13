@@ -2,7 +2,10 @@
 import BreadCrumb from "@/app/(admin)/admin/components/common/BreadCrumb";
 import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard";
 import ProductForm from "../../components/ProductForm";
-import { useGetCategories } from "@/hooks/category/useCategories";
+import {
+  useGetCategories,
+  useGetCategoriesTree,
+} from "@/hooks/category/useCategories";
 import { useParams } from "next/navigation";
 import { useGetProduct, useUpdateProduct } from "@/hooks/product/useProducts";
 import { ProductResponse } from "@/types/product.interface";
@@ -11,7 +14,8 @@ import Loader from "@/components/shared/Loader";
 const ProductUpdatePage = () => {
   const { id } = useParams<{ id: string }>();
   const productId = Number(id);
-  const { categories, isFetchingCategories } = useGetCategories();
+  // const { categories, isFetchingCategories } = useGetCategories();
+  const { categoriesTree, isFetchingCategoriesTree } = useGetCategoriesTree();
   const { product, isFetchingProduct } = useGetProduct(productId);
   const { updateProduct, isUpdatingProduct } = useUpdateProduct();
 
@@ -31,10 +35,12 @@ const ProductUpdatePage = () => {
           ) : (
             <ProductForm
               defaultValues={product as ProductResponse}
-              isFetchingCategories={isFetchingCategories}
-              categories={categories || []}
+              isFetchingCategories={isFetchingCategoriesTree}
+              categories={categoriesTree || []}
               submitText="Изменить"
-              onSubmit={(data) => updateProduct({ id: productId as number, data })}
+              onSubmit={(data) =>
+                updateProduct({ id: productId as number, data })
+              }
               isSubmitting={isUpdatingProduct}
             />
           )}
