@@ -14,6 +14,7 @@ import {
   ShoppingCart,
   Truck,
   Users,
+  Warehouse,
   Wrench,
 } from "lucide-react";
 
@@ -38,17 +39,17 @@ const navItems: NavItem[] = [
   },
   {
     icon: <Users />,
-    name: "Клиенты",
+    name: "Контрагенты",
     path: "/admin/clients",
   },
+  // {
+  //   icon: <PanelsTopLeft />,
+  //   name: "Категория",
+  //   path: "/admin/categories",
+  // },
   {
-    icon: <PanelsTopLeft />,
-    name: "Категория",
-    path: "/admin/categories",
-  },
-  {
-    icon: <ShoppingCart />,
-    name: "Товары",
+    icon: <Warehouse />,
+    name: "Склад",
     path: "/admin/products",
   },
   {
@@ -58,7 +59,7 @@ const navItems: NavItem[] = [
   },
   {
     icon: <CircleUser />,
-    name: "Пользователи",
+    name: "Администраторы",
     path: "/admin/users",
   },
 ];

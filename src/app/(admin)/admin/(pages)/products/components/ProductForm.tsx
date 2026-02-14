@@ -11,10 +11,10 @@ import { flattenCategories } from "@/lib/utils/category.utils";
 
 interface ProductFormProps {
   defaultValues?: Partial<ProductCreateDTO>;
-  categories: CategoryNode[];
+  // categories: CategoryNode[];
+  // isFetchingCategories: boolean;
   submitText?: string;
   clearOnSubmit?: boolean;
-  isFetchingCategories: boolean;
   isSubmitting?: boolean;
   onSubmit: SubmitHandler<ProductCreateDTO>;
 }
@@ -26,9 +26,9 @@ const availableOptions = [
 
 const ProductForm: FC<ProductFormProps> = ({
   defaultValues,
-  categories,
+  // categories,
+  // isFetchingCategories,
   submitText,
-  isFetchingCategories,
   isSubmitting,
   clearOnSubmit,
   onSubmit,
@@ -57,7 +57,7 @@ const ProductForm: FC<ProductFormProps> = ({
     if (clearOnSubmit) reset();
   };
 
-  const categoryOptions = flattenCategories(categories);
+  // const categoryOptions = flattenCategories(categories);
 
   return (
     <form
@@ -104,7 +104,7 @@ const ProductForm: FC<ProductFormProps> = ({
           }}
         />
       </div>
-      <div>
+      {/* <div>
         <Label htmlFor="categoryId"> Категория</Label>
         {isFetchingCategories ? (
           <Loader />
@@ -118,7 +118,7 @@ const ProductForm: FC<ProductFormProps> = ({
             placeholder="Выберите котегорию"
           />
         )}
-      </div>
+      </div> */}
       <div>
         <Label htmlFor="published">Опубликовать</Label>
         <ControlledSelect<ProductCreateDTO, boolean>

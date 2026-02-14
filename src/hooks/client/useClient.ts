@@ -20,6 +20,18 @@ export const useGetClients = (type?: ClientFilterTypes) => {
   return { clients, isFetchingClients };
 };
 
+export const useGetClientsSelectList = () => {
+  const { data: clients = [], isPending: isFetchingClients } = useQuery({
+    queryKey: ["get-clients-select"],
+    queryFn: () => ClientService.getSelectList(),
+    retry: (failureCount, error: any) => {
+      if (error?.status === 404) return false;
+      return failureCount < 0;
+    },
+  });
+  return { clients, isFetchingClients };
+}
+
 export const useUpdateClient = () => {
   const queryClient = useQueryClient();
   const { mutate: updateClient, isPending: isUpdatingClient } = useMutation<

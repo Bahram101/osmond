@@ -35,8 +35,8 @@ const ProductUpdatePage = () => {
           ) : (
             <ProductForm
               defaultValues={product as ProductResponse}
-              isFetchingCategories={isFetchingCategoriesTree}
-              categories={categoriesTree || []}
+              // isFetchingCategories={isFetchingCategoriesTree}
+              // categories={categoriesTree || []}
               submitText="Изменить"
               onSubmit={(data) =>
                 updateProduct({ id: productId as number, data })

@@ -66,6 +66,15 @@ const SalesPage = () => {
       },
     },
     {
+      header: "Имя клиента",
+      accessorKey: "clientName",
+      cell: ({ row }) => (
+        <div className="flex justify-center">
+          <div className="text-center">{row.original.clientName}</div>
+        </div>
+      ),
+    },
+    {
       header: "Статус",
       accessorKey: "status",
       cell: ({ row }) => (
@@ -112,7 +121,6 @@ const SalesPage = () => {
               size="xs"
               variant="success"
               startIcon={<Plus size="18" />}
-              // onClick={() => handleOpenModal(null)}
             >
               Новая продажа
             </Button>

@@ -1,3 +1,4 @@
+import { Prisma, VisitStatus } from "@/generated/prisma/edge";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -105,13 +106,74 @@ export async function POST(req: NextRequest) {
 //GET /api/visits
 export async function GET(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url);
+
+    const period = searchParams.get("period");
+    const from = searchParams.get("from");
+    const to = searchParams.get("to");
+    const status = searchParams.get("status");
+    const search = searchParams.get("search");
+
+    // const where: any = {};
+
+    const where: Prisma.VisitWhereInput = {};
+
+    // 🔹 Период
+    if (period === "today") {
+      const start = new Date();
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date();
+      end.setHours(23, 59, 59, 999);
+
+      where.createdAt = { gte: start, lte: end };
+    }
+
+    if (period === "custom" && from && to) {
+      const fromDate = new Date(from);
+      const toDate = new Date(to);
+
+      if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
+        return NextResponse.json(
+          { message: "Неверный формат даты" },
+          { status: 400 },
+        );
+      }
+
+      where.createdAt = {
+        gte: fromDate,
+        lte: toDate,
+      };
+    }
+
+    if (status) {
+      where.status = status as VisitStatus;
+    }
+
+    // 🔹 Поиск клиента
+    if (search) {
+      where.client = {
+        fullName: {
+          contains: search,
+          mode: "insensitive",
+        },
+      };
+    }
+
     const visits = await prisma.visit.findMany({
+      where,
       include: {
         payments: {
           select: { amount: true },
         },
+        client: {
+          select: {
+            fullName: true,
+          },
+        },
       },
       orderBy: { createdAt: "desc" },
+      ...(period ? {} : { take: 30 }),
     });
 
     const result = visits.map((visit) => {
@@ -119,6 +181,7 @@ export async function GET(req: NextRequest) {
 
       return {
         id: visit.id,
+        clientName: visit.client.fullName,
         totalAmount: Number(visit.totalAmount),
         paidAmount: paid,
         debtAmount: Number(visit.totalAmount) - paid,
@@ -126,6 +189,8 @@ export async function GET(req: NextRequest) {
         date: visit.createdAt,
       };
     });
+
+    console.log("Fetched visits:", result.length);
 
     return NextResponse.json(result);
   } catch (error) {

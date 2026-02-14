@@ -3,7 +3,10 @@ import BreadCrumb from "@/app/(admin)/admin/components/common/BreadCrumb";
 import Button from "@/app/(admin)/admin/components/ui/button/Button";
 import { Modal } from "@/app/(admin)/admin/components/ui/modal";
 import { useModal } from "@/app/(admin)/admin/hooks/useModal";
-import { useGetClients } from "@/hooks/client/useClient";
+import {
+  useGetClients,
+  useGetClientsSelectList,
+} from "@/hooks/client/useClient";
 import {
   useGetProductByBarcode,
   useGetProducts,
@@ -54,7 +57,9 @@ const VisitCreatePage = () => {
   const { isOpen, openModal, closeModal } = useModal();
   const { createVisit, isCreatingVisit } = useCreateVisit();
   const { products, isFetchingProducts } = useGetProducts();
-  const { clients, isFetchingClients } = useGetClients();
+  // const { clients, isFetchingClients } = useGetClients();
+  const { clients: selectClients, isFetchingClients: isFetchingSelectClients } =
+    useGetClientsSelectList();
   const [items, setItems] = useState<VisitItemForm[]>([]);
   const [barcode, setBarcode] = useState("");
   const [isCreateClient, setIsCreateClient] = useState<boolean>(false);
@@ -83,7 +88,7 @@ const VisitCreatePage = () => {
     setIsCreateClient(false);
   }, [clientType, paymentType]);
 
-  const clientOptions = clients
+  const clientOptions = selectClients
     .map((client) => ({
       value: client.id ?? null,
       label: client.fullName,

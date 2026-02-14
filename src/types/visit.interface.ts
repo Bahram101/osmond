@@ -16,11 +16,12 @@ export interface VisitItemCreateDTO {
 export type VisitStatus = "OPEN" | "PARTIAL" | "PAID";
 export interface ClientVisitItem {
   id: number;
-  date: string;
+  clientName: string
   totalAmount: number;
   paidAmount: number;
   debtAmount: number;
   status: VisitStatus;
+  date: string;
 }
 
 export interface VisitDetailItem {

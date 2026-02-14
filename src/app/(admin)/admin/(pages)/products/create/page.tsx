@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BreadCrumb from "../../../components/common/BreadCrumb";
 import ProductForm from "../components/ProductForm";
@@ -8,7 +7,7 @@ import { useCreateProduct } from "@/hooks/product/useProducts";
 
 const ProductCreatePage = () => {
   // const { categories, isFetchingCategories } = useGetCategories();
-  const { categoriesTree, isFetchingCategoriesTree } = useGetCategoriesTree();
+  // const { categoriesTree, isFetchingCategoriesTree } = useGetCategoriesTree();
   const { createProduct, isCreatingProduct } = useCreateProduct();
 
   return (
@@ -16,7 +15,7 @@ const ProductCreatePage = () => {
       <BreadCrumb
         items={[
           { label: "Home", href: "/admin" },
-          { label: "Товары", href: "/admin/products" },
+          { label: "Склад", href: "/admin/products" },
           { label: "Создать товара" },
         ]}
       />
@@ -24,8 +23,8 @@ const ProductCreatePage = () => {
         <ComponentCard title="Создание товара">
           <ProductForm
             submitText="Создать"
-            isFetchingCategories={isFetchingCategoriesTree}
-            categories={categoriesTree || []}
+            // isFetchingCategories={isFetchingCategoriesTree}
+            // categories={categoriesTree || []}
             onSubmit={(data) => createProduct(data)}
             isSubmitting={isCreatingProduct}
             clearOnSubmit={true}

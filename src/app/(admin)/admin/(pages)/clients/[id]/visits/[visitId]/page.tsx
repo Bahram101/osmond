@@ -220,8 +220,6 @@ const ClientVisitPage = () => {
     },
   });
 
-  console.log("selectedItem", selectedItem);
-
   return (
     <>
       <BreadCrumb

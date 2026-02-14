@@ -21,6 +21,7 @@ import PaymentForm from "./visits/[visitId]/components/PaymentForm";
 import { useForm } from "react-hook-form";
 import { PaymentFormValues } from "@/types/payment.interface";
 import { useCreatePaymentAll } from "@/hooks/payment/usePayments";
+import { useEffect } from "react";
 
 const ClientViewPage = () => {
   const router = useRouter();
@@ -40,6 +41,14 @@ const ClientViewPage = () => {
     0,
   );
   const canPay = totalDebt > 0;
+
+  useEffect(() => {
+    if (totalDebt) {
+      reset({
+        amount: totalDebt
+      });
+    }
+  }, [totalDebt, reset]);
 
   const handlePaymentAllSubmit = (data: PaymentFormValues) => {
     const body: PaymentFormValues = {

@@ -11,32 +11,44 @@ export async function GET(req: NextRequest) {
 
     const clients = await prisma.client.findMany({
       where: {
-        AND: [
-          { id: { not: 1 } },
-          ...(clientType ? [{ type: clientType as $Enums.ClientType }] : []),
+        id: { not: 1 },
+        OR: [
+          {
+            type: { in: ["MASTER", "WHOLESALER"] },
+          },
+          {
+            AND: [
+              { type: "WALK_IN" },
+              {
+                visits: {
+                  some: {
+                    status: { in: ["OPEN", "PARTIAL"] },
+                  },
+                },
+              },
+            ],
+          },
         ],
+        ...(clientType && { type: clientType as $Enums.ClientType }),
       },
       orderBy: { createdAt: "desc" },
       include: {
         visits: {
           select: { status: true },
         },
-        user: {
-          select: { username: true },
-        },
+        user: { select: { username: true } },
       },
     });
 
     const result = clients
-      .map(({ visits, user, ...client }) => {
-        const hasDebt = visits.some(
-          (v) => v.status === "OPEN" || v.status === "PARTIAL",
+      .map((c) => {
+        const hasDebt = c.visits.some((v) =>
+          ["OPEN", "PARTIAL"].includes(v.status),
         );
 
         return {
-          ...client,
+          ...c,
           hasDebt,
-          username: user?.username ?? null,
         };
       })
       .sort((a, b) => Number(b.hasDebt) - Number(a.hasDebt));

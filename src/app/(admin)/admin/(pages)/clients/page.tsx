@@ -155,6 +155,7 @@ const ClientPage = () => {
       header: "Статус",
       cell: ({ row }) => {
         const status: boolean = row.original.hasDebt;
+        console.log(status);
         return (
           <div className="text-center">
             <Badge variant="light" color={getClientStatusColor(status)}>
@@ -223,11 +224,11 @@ const ClientPage = () => {
         />
       </Modal>
       <BreadCrumb
-        items={[{ label: "Home", href: "/admin" }, { label: "Клиенты" }]}
+        items={[{ label: "Home", href: "/admin" }, { label: "Контрагенты" }]}
       />
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
         <div className="flex justify-between items-center pb-5">
-          <h3 className="text-lg">Список клиентов</h3>
+          <h3 className="text-lg">Список контрагентов</h3>
           <div className="flex items-center gap-6">
             <ControlledSelect<ClientFilterValues, ClientFilterTypes>
               className="w-30"

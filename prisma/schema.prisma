@@ -62,11 +62,11 @@ model Product {
   price       Float    @default(0)
   quantity    Int      @default(0)
   barcode     String?  @unique
-  categoryId  Int      @map("category_id")
+  categoryId  Int?     @map("category_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  category Category @relation(fields: [categoryId], references: [id])
+  category Category? @relation(fields: [categoryId], references: [id])
 
   arrivals   Arrival[]
   visitItems VisitItem[]

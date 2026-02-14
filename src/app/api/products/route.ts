@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     const dataParsed = {
       ...data,
       price: Number(data.price),
-      categoryId: Number(data.categoryId),
+      // categoryId: Number(data.categoryId),
       published: data.published === "true" || data.published === true,
       barcode,
     };

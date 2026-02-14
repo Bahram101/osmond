@@ -11,7 +11,7 @@ export const ClientService = {
     return request<Client[]>({
       url: `/clients`,
       method: "GET",
-      params: type && type !== "ALL" ? { type } : {}
+      params: type && type !== "ALL" ? { type } : {},
     });
   },
   async update(data: ClientUpdateDTO) {
@@ -37,5 +37,11 @@ export const ClientService = {
   },
   async getOne(id: number) {
     return request<Client>({ url: `/clients/${id}`, method: "GET" });
+  },
+  async getSelectList() {
+    return request<{ id: number; fullName: string; type: string }[]>({
+      url: `/clients/select`,
+      method: "GET", 
+    });
   },
 };

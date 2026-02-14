@@ -80,10 +80,10 @@ const ProductsPage = () => {
     columnHelper.accessor("name", {
       header: "Название",
     }),
-    columnHelper.accessor((row) => row.category?.title ?? "-", {
-      id: "category.title",
-      header: "Категория",
-    }),
+    // columnHelper.accessor((row) => row.category?.title ?? "-", {
+    //   id: "category.title",
+    //   header: "Категория",
+    // }),
     {
       header: "Цена",
       accessorKey: "price",
@@ -100,7 +100,14 @@ const ProductsPage = () => {
     columnHelper.accessor("barcode", {
       header: "Штрих-код",
       cell: ({ getValue }) => {
-        return <div className="text-center">{getValue()}</div>;
+        return (
+          <div className="flex justify-center items-center">
+            <div className="flex gap-3 items-center">
+              <ScanBarcode size={18} />
+              {getValue()}
+            </div>
+          </div>
+        );
       },
     }),
     columnHelper.accessor("published", {
@@ -260,7 +267,7 @@ const ProductsPage = () => {
         )}
       </Modal>
       <BreadCrumb
-        items={[{ label: "Home", href: "/admin" }, { label: "Товары" }]}
+        items={[{ label: "Home", href: "/admin" }, { label: "Склад" }]}
       />
       <div className="p-3 rounded-2xl md:p-6 border-gray-200 bg-white">
         <div className="flex justify-between items-center pb-5">
