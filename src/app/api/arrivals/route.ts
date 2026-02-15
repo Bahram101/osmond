@@ -31,6 +31,13 @@ export async function POST(req: NextRequest) {
         throw new HttpError("Товар не найден", 404);
       }
 
+      if (type === "IN" && product.quantity > 0) {
+        throw new HttpError(
+          "Нельзя делать приход, пока есть остаток старой партии",
+          400
+        );
+      }
+
       if (type === "OUT" && product.quantity < qtyNumber) {
         throw new HttpError("Недостаточно товара на складе", 400);
       }
@@ -44,14 +51,20 @@ export async function POST(req: NextRequest) {
           note,
         },
       });
-
       await tx.product.update({
-        where: {
-          id: productId,
-        },
+        where: { id: productId },
         data: {
           quantity:
-            type === "IN" ? { increment: qtyNumber } : { decrement: qtyNumber },
+            type === "IN"
+              ? { increment: qtyNumber }
+              : { decrement: qtyNumber },
+
+          price:
+            type === "IN" &&
+              priceNumber !== null &&
+              product.quantity === 0   // 🔥 добавляем проверку
+              ? priceNumber
+              : undefined,
         },
       });
       return movement;

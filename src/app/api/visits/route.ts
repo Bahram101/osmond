@@ -24,9 +24,8 @@ export async function POST(req: NextRequest) {
 
       if (clientId) {
         finalClientId = clientId;
-      } else if (payNow) {
-        const GUEST_CLIENT_ID = 1;
-        finalClientId = GUEST_CLIENT_ID;
+      } else if (payNow) { 
+        finalClientId = 1;
       } else {
         if (!walkInClient?.fullName) {
           throw new Error("Нужно создать клиента для оформления долга");
