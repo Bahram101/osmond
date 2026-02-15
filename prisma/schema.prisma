@@ -114,6 +114,7 @@ model Visit {
   clientId    Int
   totalAmount Decimal     @default(0) @db.Decimal(10, 2)
   status      VisitStatus @default(OPEN)
+  profit      Decimal     @default(0) @db.Decimal(10, 2)
   createdAt   DateTime    @default(now())
 
   client   Client      @relation(fields: [clientId], references: [id])
@@ -137,6 +138,8 @@ model VisitItem {
   price        Float
   servicePrice Decimal? @db.Decimal(10, 2)
   total        Float
+  costPrice    Decimal  @default(0) @db.Decimal(10, 2)
+  profit       Decimal  @default(0) @db.Decimal(10, 2)
 
   visit   Visit   @relation(fields: [visitId], references: [id])
   product Product @relation(fields: [productId], references: [id])
