@@ -87,7 +87,12 @@ export async function GET(req: NextRequest) {
         },
       },
     });
-    return NextResponse.json(arrivals);
+
+    const result = arrivals.map((arrival) => ({
+      ...arrival,
+      purchasePrice: Number(arrival.purchasePrice)
+    }))
+    return NextResponse.json(result);
   } catch (e) {
     return NextResponse.json(
       {

@@ -77,13 +77,21 @@ const ProductsPage = () => {
   const columnHelper = createColumnHelper<ProductResponse>();
 
   const columns: ColumnDef<ProductResponse, any>[] = [
+    columnHelper.display({
+      id: "rowNumber",
+      header: "#",
+      cell: ({ row }) => <div>{row.index + 1}</div>,
+    }),
+    {
+      header: "Код",
+      accessorKey: "code",
+      cell: ({ row }) => (
+        <div className="">{row.original.code}</div>
+      ),
+    },
     columnHelper.accessor("name", {
       header: "Название",
     }),
-    // columnHelper.accessor((row) => row.category?.title ?? "-", {
-    //   id: "category.title",
-    //   header: "Категория",
-    // }),
     {
       header: "Цена",
       accessorKey: "price",

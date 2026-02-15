@@ -49,6 +49,7 @@ export async function GET(req: NextRequest) {
         return {
           ...c,
           hasDebt,
+          username: c.user?.username ?? null,
         };
       })
       .sort((a, b) => Number(b.hasDebt) - Number(a.hasDebt));

@@ -14,8 +14,7 @@ import Loader from "@/components/shared/Loader";
 const ProductUpdatePage = () => {
   const { id } = useParams<{ id: string }>();
   const productId = Number(id);
-  // const { categories, isFetchingCategories } = useGetCategories();
-  const { categoriesTree, isFetchingCategoriesTree } = useGetCategoriesTree();
+  // const { categoriesTree, isFetchingCategoriesTree } = useGetCategoriesTree();
   const { product, isFetchingProduct } = useGetProduct(productId);
   const { updateProduct, isUpdatingProduct } = useUpdateProduct();
 
@@ -34,6 +33,7 @@ const ProductUpdatePage = () => {
             <Loader />
           ) : (
             <ProductForm
+              isEditMode={Boolean(id)}
               defaultValues={product as ProductResponse}
               // isFetchingCategories={isFetchingCategoriesTree}
               // categories={categoriesTree || []}

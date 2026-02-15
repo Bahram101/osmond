@@ -20,6 +20,7 @@ export async function GET(
         price: true,
         quantity: true,
         barcode: true,
+        code: true,
         categoryId: true,
         createdAt: true,
       },
@@ -43,18 +44,37 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
-  const data = await req.json();
-  const numericId = Number(id);
   try {
-    const updated = await prisma.product.update({
+    const { id } = await params;
+    const numericId = Number(id);
+
+    if (!numericId) {
+      return NextResponse.json(
+        { message: "Некорректный ID" },
+        { status: 400 }
+      );
+    }
+
+    const body = await req.json();
+
+    const updatedProduct = await prisma.product.update({
       where: { id: numericId },
-      data,
+      data: {
+        name: body.name,
+        description: body.description ?? null,
+        price: body.price ? Number(body.price) : undefined,
+        published:
+          body.published === true || body.published === "true", 
+      },
     });
-    return NextResponse.json(updated);
-  } catch (e) {
-    if (e instanceof Error) {
-      return NextResponse.json({ message: "Товар не найден" }, { status: 404 });
+
+    return NextResponse.json(updatedProduct);
+  } catch (error: any) {
+    if (error.code === "P2025") {
+      return NextResponse.json(
+        { message: "Товар не найден" },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json(
@@ -63,6 +83,7 @@ export async function PUT(
     );
   }
 }
+
 
 //DELETE /api/products/id
 export async function DELETE(
@@ -77,7 +98,7 @@ export async function DELETE(
     if (!product) {
       return NextResponse.json({ message: "Товар не найден" }, { status: 404 });
     }
-    await prisma.product.delete({ where: { id: numericId  } });
+    await prisma.product.delete({ where: { id: numericId } });
     return NextResponse.json({ message: "Товар успешно удален!" });
   } catch (e: any) {
     if (e?.code === "P2003") {

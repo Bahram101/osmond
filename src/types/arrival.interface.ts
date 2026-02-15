@@ -9,6 +9,7 @@ export interface IArrival {
     name: string
   },
   type: Type
+  purchasePrice?: number;
 }
 
 export type Type = "IN" | "OUT"

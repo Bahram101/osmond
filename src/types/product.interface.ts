@@ -7,6 +7,7 @@ export interface ProductResponse {
   categoryId?: string;
   published: boolean;
   barcode?: string;
+  code: string;
   createdAt: string;
   category: {
     id: number;
@@ -16,7 +17,7 @@ export interface ProductResponse {
 
 export type ProductCreateDTO = Pick<
   ProductResponse,
-  "name" | "description" | "price" | "categoryId" | "published" | "quantity" | "barcode"
+  "name" | "description" | "price" | "categoryId" | "published" | "quantity" | "barcode" | "code"
 >;
 
 export type ProductUpdateDTO = Partial<ProductCreateDTO>;

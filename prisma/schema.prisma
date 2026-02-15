@@ -56,8 +56,9 @@ model Product {
   id          Int      @id @default(autoincrement())
   name        String
   description String?
+  code        String   @unique @db.VarChar(10)
   published   Boolean  @default(true)
-  image       String?  @default("https://img.freepik.com/free-vector/smartphone-cartoon_78370-590.jpg?w=740&t=st=1716205026~exp=1716205626~hmac=d514ec9889a7c40481421379ef067469a4c6e2ea8cf2302d391c93f11545cc79")
+  image       String?  @default("image.png")
   views       Int      @default(0)
   price       Float    @default(0)
   quantity    Int      @default(0)

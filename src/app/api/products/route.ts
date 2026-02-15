@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { productSelect } from "../../../../prisma/selects/product.select"; 
+import { productSelect } from "../../../../prisma/selects/product.select";
 import { generateEAN13 } from "@/lib/utils/helpers";
 
 //GET /api/products
@@ -29,26 +29,62 @@ export async function GET() {
 //POST /api/products/create
 export async function POST(req: NextRequest) {
   try {
-    // const decoded = await getUserFromToken(req);
-    const data = await req.json();
-    const barcode = generateEAN13();
-    const dataParsed = {
-      ...data,
-      price: Number(data.price),
-      // categoryId: Number(data.categoryId),
-      published: data.published === "true" || data.published === true,
-      barcode,
-    };
-    const createdProduct = await prisma.product.create({ data: dataParsed });
+    const body = await req.json();
+
+    const prefix: string = body.code?.trim().toUpperCase();
+
+    if (!prefix) {
+      return NextResponse.json(
+        { message: "Введите буквенный префикс кода" },
+        { status: 400 }
+      );
+    }
+
+    const createdProduct = await prisma.$transaction(async (tx) => {
+      const lastProduct = await tx.product.findFirst({
+        where: {
+          code: {
+            startsWith: `${prefix}-`,
+          },
+        },
+        orderBy: {
+          code: "desc",
+        },
+      });
+
+      let nextNumber = 1;
+
+      if (lastProduct) {
+        const lastNumber = parseInt(
+          lastProduct.code.split("-")[1]
+        );
+        nextNumber = lastNumber + 1;
+      }
+
+      const generatedCode = `${prefix}-${String(nextNumber).padStart(3, "0")}`;
+
+      return tx.product.create({
+        data: {
+          name: body.name,
+          description: body.description || null,
+          price: Number(body.price),
+          published:
+            body.published === true || body.published === "true",
+          barcode: generateEAN13(),
+          code: generatedCode,
+        },
+      });
+    });
 
     return NextResponse.json(
       { success: true, data: createdProduct },
       { status: 201 }
     );
-  } catch (e) {
+  } catch (error) {
     return NextResponse.json(
-      { message: "Ошибка при создании товара!" },
+      { message: "Ошибка при создании товара" },
       { status: 400 }
     );
   }
 }
+

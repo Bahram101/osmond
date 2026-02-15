@@ -5,6 +5,7 @@ import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import BreadCrumb from "../../components/common/BreadCrumb";
 import Loader from "@/components/shared/Loader";
 import { DataTable } from "@/components/common/DataTable";
+import { formatCurrency } from "@/lib/utils/helpers";
 
 const ArrivalsPage = () => {
   const { arrivals, isFetchingArrivals } = useGetArrivals();
@@ -20,6 +21,13 @@ const ArrivalsPage = () => {
       header: "Количество",
       cell: (row) => {
         return <div className="text-center">{row.getValue()}</div>;
+      },
+    }),
+    columnHelper.accessor("purchasePrice", {
+      header: "Цена покупки",
+      cell: ({ row }) => {
+        const price = row.original.purchasePrice ?? 0;
+        return <div className="text-center">{formatCurrency(price)}</div>;
       },
     }),
     columnHelper.accessor("type", {

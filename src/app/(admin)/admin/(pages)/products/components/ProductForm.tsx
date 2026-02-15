@@ -17,6 +17,7 @@ interface ProductFormProps {
   clearOnSubmit?: boolean;
   isSubmitting?: boolean;
   onSubmit: SubmitHandler<ProductCreateDTO>;
+  isEditMode?: boolean;
 }
 
 const availableOptions = [
@@ -32,6 +33,7 @@ const ProductForm: FC<ProductFormProps> = ({
   isSubmitting,
   clearOnSubmit,
   onSubmit,
+  isEditMode = false
 }) => {
   const { control, handleSubmit, reset } = useForm<ProductCreateDTO>({
     mode: "all",
@@ -77,6 +79,21 @@ const ProductForm: FC<ProductFormProps> = ({
             },
             validate: (value) =>
               String(value).trim() !== "" || "Название не может быть пустым",
+          }}
+        />
+      </div>
+       <div>
+        <Label htmlFor="code">Код товара</Label>
+        <Field<ProductCreateDTO>
+          name="code"
+          control={control}
+          readOnly={isEditMode}
+          rules={{
+            required: "Заполните поле",
+            minLength: {
+              value: 2,
+              message: "Минимум 2 символа",
+            },
           }}
         />
       </div>
