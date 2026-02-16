@@ -1,18 +1,20 @@
 "use client";
 import Loader from "@/components/shared/Loader";
-import CategoryTree from "@/components/features/category/CategoryTree";
-import { useGetCategoriesTree } from "@/hooks/category/useCategories"; 
+import { useGetSiteProducts } from "@/hooks/product/useSiteProducts";
+import ProductList from "@/components/features/products/ProductList";
 
 export default function Home() {
-  const { categoriesTree, isFetchingCategoriesTree } = useGetCategoriesTree();
+  const { products, isFetchingProducts } = useGetSiteProducts();
 
-  if (isFetchingCategoriesTree) {
+  if (isFetchingProducts) {
     return <Loader />;
   }
 
   return (
     <div className="">
-      <CategoryTree categoriesTree={categoriesTree} />
+      <ProductList
+        products={products} 
+      />
     </div>
   );
 }

@@ -17,7 +17,14 @@ export interface ProductResponse {
 
 export type ProductCreateDTO = Pick<
   ProductResponse,
-  "name" | "description" | "price" | "categoryId" | "published" | "quantity" | "barcode" | "code"
+  | "name"
+  | "description"
+  | "price"
+  | "categoryId"
+  | "published"
+  | "quantity"
+  | "barcode"
+  | "code"
 >;
 
 export type ProductUpdateDTO = Partial<ProductCreateDTO>;
@@ -37,8 +44,8 @@ export type ProductInCategoryDTO = {
   name: string;
   price: number;
   quantity: number;
-  category:{
+  category: {
     id: number;
     title: string;
-  }
-}
+  };
+};
