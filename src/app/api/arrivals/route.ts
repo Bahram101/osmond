@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       if (type === "IN" && product.quantity > 0) {
         throw new HttpError(
           "Нельзя делать приход, пока есть остаток старой партии",
-          400
+          400,
         );
       }
 
@@ -55,16 +55,7 @@ export async function POST(req: NextRequest) {
         where: { id: productId },
         data: {
           quantity:
-            type === "IN"
-              ? { increment: qtyNumber }
-              : { decrement: qtyNumber },
-
-          price:
-            type === "IN" &&
-              priceNumber !== null &&
-              product.quantity === 0   // 🔥 добавляем проверку
-              ? priceNumber
-              : undefined,
+            type === "IN" ? { increment: qtyNumber } : { decrement: qtyNumber },
         },
       });
       return movement;
@@ -96,15 +87,15 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" },
       include: {
         product: {
-          select: { id: true, name: true },
+          select: { id: true, name: true, code: true },
         },
       },
     });
 
     const result = arrivals.map((arrival) => ({
       ...arrival,
-      purchasePrice: Number(arrival.purchasePrice)
-    }))
+      purchasePrice: Number(arrival.purchasePrice),
+    }));
     return NextResponse.json(result);
   } catch (e) {
     return NextResponse.json(

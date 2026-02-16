@@ -33,40 +33,54 @@ export async function POST(
         throw new HttpError("Invalid return quantity", 400);
       }
 
-      /** 2. Обновляем VisitItem */
+      /** 2. Пересчитываем данные VisitItem */
+
       const newQuantity = visitItem.quantity - quantityToReturn;
+
+      // 🔴 ИЗМЕНЕНО — считаем прибыль за 1 шт
+      const profitPerUnit = visitItem.price - Number(visitItem.costPrice);
+
+      // 🔴 ИЗМЕНЕНО — новая прибыль строки
+      const newProfit = profitPerUnit * newQuantity;
+
+      // 🔴 ИЗМЕНЕНО — пересчет total
+      const newTotal =
+        newQuantity * visitItem.price + Number(visitItem.servicePrice ?? 0);
 
       await tx.visitItem.update({
         where: { id: visitItemId },
         data: {
-          quantity: { decrement: quantityToReturn },
-          total:
-            newQuantity * visitItem.price +
-            (Number(visitItem.servicePrice) ?? 0),
+          quantity: newQuantity,
+          total: newTotal,
+          profit: newProfit, // 🔴 ИЗМЕНЕНО
         },
       });
 
       /** 3. Возвращаем товар на склад */
       await tx.product.update({
-        where: {
-          id: visitItem.productId,
-        },
+        where: { id: visitItem.productId },
         data: {
           quantity: { increment: quantityToReturn },
         },
       });
 
-      /** 4. Пересчитываем Visit */
+      /** 4. Пересчитываем весь Visit */
+
       const items = await tx.visitItem.findMany({
         where: { visitId },
       });
 
-      const totalAmount = items.reduce((sum, i) => sum + i.total, 0);
+      // 🔴 ИЗМЕНЕНО — пересчет totalAmount
+      const totalAmount = items.reduce((sum, i) => sum + Number(i.total), 0);
+
+      // 🟢 ДОБАВЛЕНО — пересчет общей прибыли визита
+      const totalProfit = items.reduce((sum, i) => sum + Number(i.profit), 0);
 
       const payments = await tx.payment.findMany({
         where: { visitId },
       });
-      const paidAmount = payments.reduce((sum, p) => sum + p.amount, 0);
+
+      const paidAmount = payments.reduce((sum, p) => sum + Number(p.amount), 0);
 
       const overpaid = paidAmount - totalAmount;
 
@@ -96,6 +110,7 @@ export async function POST(
         where: { id: visitId },
         data: {
           totalAmount,
+          profit: totalProfit, // 🟢 ДОБАВЛЕНО
           status,
         },
       });

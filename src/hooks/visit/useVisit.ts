@@ -61,11 +61,8 @@ export const useRefundVisitItem = () => {
       }) => VisitService.refundVisitItem(visitId, data),
 
       onSuccess: (_data, data) => {
-        queryClient.invalidateQueries({
-          queryKey: ["client-visits", data.visitId],
-        });
+        queryClient.invalidateQueries({queryKey: ["client-visits", data.visitId]});
         queryClient.invalidateQueries({ queryKey: ["getVisit", data.visitId] });
-
         toast.success("Возврат успешно выполнен!");
       },
     });

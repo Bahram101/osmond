@@ -56,8 +56,12 @@ export async function GET(
       items: visit.items.map((item) => ({
         ...item,
         servicePrice: Number(item.servicePrice) || null,
+        costPrice: Number(item.costPrice),
+        profit: Number(item.profit),
+        total: Number(item.total),
       })),
       totalAmount: Number(visit.totalAmount),
+      profit: Number(visit.profit),
       paidAmount,
       debtAmount: Number(visit.totalAmount) - paidAmount,
     });

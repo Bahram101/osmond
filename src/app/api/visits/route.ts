@@ -9,10 +9,7 @@ export async function POST(req: NextRequest) {
     const { items, payNow, walkInClient } = body;
 
     if (!items?.length) {
-      return NextResponse.json(
-        { message: "Invalid payload" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Invalid payload" }, { status: 400 });
     }
 
     const visit = await prisma.$transaction(async (tx) => {
@@ -25,9 +22,7 @@ export async function POST(req: NextRequest) {
         finalClientId = 1;
       } else {
         if (!walkInClient?.fullName) {
-          throw new Error(
-            "Нужно создать клиента для оформления долга"
-          );
+          throw new Error("Нужно создать клиента для оформления долга");
         }
 
         const newClient = await tx.client.create({
@@ -55,9 +50,7 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // --- обрабатываем товары ---
       for (const item of items) {
-
         const product = await tx.product.findUnique({
           where: { id: item.productId },
         });
@@ -77,16 +70,12 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        const costPrice = Number(
-          lastArrival?.purchasePrice || 0
-        );
+        const costPrice = Number(lastArrival?.purchasePrice || 0);
 
         const sellTotal =
-          item.price * item.quantity +
-          Number(item.servicePrice || 0);
+          item.price * item.quantity + Number(item.servicePrice || 0);
 
-        const profit =
-          (item.price - costPrice) * item.quantity;
+        const profit = (item.price - costPrice) * item.quantity;
 
         totalAmount += sellTotal;
         totalProfit += profit;
@@ -98,9 +87,7 @@ export async function POST(req: NextRequest) {
             productId: item.productId,
             price: item.price,
             quantity: item.quantity,
-            servicePrice: new Prisma.Decimal(
-              Number(item.servicePrice || 0)
-            ),
+            servicePrice: new Prisma.Decimal(Number(item.servicePrice || 0)),
             total: sellTotal,
             costPrice: new Prisma.Decimal(costPrice),
             profit: new Prisma.Decimal(profit),
@@ -134,26 +121,41 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      return visit;
+      const fullVisit = await tx.visit.findUnique({
+        where: { id: visit.id },
+        include: {
+          items: true,
+        },
+      });
+
+      return fullVisit;
     });
 
-    return NextResponse.json({ visitId: visit.id });
-
+    return NextResponse.json({
+      id: visit?.id,
+      totalAmount: Number(visit?.totalAmount),
+      profit: Number(visit?.profit),
+      items: visit?.items.map((item) => ({
+        ...item,
+        total: Number(item.total),
+        costPrice: Number(item.costPrice),
+        profit: Number(item.profit),
+      })),
+    });
   } catch (error: any) {
     if (error.code === "P2002") {
       return NextResponse.json(
         { message: "Клиент с таким именем уже существует" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
     return NextResponse.json(
       { message: error.message || "Ошибка продажи" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-
 
 //GET /api/visits
 export async function GET(req: NextRequest) {
@@ -237,12 +239,11 @@ export async function GET(req: NextRequest) {
         totalAmount: Number(visit.totalAmount),
         paidAmount: paid,
         debtAmount: Number(visit.totalAmount) - paid,
+        profit: Number(visit.profit),
         status: visit.status,
         date: visit.createdAt,
       };
     });
-
-    console.log("Fetched visits:", result.length);
 
     return NextResponse.json(result);
   } catch (error) {
