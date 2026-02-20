@@ -13,8 +13,6 @@ export async function GET(req: NextRequest) {
 
     const words = query.trim().split(" ").filter(Boolean);
 
-    console.log("Search query:", words);
-
     const products = await prisma.product.findMany({
       where: {
         published: true,
@@ -29,13 +27,11 @@ export async function GET(req: NextRequest) {
         id: true,
         name: true,
         quantity: true,
+        price: true,
       },
     });
 
-    return NextResponse.json({
-      message: "Search endpoint is under construction",
-      products,
-    });
+    return NextResponse.json(products);
   } catch (error) {
     return NextResponse.json(
       { message: "Ошибка при поиске товаров" },

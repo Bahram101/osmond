@@ -8,4 +8,11 @@ export const SiteProductService = {
       method: "GET",
     });
   },
+  async search(searchTerm?: string) {
+    return request<SiteProductDTO[]>({
+      url: `/site/products/search?query=${searchTerm}`,
+      method: "GET",
+      params: searchTerm ? { searchTerm } : {},
+    });
+  },
 };

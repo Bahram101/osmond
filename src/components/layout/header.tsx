@@ -16,7 +16,6 @@ import Skeleton from "../shared/Skeleton";
 
 export const Header = () => {
   const { user, logout } = useAuth();
-  console.log("user", user);
 
   return (
     <header className="px-4 py-4 border-b border-zinc-200 items-center justify-between flex">

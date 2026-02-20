@@ -2,10 +2,6 @@
 import BreadCrumb from "@/app/(admin)/admin/components/common/BreadCrumb";
 import ComponentCard from "@/app/(admin)/admin/components/common/ComponentCard";
 import ProductForm from "../../components/ProductForm";
-import {
-  useGetCategories,
-  useGetCategoriesTree,
-} from "@/hooks/category/useCategories";
 import { useParams } from "next/navigation";
 import { useGetProduct, useUpdateProduct } from "@/hooks/product/useProducts";
 import { ProductResponse } from "@/types/product.interface";
