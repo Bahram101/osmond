@@ -1,31 +1,35 @@
-export interface ProductResponse {
+export interface ProductPrices {
+  price: number;
+  masterPrice: number;
+  wholesalePrice: number;
+}
+
+export interface ProductResponse extends ProductPrices {
   id: number;
   name: string;
   description?: string;
-  price: number;
-  quantity?: number;
-  categoryId?: string;
+  quantity: number;
+  categoryId?: number;
   published: boolean;
   barcode?: string;
   code: string;
   createdAt: string;
-  category: {
+
+  category?: {
     id: number;
     title: string;
   };
 }
 
-export type ProductCreateDTO = Pick<
-  ProductResponse,
-  | "name"
-  | "description"
-  | "price"
-  | "categoryId"
-  | "published"
-  | "quantity"
-  | "barcode"
-  | "code"
->;
+export interface ProductCreateDTO extends ProductPrices {
+  name: string;
+  description?: string;
+  quantity?: number;
+  categoryId?: number;
+  published?: boolean;
+  barcode?: string;
+  code: string;
+}
 
 export type ProductUpdateDTO = Partial<ProductCreateDTO>;
 
@@ -34,10 +38,16 @@ export type PublishedOption = {
   label: string;
 };
 
-export type ProductShortDTO = Pick<
-  ProductResponse,
-  "id" | "name" | "price" | "quantity"
->;
+// export type ProductShortDTO = Pick<
+//   ProductResponse,
+//   "id" | "name" | "price" | "quantity"
+// >;
+
+export interface ProductShortDTO  extends ProductPrices {
+  id: number
+  name: string;
+  quantity: number;
+}
 
 export type ProductInCategoryDTO = {
   id: number;

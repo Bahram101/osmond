@@ -93,10 +93,24 @@ const ProductsPage = () => {
       header: "Название",
     }),
     {
-      header: "Цена",
+      header: "Цена (Кл.)",
       accessorKey: "price",
       cell: ({ row }) => (
         <div className="">{formatCurrency(row.original.price)}</div>
+      ),
+    },
+    {
+       header: "Цена (Мст.)",
+      accessorKey: "masterPrice",
+      cell: ({ row }) => (
+        <div className="">{formatCurrency(row.original.masterPrice)}</div>
+      ),
+    },
+    {
+         header: "Цена (Опт.)",
+      accessorKey: "wholesalePrice",
+      cell: ({ row }) => (
+        <div className="">{formatCurrency(row.original.wholesalePrice)}</div>
       ),
     },
     columnHelper.accessor("quantity", {
@@ -133,14 +147,14 @@ const ProductsPage = () => {
         );
       },
     }),
-    columnHelper.accessor("createdAt", {
-      header: "Дата создания",
-      cell: ({ getValue }) => (
-        <div className="text-center">
-          {new Date(getValue()).toLocaleDateString("ru-RU")}
-        </div>
-      ),
-    }),
+    // columnHelper.accessor("createdAt", {
+    //   header: "Дата создания",
+    //   cell: ({ getValue }) => (
+    //     <div className="text-center">
+    //       {new Date(getValue()).toLocaleDateString("ru-RU")}
+    //     </div>
+    //   ),
+    // }),
     columnHelper.display({
       id: "actions",
       header: "",

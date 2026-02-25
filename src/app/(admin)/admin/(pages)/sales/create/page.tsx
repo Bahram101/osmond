@@ -23,7 +23,7 @@ import { useCreateVisit } from "@/hooks/visit/useVisit";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import EmptyState from "@/app/(admin)/admin/components/ui/EmptyState";
-import { formatCurrency } from "@/lib/utils/helpers";
+import { formatCurrency, getPriceByType } from "@/lib/utils/helpers";
 import Label from "../../../components/form/Label";
 import Loader from "@/components/shared/Loader";
 import { useForm } from "react-hook-form";
@@ -97,12 +97,30 @@ const VisitCreatePage = () => {
     }))
     .filter((item) => item.type === clientType && item.id !== 1);
 
-  const productsForSelect: ProductShortDTO[] = products.map((p) => ({
+  const productsForSelect = products.map((p) => ({
     id: p.id,
     name: p.name,
     quantity: p.quantity,
     price: p.price,
+    masterPrice: p.masterPrice,
+    wholesalePrice: p.wholesalePrice,
   }));
+
+  useEffect(() => {
+    if (!clientType) return;
+
+    setItems((prev) =>
+      prev.map((item) => ({
+        ...item,
+        price:
+          clientType === "MASTER"
+            ? item.masterPrice
+            : clientType === "WHOLESALER"
+              ? item.wholesalePrice
+              : item.retailPrice,
+      })),
+    );
+  }, [clientType]);
 
   const onSelectProduct = (product: ProductShortDTO) => {
     setItems((prev) => {
@@ -121,7 +139,10 @@ const VisitCreatePage = () => {
         {
           productId: product.id,
           name: product.name,
-          price: product.price,
+          retailPrice: product.price,
+          masterPrice: product.masterPrice,
+          wholesalePrice: product.wholesalePrice,
+          price: getPriceByType(product, clientType),
           quantity: 1,
         },
       ];
@@ -201,6 +222,9 @@ const VisitCreatePage = () => {
         header: "Цена",
         meta: { className: "w-1/10" },
         cell: ({ row }) => {
+          // console.log("row.original", row.original);
+          // const { price, masterPrice, wholesalePrice } = row.original;
+          // console.log("prices", price, masterPrice, wholesalePrice);
           return (
             <div className="text-center">
               <Input
@@ -324,7 +348,12 @@ const VisitCreatePage = () => {
           ]
         : []),
     ];
-  }, [isSelectedProducts, products]);
+  }, [isSelectedProducts, products, clientType]);
+
+  console.log("items", items);
+  console.log("clientId", clientId);
+  console.log(watch());
+  console.log("clientType", clientType);
 
   return (
     <>

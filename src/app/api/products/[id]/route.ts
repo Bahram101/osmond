@@ -18,6 +18,8 @@ export async function GET(
         description: true,
         published: true,
         price: true,
+        masterPrice: true,
+        wholesalePrice: true,
         quantity: true,
         barcode: true,
         code: true,
@@ -63,6 +65,10 @@ export async function PUT(
         name: body.name,
         description: body.description ?? null,
         price: body.price ? Number(body.price) : undefined,
+        masterPrice: body.masterPrice ? Number(body.masterPrice) : undefined,
+        wholesalePrice: body.wholesalePrice
+          ? Number(body.wholesalePrice)
+          : undefined,
         published:
           body.published === true || body.published === "true", 
       },

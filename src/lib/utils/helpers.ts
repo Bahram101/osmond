@@ -1,10 +1,10 @@
+import { ProductShortDTO } from "@/types/product.interface";
+
 export const validEmail =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export const generateEAN13 = (): string => {
-  const base = Array.from({ length: 12 }, () =>
-    Math.floor(Math.random() * 10)
-  );
+  const base = Array.from({ length: 12 }, () => Math.floor(Math.random() * 10));
 
   const sum = base.reduce((acc, digit, index) => {
     return acc + digit * (index % 2 === 0 ? 1 : 3);
@@ -43,4 +43,13 @@ export const formatCurrency = (value: number, symbol: string = "₸"): string =>
 export const playSound = (src: string) => {
   const audio = new Audio(src);
   audio.play().catch(() => {});
+};
+
+export const getPriceByType = (
+  product: ProductShortDTO,
+  type: "WALK_IN" | "MASTER" | "WHOLESALER" | null,
+) => {
+  if (type === "MASTER") return product.masterPrice;
+  if (type === "WHOLESALER") return product.wholesalePrice;
+  return product.price;
 };

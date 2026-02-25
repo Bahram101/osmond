@@ -53,19 +53,21 @@ enum ClientType {
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  code        String   @unique @db.VarChar(10)
-  published   Boolean  @default(true)
-  image       String?  @default("image.png")
-  views       Int      @default(0)
-  price       Float    @default(0)
-  quantity    Int      @default(0)
-  barcode     String?  @unique
-  categoryId  Int?     @map("category_id")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id             Int      @id @default(autoincrement())
+  name           String
+  description    String?
+  code           String   @unique @db.VarChar(10)
+  published      Boolean  @default(true)
+  image          String?  @default("image.png")
+  views          Int      @default(0)
+  price          Int      @default(0)
+  masterPrice    Int      @default(0)
+  wholesalePrice Int      @default(0)
+  quantity       Int      @default(0)
+  barcode        String?  @unique
+  categoryId     Int?     @map("category_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
 
   category Category? @relation(fields: [categoryId], references: [id])
 

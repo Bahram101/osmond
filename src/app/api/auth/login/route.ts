@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { userSelect } from "@/lib/prisma/select";
-import { hash, verify } from "argon2";
+import { verify } from "argon2";
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 

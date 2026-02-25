@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { productSelect } from "../../../../prisma/selects/product.select";
 import { generateEAN13 } from "@/lib/utils/helpers";
+import { z } from "zod";
 
 //GET /api/products
 export async function GET() {
@@ -16,12 +17,12 @@ export async function GET() {
     if (e instanceof Error) {
       return NextResponse.json(
         { message: `Ошибка при получении товаров: ${e.message}` },
-        { status: 500 }
+        { status: 500 },
       );
     }
     return NextResponse.json(
       { message: "Неизвестная ошибка при получении товаров" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -36,11 +37,21 @@ export async function POST(req: NextRequest) {
     if (!prefix) {
       return NextResponse.json(
         { message: "Введите буквенный префикс кода" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
+    const productScema = z.object({
+      name: z.string().trim().min(1, "Название обязательно"),
+      description: z.string().trim().optional(),
+      price: z.coerce.number().int().min(0),
+      masterPrice: z.coerce.number().int().min(0),
+      wholesalePrice: z.coerce.number().int().min(0),
+      published: z.coerce.boolean(),
+    });
+
     const createdProduct = await prisma.$transaction(async (tx) => {
+      const parsed = productScema.parse(body);
       const lastProduct = await tx.product.findFirst({
         where: {
           code: {
@@ -55,9 +66,7 @@ export async function POST(req: NextRequest) {
       let nextNumber = 1;
 
       if (lastProduct) {
-        const lastNumber = parseInt(
-          lastProduct.code.split("-")[1]
-        );
+        const lastNumber = parseInt(lastProduct.code.split("-")[1]);
         nextNumber = lastNumber + 1;
       }
 
@@ -65,11 +74,12 @@ export async function POST(req: NextRequest) {
 
       return tx.product.create({
         data: {
-          name: body.name,
-          description: body.description || null,
-          price: Number(body.price),
-          published:
-            body.published === true || body.published === "true",
+          name: parsed.name,
+          description: parsed.description || null,
+          price: parsed.price,
+          masterPrice: parsed.masterPrice,
+          wholesalePrice: parsed.wholesalePrice,
+          published: parsed.published,
           barcode: generateEAN13(),
           code: generatedCode,
         },
@@ -78,13 +88,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       { success: true, data: createdProduct },
-      { status: 201 }
+      { status: 201 },
     );
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(
-      { message: "Ошибка при создании товара" },
-      { status: 400 }
+      { message: error.message || "Ошибка при создании товара" },
+      { status: 400 },
     );
   }
 }
-

@@ -6,6 +6,8 @@ export const productSelect = {
   description: true,
   published: true,
   price: true,
+  masterPrice: true,
+  wholesalePrice: true,
   quantity: true,
   createdAt: true,
   barcode: true,

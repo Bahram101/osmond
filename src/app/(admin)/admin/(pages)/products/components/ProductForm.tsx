@@ -3,7 +3,9 @@ import React, { FC, useEffect } from "react";
 import Label from "../../../components/form/Label";
 import Field from "@/components/shared/field/Field";
 import { ProductCreateDTO } from "@/types/product.interface";
-import ControlledSelect, { ControlledSelectOption } from "@/components/shared/select/Select";
+import ControlledSelect, {
+  ControlledSelectOption,
+} from "@/components/shared/select/Select";
 import Button from "../../../components/ui/button/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Loader from "@/components/shared/Loader";
@@ -33,9 +35,9 @@ const ProductForm: FC<ProductFormProps> = ({
   isSubmitting,
   clearOnSubmit,
   onSubmit,
-  isEditMode = false
+  isEditMode = false,
 }) => {
-  const { control, handleSubmit, reset } = useForm<ProductCreateDTO>({
+  const { control, handleSubmit, reset, watch } = useForm<ProductCreateDTO>({
     mode: "all",
     defaultValues: {
       ...defaultValues,
@@ -59,7 +61,7 @@ const ProductForm: FC<ProductFormProps> = ({
     if (clearOnSubmit) reset();
   };
 
-  // const categoryOptions = flattenCategories(categories);
+  console.log(watch());
 
   return (
     <form
@@ -82,7 +84,7 @@ const ProductForm: FC<ProductFormProps> = ({
           }}
         />
       </div>
-       <div>
+      <div>
         <Label htmlFor="code">Код товара</Label>
         <Field<ProductCreateDTO>
           name="code"
@@ -94,6 +96,8 @@ const ProductForm: FC<ProductFormProps> = ({
               value: 2,
               message: "Минимум 2 символа",
             },
+            validate: (value) =>
+              String(value).trim() !== "" || "Код не может быть пустым",
           }}
         />
       </div>
@@ -111,9 +115,31 @@ const ProductForm: FC<ProductFormProps> = ({
         />
       </div>
       <div>
-        <Label htmlFor="price">Цена продажи</Label>
+        <Label htmlFor="price">Цена для клиентов</Label>
         <Field<ProductCreateDTO>
           name="price"
+          type="number"
+          control={control}
+          rules={{
+            required: "Заполните поле",
+          }}
+        />
+      </div>
+      <div>
+        <Label htmlFor="masterPrice">Цена для мастеров</Label>
+        <Field<ProductCreateDTO>
+          name="masterPrice"
+          type="number"
+          control={control}
+          rules={{
+            required: "Заполните поле",
+          }}
+        />
+      </div>
+      <div>
+        <Label htmlFor="wholesalePrice">Цена для оптовики</Label>
+        <Field<ProductCreateDTO>
+          name="wholesalePrice"
           type="number"
           control={control}
           rules={{
