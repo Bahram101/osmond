@@ -8,6 +8,6 @@ interface Props {
 export default function BarcodePreview({ value }: Props) {
   if (!value) return null;
   return (
-    <Barcode value={value} format="EAN13" width={2} height={60} displayValue />
+    <Barcode value={value} format="EAN13" width={2} height={60} displayValue margin={0} />
   );
 }

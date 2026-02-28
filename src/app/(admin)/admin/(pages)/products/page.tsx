@@ -29,6 +29,10 @@ import { useRouter } from "next/navigation";
 import BarcodePreview from "./components/BarcodePreview";
 import BarcodePrintSheet from "./components/BarcodePrintSheet";
 import { formatCurrency } from "@/lib/utils/helpers";
+import { useRef } from "react";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import Barcode from "react-barcode";
 
 const ProductsPage = () => {
   const router = useRouter();
@@ -44,6 +48,7 @@ const ProductsPage = () => {
   const [barcodeProduct, setBarcodeProduct] = useState<ProductResponse | null>(
     null,
   );
+  const barcodeRef = useRef<HTMLDivElement>(null);
   const [openRowId, setOpenRowId] = useState<number | null>(null);
   const { products, isFetchingProducts } = useGetProducts();
   const { createArrival, isCreatingArrival } = useCreateArrival();
@@ -85,9 +90,7 @@ const ProductsPage = () => {
     {
       header: "Код",
       accessorKey: "code",
-      cell: ({ row }) => (
-        <div className="">{row.original.code}</div>
-      ),
+      cell: ({ row }) => <div className="">{row.original.code}</div>,
     },
     columnHelper.accessor("name", {
       header: "Название",
@@ -100,14 +103,14 @@ const ProductsPage = () => {
       ),
     },
     {
-       header: "Цена (Мст.)",
+      header: "Цена (Мст.)",
       accessorKey: "masterPrice",
       cell: ({ row }) => (
         <div className="">{formatCurrency(row.original.masterPrice)}</div>
       ),
     },
     {
-         header: "Цена (Опт.)",
+      header: "Цена (Опт.)",
       accessorKey: "wholesalePrice",
       cell: ({ row }) => (
         <div className="">{formatCurrency(row.original.wholesalePrice)}</div>
@@ -248,6 +251,69 @@ const ProductsPage = () => {
     });
   };
 
+  const handleDownloadPDF = async () => {
+    if (!barcodeRef.current) return;
+
+    const svg = barcodeRef.current.querySelector("svg");
+    if (!svg) return;
+
+    const bbox = svg.getBBox();
+    const widthPx = bbox.width;
+    const heightPx = bbox.height;
+
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const svgBlob = new Blob([svgData], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+
+    const url = URL.createObjectURL(svgBlob);
+    const img = new Image();
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = widthPx;
+      canvas.height = heightPx;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, widthPx, heightPx);
+      ctx.drawImage(img, 0, 0);
+
+      const pngData = canvas.toDataURL("image/png");
+
+      // перевод px → mm
+      const pxToMm = 0.264583;
+      const pdfWidth = widthPx * pxToMm;
+      const pdfHeight = heightPx * pxToMm;
+
+      const pdf = new jsPDF({
+        orientation: pdfWidth > pdfHeight ? "landscape" : "portrait",
+        unit: "mm",
+        format: [pdfWidth, pdfHeight],
+      });
+
+      pdf.addImage(pngData, "PNG", 0, 0, pdfWidth, pdfHeight);
+
+      // ✅ правильное скачивание для мобильных
+      const blob = pdf.output("blob");
+      const pdfUrl = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.download = "barcode.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      URL.revokeObjectURL(pdfUrl);
+      URL.revokeObjectURL(url);
+    };
+
+    img.src = url;
+  };
+
   return (
     <div className="col-span-12 xl:col-span-7">
       <Modal
@@ -273,7 +339,7 @@ const ProductsPage = () => {
         {barcodeProduct?.barcode && (
           <>
             <div className="flex flex-col items-center gap-4">
-              <p className="font-semibold">{barcodeProduct.name}</p>
+              {/* <p className="font-semibold">{barcodeProduct.name}</p>
               <BarcodePreview value={barcodeProduct.barcode} />
               <Button
                 variant="primary"
@@ -283,7 +349,13 @@ const ProductsPage = () => {
                 }
               >
                 Печать
-              </Button>
+              </Button> */}
+              <div ref={barcodeRef} className="bg-white inline-block">
+                <h3 className="font-semibold mb-2 ">{barcodeProduct.name}</h3>
+                <BarcodePreview value={barcodeProduct.barcode} />
+              </div>
+
+              <Button onClick={handleDownloadPDF}>Скачать PDF</Button>
             </div>
           </>
         )}
