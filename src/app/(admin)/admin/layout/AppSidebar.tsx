@@ -57,11 +57,11 @@ const navItems: NavItem[] = [
     name: "Движение товаров",
     path: "/admin/arrivals",
   },
-  {
-    icon: <CircleUser />,
-    name: "Администраторы",
-    path: "/admin/users",
-  },
+  // {
+  //   icon: <CircleUser />,
+  //   name: "Администраторы",
+  //   path: "/admin/users",
+  // },
 ];
 
 const AppSidebar: React.FC = () => {
