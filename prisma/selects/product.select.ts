@@ -3,6 +3,7 @@ import { Prisma } from "@/generated/prisma/client";
 export const productSelect = {
   id: true,
   name: true,
+  shortName: true,
   description: true,
   published: true,
   price: true,
@@ -11,7 +12,7 @@ export const productSelect = {
   quantity: true,
   createdAt: true,
   barcode: true,
-  code: true,
+  // code: true,
   category: {
     select: {
       id: true,

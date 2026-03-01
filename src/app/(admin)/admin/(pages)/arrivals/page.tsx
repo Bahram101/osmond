@@ -13,14 +13,14 @@ const ArrivalsPage = () => {
   const columnHelper = createColumnHelper<IArrival>();
 
   const columns: ColumnDef<IArrival, any>[] = [
-    columnHelper.accessor((row) => row.product?.code ?? "-", {
-      id: "product.code",
-      header: "Код товара",
-      cell:({ getValue }) => {
-        const value = getValue() as string;
-        return <div className="text-center">{value}</div>;
-      }
-    }),
+    // columnHelper.accessor((row) => row.product?.code ?? "-", {
+    //   id: "product.code",
+    //   header: "Код товара",
+    //   cell:({ getValue }) => {
+    //     const value = getValue() as string;
+    //     return <div className="text-center">{value}</div>;
+    //   }
+    // }),
     columnHelper.accessor((row) => row.product?.name ?? "-", {
       id: "product.name",
       header: "Название товара",

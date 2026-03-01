@@ -7,12 +7,13 @@ export interface ProductPrices {
 export interface ProductResponse extends ProductPrices {
   id: number;
   name: string;
+  shortName: string;
   description?: string;
   quantity: number;
   categoryId?: number;
   published: boolean;
   barcode?: string;
-  code: string;
+  // code: string;
   createdAt: string;
 
   category?: {
@@ -23,12 +24,13 @@ export interface ProductResponse extends ProductPrices {
 
 export interface ProductCreateDTO extends ProductPrices {
   name: string;
+  shortName: string;
   description?: string;
   quantity?: number;
   categoryId?: number;
   published?: boolean;
   barcode?: string;
-  code: string;
+  // code: string;
 }
 
 export type ProductUpdateDTO = Partial<ProductCreateDTO>;

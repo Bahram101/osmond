@@ -55,8 +55,9 @@ enum ClientType {
 model Product {
   id             Int      @id @default(autoincrement())
   name           String
+  shortName      String
   description    String?
-  code           String   @unique @db.VarChar(10)
+  // code           String   @unique @db.VarChar(10)
   published      Boolean  @default(true)
   image          String?  @default("image.png")
   views          Int      @default(0)

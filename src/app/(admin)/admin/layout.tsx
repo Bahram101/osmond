@@ -13,7 +13,6 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    // ✅ теперь всё, где используется useSidebar, находится внутри провайдера
     <ThemeProvider>
       <SidebarProvider>
         <AdminLayoutInner>{children}</AdminLayoutInner>
@@ -22,7 +21,6 @@ export default function AdminLayout({
   );
 }
 
-// 🔹 Вынеси внутреннюю часть отдельно, чтобы хук вызывался после провайдера
 function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
 

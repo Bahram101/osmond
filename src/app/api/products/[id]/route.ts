@@ -15,6 +15,7 @@ export async function GET(
       select: {
         id: true,
         name: true,
+        shortName: true,
         description: true,
         published: true,
         price: true,
@@ -22,7 +23,7 @@ export async function GET(
         wholesalePrice: true,
         quantity: true,
         barcode: true,
-        code: true,
+        // code: true,
         categoryId: true,
         createdAt: true,
       },
@@ -63,6 +64,7 @@ export async function PUT(
       where: { id: numericId },
       data: {
         name: body.name,
+        shortName: body.shortName,
         description: body.description ?? null,
         price: body.price ? Number(body.price) : undefined,
         masterPrice: body.masterPrice ? Number(body.masterPrice) : undefined,

@@ -7,7 +7,7 @@ export interface IArrival {
   product:{
     id: number,
     name: string
-    code: string;
+    // code: string;
   },
   type: Type
   purchasePrice?: number;

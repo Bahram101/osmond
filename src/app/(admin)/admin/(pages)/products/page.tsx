@@ -78,6 +78,7 @@ const ProductsPage = () => {
   function closeDropdown() {
     setOpenRowId(null);
   }
+  console.log(barcodeProduct);
 
   const columnHelper = createColumnHelper<ProductResponse>();
 
@@ -87,13 +88,16 @@ const ProductsPage = () => {
       header: "#",
       cell: ({ row }) => <div>{row.index + 1}</div>,
     }),
-    {
-      header: "Код",
-      accessorKey: "code",
-      cell: ({ row }) => <div className="">{row.original.code}</div>,
-    },
+    // {
+    //   header: "Код",
+    //   accessorKey: "code",
+    //   cell: ({ row }) => <div className="">{row.original.code}</div>,
+    // },
     columnHelper.accessor("name", {
       header: "Название",
+    }),
+    columnHelper.accessor("shortName", {
+      header: "Корот. назв.",
     }),
     {
       header: "Цена (Кл.)",
@@ -252,15 +256,17 @@ const ProductsPage = () => {
   };
 
   const handleDownloadPDF = async () => {
-    if (!barcodeRef.current) return;
+    if (!barcodeRef.current || !barcodeProduct) return;
 
     const svg = barcodeRef.current.querySelector("svg");
     if (!svg) return;
 
+    // реальные размеры SVG
     const bbox = svg.getBBox();
     const widthPx = bbox.width;
     const heightPx = bbox.height;
 
+    // сериализация SVG
     const svgData = new XMLSerializer().serializeToString(svg);
     const svgBlob = new Blob([svgData], {
       type: "image/svg+xml;charset=utf-8",
@@ -270,6 +276,7 @@ const ProductsPage = () => {
     const img = new Image();
 
     img.onload = () => {
+      // canvas для конвертации в PNG
       const canvas = document.createElement("canvas");
       canvas.width = widthPx;
       canvas.height = heightPx;
@@ -283,10 +290,30 @@ const ProductsPage = () => {
 
       const pngData = canvas.toDataURL("image/png");
 
-      // перевод px → mm
+      // px → mm
       const pxToMm = 0.264583;
-      const pdfWidth = widthPx * pxToMm;
-      const pdfHeight = heightPx * pxToMm;
+      const barcodeWidthMm = widthPx * pxToMm;
+      const barcodeHeightMm = heightPx * pxToMm;
+
+      const paddingMm = 5;
+
+      // создаём временный pdf для расчёта текста
+      const tempPdf = new jsPDF({ unit: "mm" });
+      tempPdf.setFont("helvetica", "normal");
+      tempPdf.setFontSize(12);
+
+      const textMaxWidth = barcodeWidthMm;
+      const lines = tempPdf.splitTextToSize(
+        barcodeProduct.shortName,
+        textMaxWidth,
+      );
+
+      const lineHeightMm = 6;
+      const textBlockHeightMm = lines.length * lineHeightMm;
+
+      // итоговые размеры PDF
+      const pdfWidth = barcodeWidthMm + paddingMm * 2;
+      const pdfHeight = barcodeHeightMm + textBlockHeightMm + paddingMm * 3;
 
       const pdf = new jsPDF({
         orientation: pdfWidth > pdfHeight ? "landscape" : "portrait",
@@ -294,9 +321,24 @@ const ProductsPage = () => {
         format: [pdfWidth, pdfHeight],
       });
 
-      pdf.addImage(pngData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(9);
+      // pdf.text(lines, paddingMm, paddingMm + 5);
+      pdf.text(lines, pdfWidth / 2, paddingMm + 5, {
+        align: "center",
+      });
 
-      // ✅ правильное скачивание для мобильных
+      // штрихкод ниже текста
+      pdf.addImage(
+        pngData,
+        "PNG",
+        paddingMm,
+        paddingMm * 1.2 + textBlockHeightMm,
+        barcodeWidthMm,
+        barcodeHeightMm,
+      );
+
+      // скачивание
       const blob = pdf.output("blob");
       const pdfUrl = URL.createObjectURL(blob);
 
@@ -313,7 +355,6 @@ const ProductsPage = () => {
 
     img.src = url;
   };
-
   return (
     <div className="col-span-12 xl:col-span-7">
       <Modal
@@ -339,19 +380,13 @@ const ProductsPage = () => {
         {barcodeProduct?.barcode && (
           <>
             <div className="flex flex-col items-center gap-4">
-              {/* <p className="font-semibold">{barcodeProduct.name}</p>
-              <BarcodePreview value={barcodeProduct.barcode} />
-              <Button
-                variant="primary"
-                size="xs"
-                onClick={() =>
-                  router.push(`/admin/products/print/${barcodeProduct.id}`)
-                }
+              <div
+                ref={barcodeRef}
+                className="bg-white flex flex-col items-center flex-wrap"
               >
-                Печать
-              </Button> */}
-              <div ref={barcodeRef} className="bg-white inline-block">
-                <h3 className="font-semibold mb-2 ">{barcodeProduct.name}</h3>
+                <h3 className="font-semibold mb-2 ">
+                  {barcodeProduct.shortName}
+                </h3>
                 <BarcodePreview value={barcodeProduct.barcode} />
               </div>
 

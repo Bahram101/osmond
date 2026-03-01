@@ -32,17 +32,18 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const prefix: string = body.code?.trim().toUpperCase();
+    // const prefix: string = body.code?.trim().toUpperCase();
 
-    if (!prefix) {
-      return NextResponse.json(
-        { message: "Введите буквенный префикс кода" },
-        { status: 400 },
-      );
-    }
+    // if (!prefix) {
+    //   return NextResponse.json(
+    //     { message: "Введите буквенный префикс кода" },
+    //     { status: 400 },
+    //   );
+    // }
 
     const productScema = z.object({
       name: z.string().trim().min(1, "Название обязательно"),
+      shortName: z.string().trim().min(1, "Короткое название обязательно"),
       description: z.string().trim().optional(),
       price: z.coerce.number().int().min(0),
       masterPrice: z.coerce.number().int().min(0),
@@ -52,36 +53,37 @@ export async function POST(req: NextRequest) {
 
     const createdProduct = await prisma.$transaction(async (tx) => {
       const parsed = productScema.parse(body);
-      const lastProduct = await tx.product.findFirst({
-        where: {
-          code: {
-            startsWith: `${prefix}-`,
-          },
-        },
-        orderBy: {
-          code: "desc",
-        },
-      });
+      // const lastProduct = await tx.product.findFirst({
+      //   where: {
+      //     code: {
+      //       startsWith: `${prefix}-`,
+      //     },
+      //   },
+      //   orderBy: {
+      //     code: "desc",
+      //   },
+      // });
 
-      let nextNumber = 1;
+      // let nextNumber = 1;
 
-      if (lastProduct) {
-        const lastNumber = parseInt(lastProduct.code.split("-")[1]);
-        nextNumber = lastNumber + 1;
-      }
+      // if (lastProduct) {
+      //   const lastNumber = parseInt(lastProduct.code.split("-")[1]);
+      //   nextNumber = lastNumber + 1;
+      // }
 
-      const generatedCode = `${prefix}-${String(nextNumber).padStart(3, "0")}`;
+      // const generatedCode = `${prefix}-${String(nextNumber).padStart(3, "0")}`;
 
       return tx.product.create({
         data: {
           name: parsed.name,
+          shortName: parsed.shortName,
           description: parsed.description || null,
           price: parsed.price,
           masterPrice: parsed.masterPrice,
           wholesalePrice: parsed.wholesalePrice,
           published: parsed.published,
           barcode: generateEAN13(),
-          code: generatedCode,
+          // code: generatedCode,
         },
       });
     });

@@ -31,12 +31,12 @@ export async function POST(req: NextRequest) {
         throw new HttpError("Товар не найден", 404);
       }
 
-      if (type === "IN" && product.quantity > 0) {
-        throw new HttpError(
-          "Нельзя делать приход, пока есть остаток старой партии",
-          400,
-        );
-      }
+      // if (type === "IN" && product.quantity > 0) {
+      //   throw new HttpError(
+      //     "Нельзя делать приход, пока есть остаток старой партии",
+      //     400,
+      //   );
+      // }
 
       if (type === "OUT" && product.quantity < qtyNumber) {
         throw new HttpError("Недостаточно товара на складе", 400);
@@ -87,7 +87,11 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" },
       include: {
         product: {
-          select: { id: true, name: true, code: true },
+          select: {
+            id: true,
+            name: true,
+            // code: true
+          },
         },
       },
     });

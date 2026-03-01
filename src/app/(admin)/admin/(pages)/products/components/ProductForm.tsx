@@ -85,6 +85,22 @@ const ProductForm: FC<ProductFormProps> = ({
         />
       </div>
       <div>
+        <Label htmlFor="name">Короткое название (на латинице)</Label>
+        <Field<ProductCreateDTO>
+          name="shortName"
+          control={control}
+          rules={{
+            required: "Заполните поле",
+            minLength: {
+              value: 3,
+              message: "Минимум 3 символа",
+            },
+            validate: (value) =>
+              String(value).trim() !== "" || "Короткое название не может быть пустым",
+          }}
+        />
+      </div>
+      {/* <div>
         <Label htmlFor="code">Код товара</Label>
         <Field<ProductCreateDTO>
           name="code"
@@ -100,7 +116,7 @@ const ProductForm: FC<ProductFormProps> = ({
               String(value).trim() !== "" || "Код не может быть пустым",
           }}
         />
-      </div>
+      </div> */}
       <div>
         <Label htmlFor="description">Описание</Label>
         <Field<ProductCreateDTO>
