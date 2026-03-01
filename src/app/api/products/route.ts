@@ -9,19 +9,20 @@ export async function GET() {
   try {
     const products = await prisma.product.findMany({
       select: productSelect,
-      orderBy: { createdAt: "desc" },
+      orderBy: { name: "desc" },
     });
 
+    // const result = products.sort((a, b) => a.name.localeCompare(b.name, "ru"));
+
     return NextResponse.json(products);
-  } catch (e) {
-    if (e instanceof Error) {
-      return NextResponse.json(
-        { message: `Ошибка при получении товаров: ${e.message}` },
-        { status: 500 },
-      );
-    }
+  } catch (error) {
     return NextResponse.json(
-      { message: "Неизвестная ошибка при получении товаров" },
+      {
+        message:
+          error instanceof Error
+            ? `Ошибка при получении товаров: ${error.message}`
+            : "Неизвестная ошибка при получении товаров",
+      },
       { status: 500 },
     );
   }
@@ -31,15 +32,6 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-
-    // const prefix: string = body.code?.trim().toUpperCase();
-
-    // if (!prefix) {
-    //   return NextResponse.json(
-    //     { message: "Введите буквенный префикс кода" },
-    //     { status: 400 },
-    //   );
-    // }
 
     const productScema = z.object({
       name: z.string().trim().min(1, "Название обязательно"),
@@ -53,26 +45,6 @@ export async function POST(req: NextRequest) {
 
     const createdProduct = await prisma.$transaction(async (tx) => {
       const parsed = productScema.parse(body);
-      // const lastProduct = await tx.product.findFirst({
-      //   where: {
-      //     code: {
-      //       startsWith: `${prefix}-`,
-      //     },
-      //   },
-      //   orderBy: {
-      //     code: "desc",
-      //   },
-      // });
-
-      // let nextNumber = 1;
-
-      // if (lastProduct) {
-      //   const lastNumber = parseInt(lastProduct.code.split("-")[1]);
-      //   nextNumber = lastNumber + 1;
-      // }
-
-      // const generatedCode = `${prefix}-${String(nextNumber).padStart(3, "0")}`;
-
       return tx.product.create({
         data: {
           name: parsed.name,
@@ -83,7 +55,6 @@ export async function POST(req: NextRequest) {
           wholesalePrice: parsed.wholesalePrice,
           published: parsed.published,
           barcode: generateEAN13(),
-          // code: generatedCode,
         },
       });
     });
