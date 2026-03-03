@@ -256,165 +256,61 @@ const ProductsPage = () => {
     });
   };
 
-  
-const handleDownloadPDF = async () => {
-  if (!barcodeRef.current || !barcodeProduct) return;
+  const handleDownloadPDF = async () => {
+    if (!barcodeRef.current || !barcodeProduct) return;
 
-  const svg = barcodeRef.current.querySelector("svg");
-  if (!svg) return;
+    const svg = barcodeRef.current.querySelector("svg");
+    if (!svg) return;
 
-  // ✅ берём реальные размеры из viewBox
-  const viewBox = svg.viewBox.baseVal;
-  const widthPx = viewBox.width;
-  const heightPx = viewBox.height;
+    // ✅ берём реальные размеры из viewBox
+    const viewBox = svg.viewBox.baseVal;
+    const widthPx = viewBox.width;
+    const heightPx = viewBox.height;
 
-  const padding = 20;
-  const textHeight = 25;
+    const padding = 20;
+    const textHeight = 25;
 
-  const pdfWidth = widthPx + padding * 2;
-  const pdfHeight = heightPx + textHeight + padding * 2;
+    const pdfWidth = widthPx + padding * 2;
+    const pdfHeight = heightPx + textHeight + padding * 2;
 
-  const pdf = new jsPDF({
-    unit: "px",
-    format: [pdfWidth, pdfHeight],
-    orientation: pdfWidth > pdfHeight ? "landscape" : "portrait",
-  });
+    const pdf = new jsPDF({
+      unit: "px",
+      format: [pdfWidth, pdfHeight],
+      orientation: pdfWidth > pdfHeight ? "landscape" : "portrait",
+    });
 
-  // ✅ ИЗМЕНЕНО — принудительно устанавливаем размер страницы
-  pdf.internal.pageSize.setWidth(pdfWidth);
-  pdf.internal.pageSize.setHeight(pdfHeight);
+    // ✅ ИЗМЕНЕНО — принудительно устанавливаем размер страницы
+    // pdf.internal.pageSize.setWidth(pdfWidth);
+    // pdf.internal.pageSize.setHeight(pdfHeight);
 
-  pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(14);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(14);
 
-  // текст по центру
-  pdf.text(
-    barcodeProduct.shortName,
-    pdfWidth / 2,
-    padding,
-    { align: "center" }
-  );
+    // текст по центру
+    pdf.text(barcodeProduct.shortName, pdfWidth / 2, padding, {
+      align: "center",
+    });
 
-  // вставка SVG (вектор!)
-  await svg2pdf(svg, pdf, {
-    x: padding,
-    y: padding + textHeight,
-  });
+    // вставка SVG (вектор!)
+    await svg2pdf(svg, pdf, {
+      x: padding,
+      y: padding + textHeight,
+    });
 
-  // скачивание
-  const blob = pdf.output("blob");
-  const url = URL.createObjectURL(blob);
+    // скачивание
+    const blob = pdf.output("blob");
+    const url = URL.createObjectURL(blob);
 
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "barcode.pdf";
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "barcode.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-  URL.revokeObjectURL(url);
-};
+    URL.revokeObjectURL(url);
+  };
 
-  // const handleDownloadPDF = async () => {
-  //   if (!barcodeRef.current || !barcodeProduct) return;
-
-  //   const svg = barcodeRef.current.querySelector("svg");
-  //   if (!svg) return;
-
-  //   // реальные размеры SVG
-  //   const bbox = svg.getBBox();
-  //   const widthPx = bbox.width;
-  //   const heightPx = bbox.height;
-
-  //   // сериализация SVG
-  //   const svgData = new XMLSerializer().serializeToString(svg);
-  //   const svgBlob = new Blob([svgData], {
-  //     type: "image/svg+xml;charset=utf-8",
-  //   });
-
-  //   const url = URL.createObjectURL(svgBlob);
-  //   const img = new Image();
-
-  //   img.onload = () => {
-  //     // canvas для конвертации в PNG
-  //     const canvas = document.createElement("canvas");
-  //     canvas.width = widthPx;
-  //     canvas.height = heightPx;
-
-  //     const ctx = canvas.getContext("2d");
-  //     if (!ctx) return;
-
-  //     ctx.fillStyle = "#ffffff";
-  //     ctx.fillRect(0, 0, widthPx, heightPx);
-  //     ctx.drawImage(img, 0, 0);
-
-  //     const pngData = canvas.toDataURL("image/png");
-
-  //     // px → mm
-  //     const pxToMm = 0.264583;
-  //     const barcodeWidthMm = widthPx * pxToMm;
-  //     const barcodeHeightMm = heightPx * pxToMm;
-
-  //     const paddingMm = 5;
-
-  //     // создаём временный pdf для расчёта текста
-  //     const tempPdf = new jsPDF({ unit: "mm" });
-  //     tempPdf.setFont("helvetica", "normal");
-  //     tempPdf.setFontSize(12);
-
-  //     const textMaxWidth = barcodeWidthMm;
-  //     const lines = tempPdf.splitTextToSize(
-  //       barcodeProduct.shortName,
-  //       textMaxWidth,
-  //     );
-
-  //     const lineHeightMm = 6;
-  //     const textBlockHeightMm = lines.length * lineHeightMm;
-
-  //     // итоговые размеры PDF
-  //     const pdfWidth = barcodeWidthMm + paddingMm * 2;
-  //     const pdfHeight = barcodeHeightMm + textBlockHeightMm + paddingMm * 3;
-
-  //     const pdf = new jsPDF({
-  //       orientation: pdfWidth > pdfHeight ? "landscape" : "portrait",
-  //       unit: "mm",
-  //       format: [pdfWidth, pdfHeight],
-  //     });
-
-  //     pdf.setFont("helvetica", "normal");
-  //     pdf.setFontSize(9);
-  //     // pdf.text(lines, paddingMm, paddingMm + 5);
-  //     pdf.text(lines, pdfWidth / 2, paddingMm + 5, {
-  //       align: "center",
-  //     });
-
-  //     // штрихкод ниже текста
-  //     pdf.addImage(
-  //       pngData,
-  //       "PNG",
-  //       paddingMm,
-  //       paddingMm * 1.2 + textBlockHeightMm,
-  //       barcodeWidthMm,
-  //       barcodeHeightMm,
-  //     );
-
-  //     // скачивание
-  //     const blob = pdf.output("blob");
-  //     const pdfUrl = URL.createObjectURL(blob);
-
-  //     const link = document.createElement("a");
-  //     link.href = pdfUrl;
-  //     link.download = "barcode.pdf";
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     document.body.removeChild(link);
-
-  //     URL.revokeObjectURL(pdfUrl);
-  //     URL.revokeObjectURL(url);
-  //   };
-
-  //   img.src = url;
-  // };
   return (
     <div className="col-span-12 xl:col-span-7">
       <Modal

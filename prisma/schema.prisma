@@ -55,7 +55,7 @@ enum ClientType {
 model Product {
   id             Int      @id @default(autoincrement())
   name           String
-  shortName      String
+  shortName      String   @unique
   description    String?
   // code           String   @unique @db.VarChar(10)
   published      Boolean  @default(true)
