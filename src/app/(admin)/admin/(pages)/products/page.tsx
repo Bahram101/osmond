@@ -262,13 +262,13 @@ const ProductsPage = () => {
     const svg = barcodeRef.current.querySelector("svg");
     if (!svg) return;
 
-    // ✅ берём реальные размеры из viewBox
+    // берём реальные размеры из viewBox
     const viewBox = svg.viewBox.baseVal;
     const widthPx = viewBox.width;
     const heightPx = viewBox.height;
 
     const padding = 20;
-    const textHeight = 25;
+    const textHeight = 10;
 
     const pdfWidth = widthPx + padding * 2;
     const pdfHeight = heightPx + textHeight + padding * 2;
@@ -278,10 +278,6 @@ const ProductsPage = () => {
       format: [pdfWidth, pdfHeight],
       orientation: pdfWidth > pdfHeight ? "landscape" : "portrait",
     });
-
-    // ✅ ИЗМЕНЕНО — принудительно устанавливаем размер страницы
-    // pdf.internal.pageSize.setWidth(pdfWidth);
-    // pdf.internal.pageSize.setHeight(pdfHeight);
 
     pdf.setFont("helvetica", "normal");
     pdf.setFontSize(14);

@@ -117,7 +117,7 @@ const VisitCreatePage = () => {
             ? item.masterPrice
             : clientType === "WHOLESALER"
               ? item.wholesalePrice
-              : item.retailPrice,
+              : (item.retailPrice ?? 0),
       })),
     );
   }, [clientType]);
@@ -222,14 +222,11 @@ const VisitCreatePage = () => {
         header: "Цена",
         meta: { className: "w-1/10" },
         cell: ({ row }) => {
-          // console.log("row.original", row.original);
-          // const { price, masterPrice, wholesalePrice } = row.original;
-          // console.log("prices", price, masterPrice, wholesalePrice);
           return (
             <div className="text-center">
               <Input
                 className="w-20 border text-center"
-                value={row.original.price}
+                value={row.original.price ?? ""}
                 onChange={(e) => {
                   setItems((prev) =>
                     prev.map((item, idx) =>
@@ -349,11 +346,6 @@ const VisitCreatePage = () => {
         : []),
     ];
   }, [isSelectedProducts, products, clientType]);
-
-  console.log("items", items);
-  console.log("clientId", clientId);
-  console.log(watch());
-  console.log("clientType", clientType);
 
   return (
     <>
