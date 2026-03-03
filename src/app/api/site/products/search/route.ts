@@ -28,6 +28,8 @@ export async function GET(req: NextRequest) {
         name: true,
         quantity: true,
         price: true,
+        masterPrice: true,
+        wholesalePrice: true,
       },
     });
 

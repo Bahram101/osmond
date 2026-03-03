@@ -12,9 +12,9 @@ export async function GET() {
       orderBy: { name: "desc" },
     });
 
-    // const result = products.sort((a, b) => a.name.localeCompare(b.name, "ru"));
+    const result = products.sort((a, b) => a.name.localeCompare(b.name, "ru"));
 
-    return NextResponse.json(products);
+    return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(
       {

@@ -5,9 +5,11 @@ import { useRef, useEffect } from "react";
 import Field from "@/components/shared/field/Field";
 import Loader from "@/components/shared/Loader";
 import { useProductSearch } from "@/hooks/product/useProductSearch";
+import { useAuth } from "@/hooks/auth/useAuth";
 
 const ProductSearch = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const { searchTerm, isLoading, control, products } = useProductSearch();
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -16,7 +18,7 @@ const ProductSearch = () => {
     router.push(`/products/${id}`);
   };
 
-  // 🔥 Закрытие при клике вне
+  // Закрытие при клике вне
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!wrapperRef.current?.contains(e.target as Node)) {
@@ -63,7 +65,14 @@ const ProductSearch = () => {
                 className="px-4 py-2 cursor-pointer hover:bg-gray-100 transition flex flex-wrap items-center gap-3"
               >
                 <div className="font-medium">{p.name}</div>
-                <div className="text-sm text-gray-500">{p.price} ₸</div>
+                <div className="text-sm text-gray-500">
+                  {user?.role === "MASTER"
+                    ? p.masterPrice
+                    : user?.role === "WHOLESALER"
+                      ? p.wholesalePrice
+                      : p.price}{" "}
+                  ₸
+                </div>
                 <div className="text-sm text-gray-500 ">
                   {p.quantity > 0 ? (
                     <div className="text-green-600">Есть</div>
