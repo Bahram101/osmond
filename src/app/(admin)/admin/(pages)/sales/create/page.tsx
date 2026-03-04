@@ -126,12 +126,28 @@ const VisitCreatePage = () => {
     setItems((prev) => {
       const exists = prev.find((item) => item.productId === product.id);
 
+      // ЕСЛИ ТОВАР УЖЕ ЕСТЬ
       if (exists) {
+        const stock = product.quantity;
+        const newQty = exists.quantity + 1;
+
+        // ДОБАВЛЕНА ПРОВЕРКА
+        if (newQty > stock) {
+          toast.error("Недостаточно товара на складе");
+          errorSound.current?.play();
+          return prev;
+        }
+
         return prev.map((item) =>
-          item.productId === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
+          item.productId === product.id ? { ...item, quantity: newQty } : item,
         );
+      }
+
+      // ЕСЛИ ДОБАВЛЯЕМ ВПЕРВЫЕ
+      if (product.quantity <= 0) {
+        toast.error("Нет на складе");
+        errorSound.current?.play();
+        return prev;
       }
 
       return [
