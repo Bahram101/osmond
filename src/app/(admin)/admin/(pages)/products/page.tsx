@@ -256,55 +256,95 @@ const ProductsPage = () => {
     });
   };
 
+  // const handleDownloadPDF = async () => {
+  //   if (!barcodeRef.current || !barcodeProduct) return;
+
+  //   const svg = barcodeRef.current.querySelector("svg");
+  //   if (!svg) return;
+
+  //   // берём реальные размеры из viewBox
+  //   const viewBox = svg.viewBox.baseVal;
+  //   const widthPx = viewBox.width;
+  //   const heightPx = viewBox.height;
+
+  //   const padding = 20;
+  //   const textHeight = 10;
+
+  //   const pdfWidth = widthPx + padding * 2;
+  //   const pdfHeight = heightPx + textHeight + padding * 2;
+
+  //   const pdf = new jsPDF({
+  //     unit: "mm",
+  //     format: [pdfWidth, pdfHeight],
+  //     orientation: pdfWidth > pdfHeight ? "landscape" : "portrait",
+  //   });
+
+  //   pdf.setFont("helvetica", "normal");
+  //   pdf.setFontSize(14);
+
+  //   // текст по центру
+  //   pdf.text(barcodeProduct.shortName, pdfWidth / 2, padding, {
+  //     align: "center",
+  //   });
+
+  //   // вставка SVG (вектор!)
+  //   await svg2pdf(svg, pdf, {
+  //     x: padding,
+  //     y: padding + textHeight,
+  //   });
+
+  //   pdf.autoPrint();
+  //   window.open(pdf.output("bloburl"), "_blank");
+  // };
+
   const handleDownloadPDF = async () => {
     if (!barcodeRef.current || !barcodeProduct) return;
-
     const svg = barcodeRef.current.querySelector("svg");
     if (!svg) return;
 
-    // берём реальные размеры из viewBox
     const viewBox = svg.viewBox.baseVal;
     const widthPx = viewBox.width;
     const heightPx = viewBox.height;
 
-    const padding = 20;
-    const textHeight = 10;
+    console.log("viewBox",viewBox)
 
-    const pdfWidth = widthPx + padding * 2;
-    const pdfHeight = heightPx + textHeight + padding * 2;
+    // --- НАСТРОЙКИ ДЛЯ УДАЛЕНИЯ ПУСТОТЫ ---
+    const fontSize = 14;
+    const textZoneHeight = 8; // Уменьшили с 8 до 5, чтобы подтянуть штрихкод выше
+    const gap = 0.2; // Почти нулевой зазор
+    // const gap = -3; // Почти нулевой зазор
+    const sideMargin = -5;
+    // --------------------------------------
+
+    const pdfWidth = widthPx + sideMargin * 2;
+    const pdfHeight = heightPx + textZoneHeight + gap;
 
     const pdf = new jsPDF({
-      unit: "px",
+      unit: "mm",
       format: [pdfWidth, pdfHeight],
       orientation: pdfWidth > pdfHeight ? "landscape" : "portrait",
     });
 
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(14);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(fontSize);
 
-    // текст по центру
-    pdf.text(barcodeProduct.shortName, pdfWidth / 2, padding, {
+    // Печатаем текст. y: 4 — поднимает текст чуть выше к верхнему краю
+    pdf.text(barcodeProduct.shortName, pdfWidth / 2, 7, {
       align: "center",
+      maxWidth: pdfWidth - 1,
+      // fontWeight: 'normal'
     });
 
-    // вставка SVG (вектор!)
+    // Вставка SVG: теперь y равен 5.2 (текст закончится и сразу начнется штрихкод)
     await svg2pdf(svg, pdf, {
-      x: padding,
-      y: padding + textHeight,
+      x: sideMargin,
+      y: textZoneHeight + gap,
+      width: widthPx,
+      height: heightPx,
     });
 
-    // скачивание
-    const blob = pdf.output("blob");
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "barcode.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    URL.revokeObjectURL(url);
+    pdf.autoPrint();
+    window.open(pdf.output("bloburl"), "_blank");
   };
 
   return (
@@ -342,7 +382,9 @@ const ProductsPage = () => {
                 <BarcodePreview value={barcodeProduct.barcode} />
               </div>
 
-              <Button onClick={handleDownloadPDF}>Скачать PDF</Button>
+              <Button size="tiny" onClick={handleDownloadPDF}>
+                Распечатать
+              </Button>
             </div>
           </>
         )}
