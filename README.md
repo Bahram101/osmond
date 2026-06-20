@@ -13,3 +13,11 @@ CRM-система для управления клиентами и склад�
 ## Screenshots
 
 <img width="300" alt="POS" src="https://github.com/user-attachments/assets/3637c809-e56a-41c0-94a0-a62f01f87450" />
+<img width="300" alt="Sale list" src="https://github.com/user-attachments/assets/ea20c52d-f9d2-4124-beea-878308df8ae9" />
+<img width="300" alt="warehouse" src="https://github.com/user-attachments/assets/ace8f35c-9ea3-45be-b838-db9cddef5d78" />
+<img width="300" alt="contr" src="https://github.com/user-attachments/assets/6b89666f-9cc3-473f-add3-994eb1e1994d" />
+<img width="300" alt="master" src="https://github.com/user-attachments/assets/76116ec8-0c89-4b22-bc61-5bd35e5c96cc" />
+
+
+
+
